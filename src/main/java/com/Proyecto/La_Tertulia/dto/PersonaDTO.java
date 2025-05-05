@@ -11,4 +11,7 @@ public class PersonaDTO {
     private long id;
     private String nombre;
     private String apellido;
+    private int numeroTelefono;
+    private String correo;
+    private String fechaNacimiento;
 }
