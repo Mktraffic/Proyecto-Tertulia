@@ -1,0 +1,120 @@
+@startuml
+class Persona{
+    - nombre: String
+    - numeroDocumento: String
+    - numeroContacto : String
+    - correo : String
+    - fechaNacimiento: Date
+    - rol: Rol
+}
+class RolCliente{
+
+}
+class RolProveedor{
+    - nombreEmpresa: String
+    - NIT : String
+}
+class RolVendedor{
+
+}
+interface Rol{
+
+}
+class RolAdministrador{
+
+}
+enum Presentacion{
+    - presentacion: String
+}
+enum Categoria{
+    - categoria: String
+}
+class Producto{
+    - nombre: String
+    - codigoBarras: String
+    - descripcion: String
+    - categoria : Categoria
+    - presentacion : Presentacion
+    - precioUnitarioVenta: double
+    - precioUnitarioCompra: double 
+}
+
+class ProductManager{
+    + agregarProducto() : Producto
+    + modificarProducto(): void
+    + desactivarProducto(): void
+    + verProducto() : Producto
+    + registrarProductoEntrada(): Producto
+    + activarProducto(): void
+}
+class Venta{
+    - producto: Producto
+    - cantidad: int 
+    - fechaVenta: Date 
+    - numeroDocumentoCliente: String
+    - numeroDocumentoRolVendedor: String 
+}
+class VentaManager{
+    + registrarVenta():Venta
+    + consultarVenta(): Venta
+    + cancelarVenta(): void
+}
+class Compra{
+    - codigoCompra: String
+    - procucto: Producto
+    - cantidadProducto : int
+    - fechaCompra : Date
+    - valorCompra : double
+}
+class CompraManager{
+    + registrarCompra(): Compra
+    + modificarCompra(): void
+    + consultarCompra(): Compra
+    + cancelarCompra(): void
+
+}
+class FacturaVenta{
+    - idFactura:int
+    - nombreEmpresa: String
+    - descripcionEmpresa: String
+    - listaVenta: List<Venta> 
+    - RolCliente : Cliente
+    - RolVendedor : RolVendedor
+
+}
+class FacturaCompra{
+    - RolProveedor: RolProveedor
+    - administrador : Administrador
+    - productos : List<Compra>
+}
+Producto --> Categoria
+Producto --> Presentacion
+Persona o-- Rol
+Rol<|-- RolCliente
+Rol <|-- RolProveedor
+Rol<|-- RolVendedor
+Rol <|-- RolAdministrador
+VentaManager-->Venta
+CompraManager --> Compra
+ProductManager --> Producto
+RolVendedor --> VentaManager
+RolAdministrador --> VentaManager
+RolAdministrador --> CompraManager
+RolAdministrador --> ProductManager
+Venta --> RolVendedor
+Venta --> RolCliente
+Venta --> Producto
+Compra --> Producto
+Compra --> RolAdministrador
+Compra --> RolProveedor
+FacturaVenta --> RolCliente
+FacturaVenta --> RolVendedor
+FacturaVenta..>Venta
+FacturaVenta o-- Venta
+FacturaCompra ..> Compra
+FacturaCompra --> Producto
+FacturaCompra --> RolAdministrador
+FacturaCompra --> RolProveedor
+FacturaCompra o-- Compra
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+class Persona{
+    - nombre: String
+    - apellido : String 
+    - id: Long
+    - numeroTelefono : String
+    - correo : String
+    - fechaNacimiento: String
+    
+}
+
+class Rol{
+    - id: Long 
+    - nombreRol: String 
+}
+class Usuario{
+    - id : Long
+    -user_name: String
+    -user_password :String
+    -persona : Persona
+    - rol: Rol
+}
+
+Usuario ..> Persona
+Rol --o Usuario
+
+@enduml
