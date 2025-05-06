@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Opciones administrador</title>
+    <link rel="stylesheet" th:href="@{/css/StylesAdmOptions.css}" />
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img th:src="@{/images/logo-tertulia.png}" alt="Logo La Tertulia" width="80" height="80">
+            <h2>LA TERTULIA LICORERA</h2>
+        </div>
+        <nav class="menu">
+            <button class="menu-item">Gestionar Persona</button>
+            <button class="menu-item">Gestionar Producto</button>
+            <button class="menu-item">Registrar compra</button>
+            <button class="menu-item">Gestionar venta</button>
+            <button class="menu-item">Cerrar sesion</button>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <section class="welcome-section">
+            <h1>¡Bienvenido, <span th:text="${usuarioDTO.user_name}">Usuario</span>!</h1>
+            <p>Selecciona el modulo a gestionar.</p>
+        </section>
+    </div>
+</body>
+</html>

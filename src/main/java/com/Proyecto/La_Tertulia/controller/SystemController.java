@@ -35,4 +35,9 @@ public class SystemController {
         }
         return "UserRegistration";
     }
+    @GetMapping("/dashboard")
+    public String volverAdministratorOptions(Model model) {
+        model.addAttribute("usuarioDTO", new UsuarioDTO());
+        return "AdministratorOptions";
+    }
 }

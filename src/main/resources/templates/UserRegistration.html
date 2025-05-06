@@ -99,18 +99,14 @@
             const selectedRol = rolSelect.value;
             if (selectedRol === 'Proveedor' || selectedRol === 'Cliente') {
                 accesoSistema.style.display = 'none';
-                // Quitar atributos 'required'
                 accesoSistema.querySelectorAll('input').forEach(input => input.required = false);
             } else {
                 accesoSistema.style.display = 'block';
-                // Restaurar atributos 'required'
                 accesoSistema.querySelectorAll('input').forEach(input => input.required = true);
             }
         }
 
         rolSelect.addEventListener('change', toggleAccesoSistema);
-
-        // Ejecutar una vez al cargar para el valor inicial
         toggleAccesoSistema();
     });
 </script>
