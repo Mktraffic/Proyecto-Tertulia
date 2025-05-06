@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de usuarios</title>
+    <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            <h1>Registro de usuarios</h1>
+        </div>
+        
+        <div class="form-container">
+            <form th:action="@{/Person/SavePerson}" th:object="${usuarioDTO}" method="POST">
+                <div class="form-group">
+                    <label for="nombre">Nombre *</label>
+                    <input type="text" class="form-control" th:field="*{persona.nombre}" required>
+                </div>
+                <div class="form-group">
+                    <label for="nombre">Apellido *</label>
+                    <input type="text" class="form-control" th:field="*{persona.apellido}" required>
+                </div>
+                <div class="form-group">
+                    <label for="id">Documento de Identidad *</label>
+                    <input type="number" class="form-control" th:field="*{persona.id}" required min="1"
+                           max="9999999999" />
+                </div>
+                <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de nacimiento * </label>
+                    <input type="text" class="form-control" th:field="*{persona.fechaNacimiento}" required>
+                </div>
+                <div class="form-group">
+                    <label for="celular">Numero de contacto *</label>
+                    <input type="number" class="form-control" th:field="*{persona.numeroTelefono}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="correo">Correo electrónico </label>
+                    <input type="text" class="form-control" th:field="*{persona.correo}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rol">Rol *</label>
+                    <select class="form-select" th:field="*{rol.nombreRol}" required>
+                        <option value="" selected disabled>Selecciona una opción</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Vendedor">Vendedor</option>
+                        <option value="Proveedor">Proveedor</option>
+                        <option value="Cliente">Cliente</option>
+                    </select>
+                </div>
+                <div id="accesoSistema"></div>
+                    <h3>Datos de acceso al sistema</h3>
+                    <div class="form-group">
+                        <label class="form-label">Usuario *</label>
+                        <div class="input-group">
+                         <span class="input-group-text"><i class="fas fa-user"></i></span>
+                         <input type="text" class="form-control" th:field="*{user_name}" required />
+                        </div>
+                 </div>
+                 <div class="form-group">
+                    <label class="form-label">Contraseña *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" th:field="*{user_password}" required />
+                    </div>
+                </div>
+            </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a th:href="@{/Login}" class="btn btn-secondary" style="text-decoration: none; text-align: center;">Ya tiene una cuenta</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:if="${success}" class="alert alert-success">
+        <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger">
+        <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>
+    </div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const rolSelect = document.getElementById('rolSelect');
+        const accesoSistema = document.getElementById('accesoSistema');
+
+        function toggleAccesoSistema() {
+            const selectedRol = rolSelect.value;
+            if (selectedRol === 'Proveedor' || selectedRol === 'Cliente') {
+                accesoSistema.style.display = 'none';
+                // Quitar atributos 'required'
+                accesoSistema.querySelectorAll('input').forEach(input => input.required = false);
+            } else {
+                accesoSistema.style.display = 'block';
+                // Restaurar atributos 'required'
+                accesoSistema.querySelectorAll('input').forEach(input => input.required = true);
+            }
+        }
+
+        rolSelect.addEventListener('change', toggleAccesoSistema);
+
+        // Ejecutar una vez al cargar para el valor inicial
+        toggleAccesoSistema();
+    });
+</script>
+</html>
