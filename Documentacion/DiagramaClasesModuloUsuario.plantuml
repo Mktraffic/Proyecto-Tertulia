@@ -118,5 +118,6 @@ RolMapperImplement <-- Rol
 RolMapperImplement <-- RolDTO
 PersonaMapperImplement <-- Persona
 PersonaMapperImplement <-- PersonaDTO
-
+UsuarioService <-- UsuarioDTO
+PersonaService <-- PersonaDTO
 @enduml
