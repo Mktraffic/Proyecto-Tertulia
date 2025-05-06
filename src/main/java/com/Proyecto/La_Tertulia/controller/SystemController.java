@@ -92,6 +92,11 @@ public class SystemController {
         }
         return nombre;
     }
+    @GetMapping("/logout")
+public String cerrarSesion(HttpSession session) {
+    session.invalidate();
+    return "redirect:/login";
+}
     @GetMapping("/")
     public String mostrarFormularioRegistroUsuarios(Model model,
                                          @RequestParam(value = "success", required = false) String success,
