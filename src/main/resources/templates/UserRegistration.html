@@ -7,6 +7,15 @@
     <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
 </head>
 <body>
+    <div class="toast-container">
+        <div th:if="${success}" class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger">
+            <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>
+        </div>
+    </div>
     <div class="container">
         <div class="header">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -54,8 +63,6 @@
                         <option value="" selected disabled>Selecciona una opción</option>
                         <option value="Administrador">Administrador</option>
                         <option value="Vendedor">Vendedor</option>
-                        <option value="Proveedor">Proveedor</option>
-                        <option value="Cliente">Cliente</option>
                     </select>
                 </div>
                 <div id="accesoSistema"></div>
@@ -82,32 +89,5 @@
             </form>
         </div>
     </div>
-    <div th:if="${success}" class="alert alert-success">
-        <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
-    </div>
-
-    <div th:if="${error}" class="alert alert-danger">
-        <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>
-    </div>
 </body>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const rolSelect = document.getElementById('rolSelect');
-        const accesoSistema = document.getElementById('accesoSistema');
-
-        function toggleAccesoSistema() {
-            const selectedRol = rolSelect.value;
-            if (selectedRol === 'Proveedor' || selectedRol === 'Cliente') {
-                accesoSistema.style.display = 'none';
-                accesoSistema.querySelectorAll('input').forEach(input => input.required = false);
-            } else {
-                accesoSistema.style.display = 'block';
-                accesoSistema.querySelectorAll('input').forEach(input => input.required = true);
-            }
-        }
-
-        rolSelect.addEventListener('change', toggleAccesoSistema);
-        toggleAccesoSistema();
-    });
-</script>
 </html>
