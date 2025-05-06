@@ -35,16 +35,16 @@ public class UsuarioService {
 
     public String validateUserByUserName(String userName, String password) {
         List<UsuarioDTO> userList = findAllUsuarios();
-        boolean reponse = false;
-        String userRol = "";
-        for (int i = 0; i < userList.size(); i++) {
-            if(userList.get(i).getUser_name().equals(userName) && userList.get(i).getUser_password().equals(password)){
-                reponse=true;
-                userRol = userList.get(i).getRol().getNombreRol();
-                break;
+        for (UsuarioDTO usuario : userList) {
+            if (usuario.getUser_name().equals(userName)) {
+                if (usuario.getUser_password().equals(password)) {
+                return true+","+usuario.getRol().getNombreRol();
+            } else {
+                return "false,WRONG_PASSWORD";
             }
         }
-        return reponse+","+userRol;
+        }
+        return "false,USER_NOT_FOUND";
     }
     public boolean validateExistUserName(String userName) {
         List<UsuarioDTO> userList = findAllUsuarios();
