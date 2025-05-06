@@ -15,22 +15,31 @@
         </div>
         
         <div class="login-form">
-            <h2 th:text="#{welcome.message}">Bienvenido a la Tertulia.</h2>
-            <p th:text="#{login.instruction}">Por favor inicia sesión para continuar.</p>
+            <h2 th:text="'Bienvenido a la Tertulia.'">Bienvenido a la Tertulia.</h2>
+            <p th:text="'Por favor inicia sesión para continuar.'">Por favor inicia sesión para continuar.</p>
             
-            <form th:action="@{/login}" method="post">
+            <form th:action="@{/loggeo}" th:object="${usuarioDTO}" method="post">
                 <div class="form-group">
-                    <input type="text" id="username" name="username" th:placeholder="#{username.placeholder}" placeholder="Nombre de usuario" required>
+                    <input type="text" id="username" name="username"
+                           th:placeholder="'Nombre de usuario'" placeholder="Nombre de usuario" required>
                 </div>
                 
                 <div class="form-group">
-                    <input type="password" id="password" name="password" th:placeholder="#{password.placeholder}" placeholder="Contraseña" required>
+                    <input type="password" id="password" name="password"
+                           th:placeholder="'Contraseña'" placeholder="Contraseña" required>
                 </div>
                 
                 <div class="form-group">
-                    <button type="submit" th:text="#{login.button}">Iniciar sesión</button>
+                    <button type="submit" th:text="'Iniciar sesión'">Iniciar sesión</button>
                 </div>
             </form>
+        </div>
+        <div th:if="${success}" class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
+        </div>
+
+        <div th:if="${error}" class="alert alert-danger">
+            <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>
         </div>
     </div>
 </body>
