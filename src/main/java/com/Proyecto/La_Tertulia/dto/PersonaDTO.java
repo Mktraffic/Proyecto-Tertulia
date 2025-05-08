@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PersonaDTO {
     private long id;
+    private int documentoIdentidad;
+    private String tipoDocumento;
     private String nombre;
     private String apellido;
     private long numeroTelefono;
     private String correo;
     private LocalDate fechaNacimiento;
-    private String tipoDocumento;
 }

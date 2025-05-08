@@ -125,12 +125,13 @@ public String cerrarSesion(HttpSession session) {
         try {
             PersonaDTO persona = new PersonaDTO(
                     usuario.getPersona().getId(),
+                    usuario.getPersona().getDocumentoIdentidad(),
+                    usuario.getPersona().getTipoDocumento(),
                     usuario.getPersona().getNombre(),
                     usuario.getPersona().getApellido(),
                     usuario.getPersona().getNumeroTelefono(),
                     usuario.getPersona().getCorreo(),
-                    usuario.getPersona().getFechaNacimiento(),
-                    usuario.getPersona().getTipoDocumento());
+                    usuario.getPersona().getFechaNacimiento());
 
             PersonaDTO nuevaPersona = personaService.addPersonaInDB(persona);
             String nombreRol = usuario.getRol().getNombreRol();

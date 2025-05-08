@@ -39,9 +39,9 @@ class UsuarioServiceTest {
         Rol rolAdm = new Rol(1L, "ADMINISTRADOR");
         Rol rolVen = new Rol(2L, "VENDEDOR");
 
-        Persona persona1 = new Persona(1L, "juan", "perez",
-                310802532, "luis2020@gmail.com", LocalDate.of(1999, 1, 1),"Cedula de ciudadania");
-        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
+        Persona persona1 = new Persona(1L, 123455, "Cedula de ciudadania", "juan", "perez",
+                310802532, "luis2020@gmail.com", LocalDate.of(1999, 1, 1));
+        Persona persona2 = new Persona(2L, 123445, "Cedula de ciudadania", "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
         
         Usuario usuario1 = new Usuario(1L, "user1", "password1", rolAdm, persona1);
         Usuario usuario2 = new Usuario(2L, "user2", "password2", rolVen, persona2);
@@ -49,8 +49,8 @@ class UsuarioServiceTest {
 
         List<Usuario> usuarios = Arrays.asList(usuario1, usuario2);
 
-        PersonaDTO personaDTO1 = new PersonaDTO(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
-        PersonaDTO personaDTO2 = new PersonaDTO(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
+        PersonaDTO personaDTO1 = new PersonaDTO(1L, 123345, "Cedula de ciudadania", "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        PersonaDTO personaDTO2 = new PersonaDTO(2L, 122345, "Cedula de ciudadania", "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
         
         
         RolDTO rolDTO1 = new RolDTO(1L, "ADMINISTRADOR");
@@ -80,14 +80,14 @@ class UsuarioServiceTest {
         Rol rolAdm = new Rol(1L, "ADMINISTRADOR");
         Rol rolVen = new Rol(2L, "VENDEDOR");
        
-        Persona persona1 = new Persona(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
-        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
-        Usuario usuario1 = new Usuario(1L, "user1", "password1", rolAdm, persona1);
+        Persona persona1 = new Persona(1L, 987655,"Cedula de extranjeria", "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        Persona persona2 = new Persona(2L, 987665,"Cedula de extranjeria", "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+        Usuario usuario1 = new Usuario(1L , "user1", "password1", rolAdm, persona1);
         Usuario usuario2 = new Usuario(2L, "user2", "password2", rolVen, persona2);
        
 
-        PersonaDTO personaDTO1 = new PersonaDTO(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
-        PersonaDTO personaDTO2 = new PersonaDTO(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
+        PersonaDTO personaDTO1 = new PersonaDTO(1L, 987765,"Cedula de ciudadania", "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        PersonaDTO personaDTO2 = new PersonaDTO(2L, 988765,"Cedula de ciudadania", "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
 
         RolDTO rolDTO1 = new RolDTO(1L, "ADMINISTRADOR");
         RolDTO rolDTO2 = new RolDTO(2L, "VENDEDOR");
@@ -123,14 +123,14 @@ class UsuarioServiceTest {
 
         Rol rolAdm = new Rol(1L, "ADMINISTRADOR");
         Rol rolVen = new Rol(2L, "VENDEDOR");
-        Persona persona1 = new Persona(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
-        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
+        Persona persona1 = new Persona(1L, 456788,"Cedula de extranjeria", "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        Persona persona2 = new Persona(2L, 456778,"Cedula de ciudadania", "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
         Usuario usuario1 = new Usuario(1L, "user1", "password1", rolAdm, persona1);
         Usuario usuario2 = new Usuario(2L, "user2", "password2", rolVen, persona2);
 
 
-        PersonaDTO personaDTO1 = new PersonaDTO(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
-        PersonaDTO personaDTO2 = new PersonaDTO(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
+        PersonaDTO personaDTO1 = new PersonaDTO(1L, 456678,"Cedula de ciudadania", "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        PersonaDTO personaDTO2 = new PersonaDTO(2L, 455678,"Cedula de extranjeria", "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
         RolDTO rolDTO1 = new RolDTO(1L, "ADMINISTRADOR");
         RolDTO rolDTO2 = new RolDTO(2L, "VENDEDOR");
         UsuarioDTO usuarioDTO1 = new UsuarioDTO(1L, "user1", "password1", rolDTO1, personaDTO1);

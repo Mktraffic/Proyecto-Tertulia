@@ -44,7 +44,7 @@ public class PersonaService {
     }
 
     public Optional<PersonaDTO> findById(Long id) {
-        return personaRepository.findById(id).map(persona -> new PersonaDTO(persona.getId(), persona.getNombre(), persona.getApellido(),persona.getNumeroTelefono(), persona.getCorreo(), persona.getFechaNacimiento(),persona.getTipoDocumento()));
+        return personaRepository.findById(id).map(persona -> new PersonaDTO(persona.getId(), persona.getDocumentoIdentidad(), persona.getTipoDocumento(), persona.getNombre(), persona.getApellido(),persona.getNumeroTelefono(), persona.getCorreo(), persona.getFechaNacimiento()));
     }
 
 }

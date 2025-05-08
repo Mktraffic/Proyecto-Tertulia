@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
@@ -20,8 +22,16 @@ public class Persona {
 
     @Id
     @Column(name = "id_persona", length = 50, nullable = false)
-    //numero de documento
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "numero_documento", length = 50, nullable = false)
+    @Size(min = 3, max = 50)
+    private int documentoIdentidad;
+
+    @Column(name = "tipo_documento", length = 50, nullable = false)
+    @Size(min = 3, max = 30)
+    private String tipoDocumento;
 
     @Column(name = "nombre", length = 100, nullable = false)
     @Size(min = 3, max = 100)
@@ -41,8 +51,4 @@ public class Persona {
 
     @Column(name = "fecha_nacimiento", length = 80, nullable = false)
     private LocalDate FechaNacimiento;
-     
-    @Column(name = "tipo_documento", length = 50, nullable = false)
-    @Size(min = 1, max = 30)
-    private String tipoDocumento;
 }
