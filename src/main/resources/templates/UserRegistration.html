@@ -8,11 +8,11 @@
 </head>
 <body>
     <div class="toast-container">
-        <div th:if="${success}" class="alert alert-success">
+        <div id="success" th:if="${success}" class="alert alert-success">
             <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
         </div>
 
-        <div th:if="${error}" class="alert alert-danger">
+        <div id="error" th:if="${error}" class="alert alert-danger">
             <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>
         </div>
     </div>
@@ -37,24 +37,39 @@
                 <div class="form-group">
                     <label for="nombre">Apellido *</label>
                     <input type="text" class="form-control" th:field="*{persona.apellido}" required>
-                </div>
+                </div>,
+                <div class="form-group">
+                    <label for="tipoDocumento">Tipo de documento *</label>
+                    <select class="form-control" th:field="*{persona.tipoDocumento}" required>
+                        <option value="" selected disabled>Selecciona una opción</option>
+                        <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
+                        <option value="Cedula de extranjeria">Cédula de extranjería</option>
+                    </select>
+                </div> 
                 <div class="form-group">
                     <label for="id">Documento de Identidad *</label>
-                    <input type="number" class="form-control" th:field="*{persona.id}" required min="1"
-                           max="9999999999" />
+                    <input type="text" class="form-control" th:field="*{persona.id}" required 
+                           minlength="7" maxlength="10"
+                           title="El documento de identidad debe tener entre 7 y 10 dígitos numéricos">
                 </div>
+                
                 <div class="form-group">
                     <label for="fechaNacimiento">Fecha de nacimiento * </label>
-                    <input type="text" class="form-control" th:field="*{persona.fechaNacimiento}" required>
+                    <input type="date" class="form-control" th:field="*{persona.fechaNacimiento}" required 
+                    title="Seleccione una fecha de nacimiento">
                 </div>
                 <div class="form-group">
                     <label for="celular">Numero de contacto *</label>
-                    <input type="number" class="form-control" th:field="*{persona.numeroTelefono}" required>
+                    <input type="text" class="form-control" th:field="*{persona.numeroTelefono}" required
+                           minlength="7" maxlength="10" 
+                           title="El numero de telefono debe tener entre 7 y 10 dígitos numéricos">
                 </div>
                 
                 <div class="form-group">
                     <label for="correo">Correo electrónico </label>
-                    <input type="text" class="form-control" th:field="*{persona.correo}" required>
+                    <input type="email" class="form-control" th:field="*{persona.correo}" required
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        title="Introduce un correo válido (usuario@gmail.com)">
                 </div>
                 
                 <div class="form-group">
@@ -71,14 +86,14 @@
                         <label class="form-label">Usuario *</label>
                         <div class="input-group">
                          <span class="input-group-text"><i class="fas fa-user"></i></span>
-                         <input type="text" class="form-control" th:field="*{user_name}" required />
+                         <input type="text" class="form-control" th:field="*{userName}" required />
                         </div>
                  </div>
                  <div class="form-group">
                     <label class="form-label">Contraseña *</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" class="form-control" th:field="*{user_password}" required />
+                        <input type="password" class="form-control" th:field="*{userPassword}" required />
                     </div>
                 </div>
             </div>
@@ -89,5 +104,6 @@
             </form>
         </div>
     </div>
+    <script src="/js/information.js"></script>
 </body>
 </html>

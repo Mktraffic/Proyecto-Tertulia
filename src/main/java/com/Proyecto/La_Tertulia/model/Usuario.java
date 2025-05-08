@@ -19,11 +19,11 @@ public class Usuario {
 
     @Column(name = "user_name", nullable =  false)
     @Size(min = 1, max = 50, message = "El usuario debe tener entre 5 y 50 caracteres")
-    private String user_name;
+    private String userName;
 
     @Column(name = "password", nullable = false)
     @Size(min = 1, max = 30, message = "La contraseña debe tener entre 5 y 20 caracteres")
-    private String user_password;
+    private String userPassword;
 
     @ManyToOne
     @JoinColumn(name = "id_rol", nullable = false, referencedColumnName = "id_rol")
@@ -34,8 +34,8 @@ public class Usuario {
     private Persona persona;
 
     public Usuario(String user_name, String user_password, Rol rol, Persona persona) {
-        this.user_name = user_name;
-        this.user_password = user_password;
+        this.userName = user_name;
+        this.userPassword = user_password;
         this.rol = rol;
         this.persona = persona;
     }

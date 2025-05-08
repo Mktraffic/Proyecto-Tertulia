@@ -1,5 +1,7 @@
 package com.Proyecto.La_Tertulia.dto;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +13,8 @@ public class PersonaDTO {
     private long id;
     private String nombre;
     private String apellido;
-    private int numeroTelefono;
+    private long numeroTelefono;
     private String correo;
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento;
+    private String tipoDocumento;
 }

@@ -1,5 +1,6 @@
 package com.Proyecto.La_Tertulia;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -39,9 +40,9 @@ class PersonaServiceTest {
     @BeforeEach
     void setUp() {
         PersonaDTO personaDTO = new PersonaDTO(1L, "juan", "perez",
-        310802532,"luis2020@gmail.com", "1998-01-01");
+        310802532,"luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
         PersonaDTO personaDTO2 = new PersonaDTO(2L, "luis", "rincon",320802341,
-        "luis3050@gmail.com", "1990-01-01");
+        "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
         personaService.addPersonaInDB(personaDTO);
         personaService.addPersonaInDB(personaDTO2);
 
@@ -51,15 +52,15 @@ class PersonaServiceTest {
     void testFindAllPersonas() {
 
         Persona persona1 = new Persona(1L, "juan", "perez",
-        310802532,"luis2020@gmail.com", "1998-01-01");
+        310802532,"luis2020@gmail.com",LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
         Persona persona2 = new Persona(2L, "luis", "rincon"
-        ,320802341,"luis3050@gmail.com", "1990-01-01");
+        ,320802341,"luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
         List<Persona> personas = Arrays.asList(persona1, persona2);
 
         PersonaDTO personaDTO1 = new PersonaDTO(1L, "juan", "perez",
-        310802532,"luis2020@gmail.com", "1998-01-01");
+        310802532,"luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
         PersonaDTO personaDTO2 =new PersonaDTO(2L, "luis", "rincon",320802341,
-        "luis3050@gmail.com", "1990-01-01");
+        "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
         List<PersonaDTO> expected = Arrays.asList(personaDTO1, personaDTO2);
 
         Mockito.when(personaRepository.findAll()).thenReturn(personas);
@@ -77,9 +78,9 @@ class PersonaServiceTest {
     void testAddPersonaInDB() {
 
         PersonaDTO personaDTO = new PersonaDTO(3L, "max", "ruiz",320854987,
-        "max202@gmail.com", "1995-01-01");
+        "max202@gmail.com", LocalDate.of(1995, 1, 1),"Cedula de ciudadania");
         Persona persona = new Persona(3L, "max", "ruiz",320854987,
-        "max202@gmail.com", "1995-01-01");
+        "max202@gmail.com",  LocalDate.of(1995, 1, 1),"Cedula de ciudadania");
 
         Mockito.when(personaMapper.toEntity(personaDTO)).thenReturn(persona);
         Mockito.when(personaRepository.save(persona)).thenReturn(persona);
@@ -96,9 +97,9 @@ class PersonaServiceTest {
     void testFetchPersonaByIdFound() {
     Long id = 1L;
     Persona persona = new Persona(id, "juan", "perez",
-    310802532,"luis2020@gmail.com", "1998-01-01");
+    310802532,"luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
     PersonaDTO personaDTO = new PersonaDTO(id, "juan", "perez",
-    310802532,"luis2020@gmail.com", "1998-01-01");
+    310802532,"luis2020@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
 
     Mockito.when(personaRepository.findById(id)).thenReturn(Optional.of(persona));
     Mockito.when(personaMapper.toDTO(persona)).thenReturn(personaDTO);

@@ -18,6 +18,7 @@ import com.Proyecto.La_Tertulia.model.Usuario;
 import com.Proyecto.La_Tertulia.repository.UsuarioRepository;
 import com.Proyecto.La_Tertulia.service.UsuarioService;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,8 +40,8 @@ class UsuarioServiceTest {
         Rol rolVen = new Rol(2L, "VENDEDOR");
 
         Persona persona1 = new Persona(1L, "juan", "perez",
-                310802532, "luis2020@gmail.com", "1998-01-01");
-        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", "1990-01-01");
+                310802532, "luis2020@gmail.com", LocalDate.of(1999, 1, 1),"Cedula de ciudadania");
+        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
         
         Usuario usuario1 = new Usuario(1L, "user1", "password1", rolAdm, persona1);
         Usuario usuario2 = new Usuario(2L, "user2", "password2", rolVen, persona2);
@@ -48,10 +49,9 @@ class UsuarioServiceTest {
 
         List<Usuario> usuarios = Arrays.asList(usuario1, usuario2);
 
-        PersonaDTO personaDTO1 =  new PersonaDTO(1L, "juan", "perez",
-        310802532,"luis2020@gmail.com", "1998-01-01");
-        PersonaDTO personaDTO2 =new PersonaDTO(2L, "luis", "rincon",320802341,
-        "luis3050@gmail.com", "1990-01-01");
+        PersonaDTO personaDTO1 = new PersonaDTO(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
+        PersonaDTO personaDTO2 = new PersonaDTO(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
+        
         
         RolDTO rolDTO1 = new RolDTO(1L, "ADMINISTRADOR");
         RolDTO rolDTO2 = new RolDTO(2L, "VENDEDOR");
@@ -80,17 +80,14 @@ class UsuarioServiceTest {
         Rol rolAdm = new Rol(1L, "ADMINISTRADOR");
         Rol rolVen = new Rol(2L, "VENDEDOR");
        
-        Persona persona1 = new Persona(1L, "juan", "perez",
-                310802532, "luis2020@gmail.com", "1998-01-01");
-        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", "1990-01-01");
+        Persona persona1 = new Persona(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
+        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
         Usuario usuario1 = new Usuario(1L, "user1", "password1", rolAdm, persona1);
         Usuario usuario2 = new Usuario(2L, "user2", "password2", rolVen, persona2);
        
 
-        PersonaDTO personaDTO1 =  new PersonaDTO(1L, "juan", "perez",
-        310802532,"luis2020@gmail.com", "1998-01-01");
-        PersonaDTO personaDTO2 =new PersonaDTO(2L, "luis", "rincon",320802341,
-        "luis3050@gmail.com", "1990-01-01");
+        PersonaDTO personaDTO1 = new PersonaDTO(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
+        PersonaDTO personaDTO2 = new PersonaDTO(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
 
         RolDTO rolDTO1 = new RolDTO(1L, "ADMINISTRADOR");
         RolDTO rolDTO2 = new RolDTO(2L, "VENDEDOR");
@@ -110,12 +107,12 @@ class UsuarioServiceTest {
 
         UsuarioDTO result1 = usuarioService.addUsuarioInDB(usuarioDTO1);
         Assertions.assertNotNull(result1);
-        Assertions.assertEquals(usuarioDTO1.getUser_name(), result1.getUser_name());
+        Assertions.assertEquals(usuarioDTO1.getUserName(), result1.getUserName());
         Mockito.verify(usuarioRepository).save(usuario1);
 
         UsuarioDTO result2 = usuarioService.addUsuarioInDB(usuarioDTO2);
         Assertions.assertNotNull(result2);
-        Assertions.assertEquals(usuarioDTO2.getUser_name(), result2.getUser_name());
+        Assertions.assertEquals(usuarioDTO2.getUserName(), result2.getUserName());
         Mockito.verify(usuarioRepository).save(usuario2);
 
         
@@ -126,17 +123,14 @@ class UsuarioServiceTest {
 
         Rol rolAdm = new Rol(1L, "ADMINISTRADOR");
         Rol rolVen = new Rol(2L, "VENDEDOR");
-        Persona persona1 = new Persona(1L, "juan", "perez",
-                310802532, "luis2020@gmail.com", "1998-01-01");
-        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", "1990-01-01");
+        Persona persona1 = new Persona(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
+        Persona persona2 = new Persona(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
         Usuario usuario1 = new Usuario(1L, "user1", "password1", rolAdm, persona1);
         Usuario usuario2 = new Usuario(2L, "user2", "password2", rolVen, persona2);
 
 
-        PersonaDTO personaDTO1 =  new PersonaDTO(1L, "juan", "perez",
-        310802532,"luis2020@gmail.com", "1998-01-01");
-        PersonaDTO personaDTO2 =new PersonaDTO(2L, "luis", "rincon",320802341,
-        "luis3050@gmail.com", "1990-01-01");
+        PersonaDTO personaDTO1 = new PersonaDTO(1L, "juan", "perez", 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1),"Cedula de ciudadania");
+        PersonaDTO personaDTO2 = new PersonaDTO(2L, "luis", "rincon", 320802341, "luis3050@gmail.com", LocalDate.of(1990, 1, 1),"Cedula de ciudadania");
         RolDTO rolDTO1 = new RolDTO(1L, "ADMINISTRADOR");
         RolDTO rolDTO2 = new RolDTO(2L, "VENDEDOR");
         UsuarioDTO usuarioDTO1 = new UsuarioDTO(1L, "user1", "password1", rolDTO1, personaDTO1);

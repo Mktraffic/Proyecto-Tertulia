@@ -28,7 +28,7 @@ public class UsuarioService {
 
     public UsuarioDTO addUsuarioInDB(UsuarioDTO usuarioDTO) {
         System.out.println("Usuario antes de persistir: " + usuarioDTO);
-        System.out.println("Contraseña antes de persistir: " + usuarioDTO.getUser_password());
+        System.out.println("Contraseña antes de persistir: " + usuarioDTO.getUserPassword());
         Usuario usuarioGuardado = usuarioRepository.save(usuarioMapper.toEntity(usuarioDTO));
         return usuarioMapper.toDTO(usuarioGuardado);
     }
@@ -36,8 +36,8 @@ public class UsuarioService {
     public String validateUserByUserName(String userName, String password) {
         List<UsuarioDTO> userList = findAllUsuarios();
         for (UsuarioDTO usuario : userList) {
-            if (usuario.getUser_name().equals(userName)) {
-                if (usuario.getUser_password().equals(password)) {
+            if (usuario.getUserName().equals(userName)) {
+                if (usuario.getUserPassword().equals(password)) {
                 return true+","+usuario.getRol().getNombreRol();
             } else {
                 return "false,WRONG_PASSWORD";
@@ -50,7 +50,7 @@ public class UsuarioService {
         List<UsuarioDTO> userList = findAllUsuarios();
         boolean reponse = false;
         for (int i = 0; i < userList.size(); i++) {
-            if(userList.get(i).getUser_name().equals(userName)){
+            if(userList.get(i).getUserName().equals(userName)){
                 reponse=true;
                 break;
             }

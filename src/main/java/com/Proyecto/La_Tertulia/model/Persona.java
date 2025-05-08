@@ -1,5 +1,7 @@
 package com.Proyecto.La_Tertulia.model;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,24 +23,26 @@ public class Persona {
     //numero de documento
     private Long id;
 
-    @Column(name = "nombre", length = 100)
+    @Column(name = "nombre", length = 100, nullable = false)
     @Size(min = 3, max = 100)
     private String nombre;
 
-    @Column(name = "apellido", length = 100)
+    @Column(name = "apellido", length = 100, nullable = false)
     @Size(min = 3, max = 100)
     private String apellido;
 
     @Column(name = "numero_telefono", length = 20, nullable = false)
     @Size(min = 3, max = 20)
-    private int numeroTelefono;
+    private long numeroTelefono;
 
     @Column(name = "correo_electronico", length = 200)
     @Size(min = 3, max = 200)
     private String correo;
 
-    @Column(name = "fecha_nacimiento", length = 80)
-    @Size(min = 3, max = 80)
-    private String fechaNacimiento;
+    @Column(name = "fecha_nacimiento", length = 80, nullable = false)
+    private LocalDate FechaNacimiento;
      
+    @Column(name = "tipo_documento", length = 50, nullable = false)
+    @Size(min = 1, max = 30)
+    private String tipoDocumento;
 }

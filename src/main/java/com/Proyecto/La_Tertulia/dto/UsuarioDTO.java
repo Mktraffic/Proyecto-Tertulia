@@ -12,9 +12,9 @@ public class UsuarioDTO {
 
     private Long id;
     
-    private String user_name;
+    private String userName;
 
-    private String user_password;
+    private String userPassword;
 
     private RolDTO rol;
 

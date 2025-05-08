@@ -45,7 +45,7 @@ public class SystemController {
     public String procesarLogin(@ModelAttribute UsuarioDTO usuarioDTO, Model model, HttpSession session) {
         try {
             String[] data = usuarioService
-                    .validateUserByUserName(usuarioDTO.getUser_name(), usuarioDTO.getUser_password())
+                    .validateUserByUserName(usuarioDTO.getUserName(), usuarioDTO.getUserPassword())
                     .split(",");
             boolean isAuthenticated = Boolean.parseBoolean(data[0].trim());
     
@@ -68,7 +68,7 @@ public class SystemController {
                 return "Login";
             }
             String rol = data[1];
-            session.setAttribute("usuario", searchPersonByUserName(usuarioDTO.getUser_name()));
+            session.setAttribute("usuario", searchPersonByUserName(usuarioDTO.getUserName()));
             session.setAttribute("rol", rol);
             switch (rol) {
                 case "Administrador":
@@ -86,7 +86,7 @@ public class SystemController {
         List<UsuarioDTO> userList = usuarioService.findAllUsuarios();
         String nombre = "";
         for (int i = 0; i < userList.size(); i++) {
-            if (userList.get(i).getUser_name().equals(user_name)) {
+            if (userList.get(i).getUserName().equals(user_name)) {
                 nombre = userList.get(i).getPersona().getNombre() + " " + userList.get(i).getPersona().getApellido();
             }
         }
@@ -117,7 +117,7 @@ public String cerrarSesion(HttpSession session) {
             model.addAttribute("usuarioDTO", usuario);
             return "UserRegistration";
         }
-        if (usuarioService.validateExistUserName(usuario.getUser_name())) {
+        if (usuarioService.validateExistUserName(usuario.getUserName())) {
             model.addAttribute("error", "El nombre de usuario ya esta registrado.");
             model.addAttribute("usuarioDTO", usuario);
             return "UserRegistration";
@@ -129,7 +129,8 @@ public String cerrarSesion(HttpSession session) {
                     usuario.getPersona().getApellido(),
                     usuario.getPersona().getNumeroTelefono(),
                     usuario.getPersona().getCorreo(),
-                    usuario.getPersona().getFechaNacimiento());
+                    usuario.getPersona().getFechaNacimiento(),
+                    usuario.getPersona().getTipoDocumento());
 
             PersonaDTO nuevaPersona = personaService.addPersonaInDB(persona);
             String nombreRol = usuario.getRol().getNombreRol();

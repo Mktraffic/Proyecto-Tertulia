@@ -22,8 +22,8 @@ public class UsuarioMapperImplement implements UsuarioMapper {
         }
         UsuarioDTO usuarioDTO = new UsuarioDTO();
         usuarioDTO.setId(usuario.getId());
-        usuarioDTO.setUser_name(usuario.getUser_name());
-        usuarioDTO.setUser_password(usuario.getUser_password());
+        usuarioDTO.setUserName(usuario.getUserName());
+        usuarioDTO.setUserPassword(usuario.getUserPassword());
         usuarioDTO.setPersona(personaMapper.toDTO(usuario.getPersona()));
         usuarioDTO.setRol(new RolDTO(usuario.getRol().getId(), usuario.getRol().getNombreRol()));
         return usuarioDTO;
@@ -37,8 +37,8 @@ public class UsuarioMapperImplement implements UsuarioMapper {
     
         Usuario usuario = new Usuario();
         usuario.setId(usuarioDTO.getId());
-        usuario.setUser_name(usuarioDTO.getUser_name());
-        usuario.setUser_password(usuarioDTO.getUser_password());
+        usuario.setUserName(usuarioDTO.getUserName());
+        usuario.setUserPassword(usuarioDTO.getUserPassword());
         usuario.setPersona(personaMapper.toEntity(usuarioDTO.getPersona()));
         usuario.setRol(new Rol(usuarioDTO.getRol().getId(), usuarioDTO.getRol().getNombreRol()));
         return usuario;
