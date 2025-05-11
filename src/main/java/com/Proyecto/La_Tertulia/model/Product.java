@@ -31,6 +31,9 @@ public class Product {
     @Column(name = "presentacion_producto", nullable = false)
     private String presentation;
 
+    @Column(name = "stock_producto", nullable = false)
+    private int stock;
+
     @Column(name = "precio_producto", nullable = false)
     private double price;
 
