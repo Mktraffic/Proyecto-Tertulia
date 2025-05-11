@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class InventoryDTO {
 
     private Long id;
-    private long id_product;
+    private ProductDTO productDTO;
     private int cantidad_producto;
     
 }
