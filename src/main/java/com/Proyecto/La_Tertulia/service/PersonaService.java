@@ -50,6 +50,7 @@ public class PersonaService {
     public PersonaDTO updatePersona(Long id) {
         Optional<PersonaDTO> existingPersona = findById(id);
         Persona personaToUpdate = new Persona();
+        personaToUpdate.setId(existingPersona.get().getId());
         personaToUpdate.setDocumentoIdentidad(existingPersona.get().getDocumentoIdentidad());
         personaToUpdate.setTipoDocumento(existingPersona.get().getTipoDocumento());
         personaToUpdate.setNombre(existingPersona.get().getNombre());
