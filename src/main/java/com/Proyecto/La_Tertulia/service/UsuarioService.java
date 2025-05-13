@@ -1,6 +1,7 @@
 package com.Proyecto.La_Tertulia.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
@@ -10,6 +11,7 @@ import com.Proyecto.La_Tertulia.repository.UsuarioRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 public class UsuarioService {
 
@@ -29,7 +31,17 @@ public class UsuarioService {
     public UsuarioDTO addUsuarioInDB(UsuarioDTO usuarioDTO) {
         System.out.println("Usuario antes de persistir: " + usuarioDTO);
         System.out.println("Contraseña antes de persistir: " + usuarioDTO.getUserPassword());
-        Usuario usuarioGuardado = usuarioRepository.save(usuarioMapper.toEntity(usuarioDTO));
+        Usuario usuarioGuardado = new Usuario();
+        try {
+            usuarioGuardado = usuarioRepository.save(usuarioMapper.toEntity(usuarioDTO));
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getMostSpecificCause().getMessage();
+            if (message != null && message.contains("user_name")) {
+                usuarioGuardado.setUserName("user_name");
+            } else {
+                usuarioGuardado.setUserName("error");
+            }
+        }
         return usuarioMapper.toDTO(usuarioGuardado);
     }
 
@@ -38,20 +50,21 @@ public class UsuarioService {
         for (UsuarioDTO usuario : userList) {
             if (usuario.getUserName().equals(userName)) {
                 if (usuario.getUserPassword().equals(password)) {
-                return true+","+usuario.getRol().getNombreRol();
-            } else {
-                return "false,WRONG_PASSWORD";
+                    return true + "," + usuario.getRol().getNombreRol();
+                } else {
+                    return "false,WRONG_PASSWORD";
+                }
             }
-        }
         }
         return "false,USER_NOT_FOUND";
     }
+
     public boolean validateExistUserName(String userName) {
         List<UsuarioDTO> userList = findAllUsuarios();
         boolean reponse = false;
         for (int i = 0; i < userList.size(); i++) {
-            if(userList.get(i).getUserName().equals(userName)){
-                reponse=true;
+            if (userList.get(i).getUserName().equals(userName)) {
+                reponse = true;
                 break;
             }
         }

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_name"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

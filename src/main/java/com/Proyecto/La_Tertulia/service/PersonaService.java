@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,8 +33,42 @@ public class PersonaService {
     }
 
     public PersonaDTO addPersonaInDB(PersonaDTO personaDTO) {
-        Persona personaGuardada = personaRepository.save(personaMapper.toEntity(personaDTO));
+        Persona personaGuardada = new Persona();
+        try {
+            personaGuardada = personaRepository.save(personaMapper.toEntity(personaDTO));
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getMostSpecificCause().getMessage();
+            if (message != null && message.contains("correo_electronico")) {
+                personaGuardada.setNombre("correo_electronico");
+            } else if (message != null && message.contains("numero_documento")) {
+                personaGuardada.setNombre("numero_documento");
+            }
+        }
         return personaMapper.toDTO(personaGuardada);
+    }
+
+    public PersonaDTO updatePersona(Long id) {
+        Optional<PersonaDTO> existingPersona = findById(id);
+        Persona personaToUpdate = new Persona();
+        personaToUpdate.setDocumentoIdentidad(existingPersona.get().getDocumentoIdentidad());
+        personaToUpdate.setTipoDocumento(existingPersona.get().getTipoDocumento());
+        personaToUpdate.setNombre(existingPersona.get().getNombre());
+        personaToUpdate.setApellido(existingPersona.get().getApellido());
+        personaToUpdate.setNumeroTelefono(existingPersona.get().getNumeroTelefono());
+        personaToUpdate.setCorreo(existingPersona.get().getCorreo());
+        personaToUpdate.setFechaNacimiento(existingPersona.get().getFechaNacimiento());
+        Persona updatedPersona = new Persona();
+        try {
+            updatedPersona = personaRepository.save(personaToUpdate);
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getMostSpecificCause().getMessage();
+            if (message != null && message.contains("correo_electronico")) {
+                personaToUpdate.setNombre("correo_electronico");
+            } else if (message != null && message.contains("numero_documento")) {
+                personaToUpdate.setNombre("numero_documento");
+            }
+        }
+        return personaMapper.toDTO(updatedPersona);
     }
 
     public ResponseEntity<PersonaDTO> fetchPersonaById(Long id) {
@@ -44,7 +80,16 @@ public class PersonaService {
     }
 
     public Optional<PersonaDTO> findById(Long id) {
-        return personaRepository.findById(id).map(persona -> new PersonaDTO(persona.getId(), persona.getDocumentoIdentidad(), persona.getTipoDocumento(), persona.getNombre(), persona.getApellido(),persona.getNumeroTelefono(), persona.getCorreo(), persona.getFechaNacimiento()));
+        return personaRepository.findById(id)
+                .map(persona -> new PersonaDTO(persona.getId(), persona.getDocumentoIdentidad(),
+                        persona.getTipoDocumento(), persona.getNombre(), persona.getApellido(),
+                        persona.getNumeroTelefono(), persona.getCorreo(), persona.getFechaNacimiento()));
     }
 
+    public List<PersonaDTO> findByName(String nombre) {
+        List<Persona> personas = personaRepository.findByName(nombre);
+        return personas.stream()
+                .map(personaMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

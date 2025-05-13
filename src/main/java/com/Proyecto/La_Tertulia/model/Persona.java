@@ -8,13 +8,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "persona")
+@Table(name = "persona", uniqueConstraints = {@UniqueConstraint(columnNames = {"numero_documento", "tipo_documento"}),
+        @UniqueConstraint(columnNames = {"correo_electronico"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class Persona {
 
     @Column(name = "numero_documento", length = 50, nullable = false)
     @Size(min = 3, max = 50)
-    private Long documentoIdentidad;
+    private Long documentoIdentidad; 
 
     @Column(name = "tipo_documento", length = 50, nullable = false)
     @Size(min = 3, max = 30)
