@@ -49,15 +49,11 @@ public class PersonaService {
 
     public PersonaDTO updatePersona(Long id) {
         Optional<PersonaDTO> existingPersona = findById(id);
-        Persona personaToUpdate = new Persona();
-        personaToUpdate.setId(existingPersona.get().getId());
-        personaToUpdate.setDocumentoIdentidad(existingPersona.get().getDocumentoIdentidad());
-        personaToUpdate.setTipoDocumento(existingPersona.get().getTipoDocumento());
-        personaToUpdate.setNombre(existingPersona.get().getNombre());
-        personaToUpdate.setApellido(existingPersona.get().getApellido());
-        personaToUpdate.setNumeroTelefono(existingPersona.get().getNumeroTelefono());
-        personaToUpdate.setCorreo(existingPersona.get().getCorreo());
-        personaToUpdate.setFechaNacimiento(existingPersona.get().getFechaNacimiento());
+        Persona personaToUpdate = new Persona(existingPersona.get().getId(), 
+                existingPersona.get().getDocumentoIdentidad(), existingPersona.get().getTipoDocumento(),
+                existingPersona.get().getNombre(), existingPersona.get().getApellido(),
+                existingPersona.get().getNumeroTelefono(), existingPersona.get().getCorreo(),
+                existingPersona.get().getFechaNacimiento());
         Persona updatedPersona = new Persona();
         try {
             updatedPersona = personaRepository.save(personaToUpdate);
