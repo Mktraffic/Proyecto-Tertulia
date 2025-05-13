@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PersonaDTO {
     private long id;
-    private int documentoIdentidad;
+    private long documentoIdentidad;
     private String tipoDocumento;
     private String nombre;
     private String apellido;

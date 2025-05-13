@@ -22,6 +22,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+  @Column(name = "tipo_producto", nullable = false)
+    private String type ;
+
     @Column(name = "nombre_producto", nullable = false)
     private String name;
 
@@ -36,5 +39,6 @@ public class Product {
 
     @Column(name = "precio_producto", nullable = false)
     private double price;
+  
 
 }

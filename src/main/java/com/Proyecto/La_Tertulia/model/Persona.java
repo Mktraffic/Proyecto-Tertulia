@@ -27,7 +27,7 @@ public class Persona {
 
     @Column(name = "numero_documento", length = 50, nullable = false)
     @Size(min = 3, max = 50)
-    private int documentoIdentidad;
+    private Long documentoIdentidad;
 
     @Column(name = "tipo_documento", length = 50, nullable = false)
     @Size(min = 3, max = 30)

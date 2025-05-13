@@ -15,6 +15,7 @@ public class ProductMapperImplement implements ProductMapper {
         }
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
+        productDTO.setType(product.getType());
         productDTO.setName(product.getName());
         productDTO.setDescripcion_producto(product.getDescripcion_producto());
         productDTO.setPrice(product.getPrice());
@@ -30,6 +31,7 @@ public class ProductMapperImplement implements ProductMapper {
         }
         Product product = new Product();
         product.setId(productDTO.getId());
+        product.setType(productDTO.getType());
         product.setName(productDTO.getName());
         product.setDescripcion_producto(productDTO.getDescripcion_producto());
         product.setPrice(productDTO.getPrice());

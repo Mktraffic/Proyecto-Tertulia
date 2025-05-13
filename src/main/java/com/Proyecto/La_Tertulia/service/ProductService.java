@@ -47,7 +47,7 @@ public class ProductService {
     }
 
     public Optional<ProductDTO> findById(Long id) {
-        return productRepository.findById(id).map(product -> new ProductDTO(product.getId(), product.getName(), product.getDescripcion_producto(),product.getPresentation(),product.getStock(),product.getPrice()));
+        return productRepository.findById(id).map(product -> new ProductDTO(product.getId(),product.getType(), product.getName(), product.getDescripcion_producto(),product.getPresentation(),product.getStock(),product.getPrice()));
     }
     public List<ProductDTO> findAllProductoByName (String nombre) {
         List<ProductDTO> allproducts = findAllProducts();
