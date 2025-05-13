@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Productos</title>
+    <link rel="stylesheet" th:href="@{/css/PeopleManagement.css}">
+</head>
+
+<body>
+    <header class="header">
+        <div class="user-icon">
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+    <main class="main-container">
+        <!--  <div th:replace="~{AdministratorOptions :: amdOptions}"></div>-->
+        <section class="personas-card">
+            <div class="personas-header">
+                <div class="icon-title">
+                    <i class="fas fa-id-badge"></i>
+                    <h2>Productos</h2>
+                </div>
+                <div class="search-add">
+                    <form th:action="@{/searchProduct}" method="get" class="search-form">
+                        <input type="text"  placeholder="nombre Producto" class="search-input">
+                        <button type="submit" class="search-button">🔍</button>
+                    </form>
+
+                    <form th:action="@{/addProduct}" method="get" style="display: inline;">
+                        <button type="submit" class="add-btn" title="Agregar producto">
+                            <span class="plus-icon">+</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código producto</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Presentación</th>
+                        <th>Valor unitario</th>
+                        <th>Editar producto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="producto : ${Productos}">
+                        <td th:text="${producto.id}"></td>
+                        <td th:text="${producto.name}"></td>
+                        <td th:text="${producto.descripcion_producto}"></td>
+                        <td th:text="${producto.presentacion}"></td>
+                        <td th:text="${producto.price}"></td>
+                            <a th:href="@{/modifyProduct}">
+                                <i class="fas fa-pen edit-icon"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+
+</html>

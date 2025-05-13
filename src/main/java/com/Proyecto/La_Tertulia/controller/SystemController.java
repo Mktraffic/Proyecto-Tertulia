@@ -1,5 +1,6 @@
 package com.Proyecto.La_Tertulia.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,11 @@ public class SystemController {
     private UsuarioService usuarioService;
     @Autowired
     private RolService rolService;
-@GetMapping("/login")
+
+    @GetMapping("/login")
     public String mostrarLogin(Model model,
-                               @RequestParam(value = "success", required = false) String success,
-                               @RequestParam(value = "error", required = false) String error) {
+            @RequestParam(value = "success", required = false) String success,
+            @RequestParam(value = "error", required = false) String error) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         if (success != null) {
             model.addAttribute("mensajeExito", success);
@@ -41,6 +43,7 @@ public class SystemController {
         }
         return "Login";
     }
+
     @PostMapping("/loggeo")
     public String procesarLogin(@ModelAttribute UsuarioDTO usuarioDTO, Model model, HttpSession session) {
         try {
@@ -48,7 +51,7 @@ public class SystemController {
                     .validateUserByUserName(usuarioDTO.getUserName(), usuarioDTO.getUserPassword())
                     .split(",");
             boolean isAuthenticated = Boolean.parseBoolean(data[0].trim());
-    
+
             if (!isAuthenticated) {
                 String errorCode = data.length > 1 ? data[1].trim() : "UNKNOWN_ERROR";
                 String mensajeError = "";
@@ -82,6 +85,7 @@ public class SystemController {
         }
         return null;
     }
+
     public String searchPersonByUserName(String user_name) {
         List<UsuarioDTO> userList = usuarioService.findAllUsuarios();
         String nombre = "";
@@ -92,15 +96,17 @@ public class SystemController {
         }
         return nombre;
     }
+
     @GetMapping("/logout")
-public String cerrarSesion(HttpSession session) {
-    session.invalidate();
-    return "redirect:/login";
-}
+    public String cerrarSesion(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
+    }
+
     @GetMapping("/")
     public String mostrarFormularioRegistroUsuarios(Model model,
-                                         @RequestParam(value = "success", required = false) String success,
-                                         @RequestParam(value = "error", required = false) String error) {
+            @RequestParam(value = "success", required = false) String success,
+            @RequestParam(value = "error", required = false) String error) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         if (success != null) {
             model.addAttribute("mensajeExito", success);
@@ -108,23 +114,24 @@ public String cerrarSesion(HttpSession session) {
         if (error != null) {
             model.addAttribute("mensajeError", error);
         }
-        return "UserRegistration";
+        return "AdminRegistration";
     }
-    @PostMapping("/UserRegistration")
+
+    @PostMapping("/AdminRegistration")
     public String userRegister(@ModelAttribute UsuarioDTO usuario, Model model) {
-        if (personaService.findById(usuario.getPersona().getId()).isPresent()) {
+        if (personaService.findById(usuario.getPersona().getDocumentoIdentidad()).isPresent()) {
             model.addAttribute("error", "El documento de identidad ya está registrado.");
             model.addAttribute("usuarioDTO", usuario);
-            return "UserRegistration";
+            return "AdminRegistration";
         }
         if (usuarioService.validateExistUserName(usuario.getUserName())) {
             model.addAttribute("error", "El nombre de usuario ya esta registrado.");
             model.addAttribute("usuarioDTO", usuario);
-            return "UserRegistration";
+            return "AdminRegistration";
         }
         try {
             PersonaDTO persona = new PersonaDTO(
-                    usuario.getPersona().getId(),
+                    usuario.getPersona().getId(),//Esto no debe ir en la vista
                     usuario.getPersona().getDocumentoIdentidad(),
                     usuario.getPersona().getTipoDocumento(),
                     usuario.getPersona().getNombre(),
@@ -134,26 +141,28 @@ public String cerrarSesion(HttpSession session) {
                     usuario.getPersona().getFechaNacimiento());
 
             PersonaDTO nuevaPersona = personaService.addPersonaInDB(persona);
-            String nombreRol = usuario.getRol().getNombreRol();
-        Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
+            String nombreRol = "Administrador";
+            Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
 
-        usuario.setPersona(nuevaPersona);
-        usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
+            usuario.setPersona(nuevaPersona);
+            usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
             usuarioService.addUsuarioInDB(usuario);
-            model.addAttribute("success", "Usuario registrado correctamente.");
+            model.addAttribute("success", "Administrador registrado correctamente.");
             model.addAttribute("usuarioDTO", new UsuarioDTO());
-            return "UserRegistration";
+            return "AdminRegistration";
         } catch (Exception e) {
             model.addAttribute("error", "Ocurrió un error inesperado. Inténtalo de nuevo.");
             model.addAttribute("usuarioDTO", usuario);
-            return "UserRegistration";
+            return "AdminRegistration";
         }
     }
+
     @GetMapping("/dashboardAdm")
     public String administratorOptions(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         return "AdministratorOptions";
     }
+
     @GetMapping("/dashboardSeller")
     public String sellerOptions(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
