@@ -1,5 +1,6 @@
 package com.Proyecto.La_Tertulia.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ public class PersonaService {
 
     public PersonaDTO addPersonaInDB(PersonaDTO personaDTO) {
         Persona personaGuardada = new Persona();
+        if (!personaDTO.getFechaNacimiento().isAfter(LocalDate.now().minusYears(18))) {
         try {
             personaGuardada = personaRepository.save(personaMapper.toEntity(personaDTO));
         } catch (DataIntegrityViolationException e) {
@@ -44,17 +46,20 @@ public class PersonaService {
                 personaGuardada.setNombre("numero_documento");
             }
         }
+        }else {
+            personaGuardada.setNombre("Persona_menor");
+        }
         return personaMapper.toDTO(personaGuardada);
     }
 
-    public PersonaDTO updatePersona(Long id) {
-        Optional<PersonaDTO> existingPersona = findById(id);
-        Persona personaToUpdate = new Persona(existingPersona.get().getId(),
-                existingPersona.get().getDocumentoIdentidad(), existingPersona.get().getTipoDocumento(),
-                existingPersona.get().getNombre(), existingPersona.get().getApellido(),
-                existingPersona.get().getNumeroTelefono(), existingPersona.get().getCorreo(),
-                existingPersona.get().getFechaNacimiento());
+    public PersonaDTO updatePersona(PersonaDTO existingPersona) {
         Persona updatedPersona = new Persona();
+        if (!existingPersona.getFechaNacimiento().isAfter(LocalDate.now().minusYears(18))) {
+            Persona personaToUpdate = new Persona(existingPersona.getId(),
+                existingPersona.getDocumentoIdentidad(), existingPersona.getTipoDocumento(),
+                existingPersona.getNombre(), existingPersona.getApellido(),
+                existingPersona.getNumeroTelefono(), existingPersona.getCorreo(),
+                existingPersona.getFechaNacimiento());
         try {
             updatedPersona = personaRepository.save(personaToUpdate);
         } catch (DataIntegrityViolationException e) {
@@ -64,6 +69,9 @@ public class PersonaService {
             } else if (message != null && message.contains("numero_documento")) {
                 personaToUpdate.setNombre("numero_documento");
             }
+        }
+        }else {
+            updatedPersona.setNombre("Persona_menor");
         }
         return personaMapper.toDTO(updatedPersona);
     }

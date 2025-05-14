@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 public class Persona {
 
     @Id
-    @Column(name = "id_persona", length = 50, nullable = false)
+    @Column(name = "id_persona", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
