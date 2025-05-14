@@ -49,7 +49,7 @@ public class PersonaService {
 
     public PersonaDTO updatePersona(Long id) {
         Optional<PersonaDTO> existingPersona = findById(id);
-        Persona personaToUpdate = new Persona(existingPersona.get().getId(), 
+        Persona personaToUpdate = new Persona(existingPersona.get().getId(),
                 existingPersona.get().getDocumentoIdentidad(), existingPersona.get().getTipoDocumento(),
                 existingPersona.get().getNombre(), existingPersona.get().getApellido(),
                 existingPersona.get().getNumeroTelefono(), existingPersona.get().getCorreo(),
@@ -66,6 +66,18 @@ public class PersonaService {
             }
         }
         return personaMapper.toDTO(updatedPersona);
+    }
+
+    public PersonaDTO createPerson(PersonaDTO person) {
+        PersonaDTO persona = new PersonaDTO();
+        persona.setDocumentoIdentidad(person.getDocumentoIdentidad());
+        persona.setTipoDocumento(person.getTipoDocumento());
+        persona.setNombre(person.getNombre());
+        persona.setApellido(person.getApellido());
+        persona.setNumeroTelefono(person.getNumeroTelefono());
+        persona.setCorreo(person.getCorreo());
+        persona.setFechaNacimiento(person.getFechaNacimiento());
+        return persona;
     }
 
     public ResponseEntity<PersonaDTO> fetchPersonaById(Long id) {

@@ -130,15 +130,7 @@ public class SystemController {
             return "AdminRegistration";
         }
         try {
-            PersonaDTO persona = new PersonaDTO(
-                    usuario.getPersona().getId(),//Esto no debe ir en la vista
-                    usuario.getPersona().getDocumentoIdentidad(),
-                    usuario.getPersona().getTipoDocumento(),
-                    usuario.getPersona().getNombre(),
-                    usuario.getPersona().getApellido(),
-                    usuario.getPersona().getNumeroTelefono(),
-                    usuario.getPersona().getCorreo(),
-                    usuario.getPersona().getFechaNacimiento());
+            PersonaDTO persona = personaService.createPerson(usuario.getPersona());
 
             PersonaDTO nuevaPersona = personaService.addPersonaInDB(persona);
             String nombreRol = "Administrador";
