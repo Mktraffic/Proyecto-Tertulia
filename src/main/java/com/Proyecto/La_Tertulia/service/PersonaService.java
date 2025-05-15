@@ -41,13 +41,15 @@ public class PersonaService {
             String message = e.getMostSpecificCause().getMessage();
             if (message != null && message.contains("correo_electronico")) {
                 personaGuardada.setNombre("correo_electronico");
+                return personaMapper.toDTO(personaGuardada);
             } else if (message != null && message.contains("numero_documento")) {
                 personaGuardada.setNombre("numero_documento");
+                return personaMapper.toDTO(personaGuardada);
             }
         }
         }else {
-            System.out.println("Persona menor de edad");
-            personaGuardada.setNombre("Persona_menor"); 
+            personaGuardada.setNombre("Persona_menor");
+            return personaMapper.toDTO(personaGuardada);
         }
         return personaMapper.toDTO(personaGuardada);
     }
