@@ -62,17 +62,8 @@ public class PersonController {
             return "UserRegistration";
         }
         try {
-            PersonaDTO persona = new PersonaDTO(
-                    usuario.getPersona().getId(),//Esto no debe ir en la vista
-                    usuario.getPersona().getDocumentoIdentidad(),
-                    usuario.getPersona().getTipoDocumento(),
-                    usuario.getPersona().getNombre(),
-                    usuario.getPersona().getApellido(),
-                    usuario.getPersona().getNumeroTelefono(),
-                    usuario.getPersona().getCorreo(),
-                    usuario.getPersona().getFechaNacimiento());
-
-            PersonaDTO nuevaPersona = personaService.addPersonaInDB(persona);
+            PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
+            usuario.setPersona(nuevaPersona);
             String nombreRol = usuario.getRol().getNombreRol();
             Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
 
