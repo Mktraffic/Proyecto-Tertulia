@@ -4,14 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.Proyecto.La_Tertulia.dto.PersonaDTO;
 import com.Proyecto.La_Tertulia.mapper.PersonaMapper;
 import com.Proyecto.La_Tertulia.model.Persona;
@@ -37,7 +34,9 @@ public class PersonaService {
         Persona personaGuardada = new Persona();
         if (!personaDTO.getFechaNacimiento().isAfter(LocalDate.now().minusYears(18))) {
         try {
-            personaGuardada = personaRepository.save(personaMapper.toEntity(personaDTO));
+            Persona persona = personaMapper.toEntity(personaDTO);
+            persona.setId(null);
+            personaGuardada = personaRepository.save(persona);
         } catch (DataIntegrityViolationException e) {
             String message = e.getMostSpecificCause().getMessage();
             if (message != null && message.contains("correo_electronico")) {
@@ -47,7 +46,8 @@ public class PersonaService {
             }
         }
         }else {
-            personaGuardada.setNombre("Persona_menor");
+            System.out.println("Persona menor de edad");
+            personaGuardada.setNombre("Persona_menor"); 
         }
         return personaMapper.toDTO(personaGuardada);
     }
@@ -76,18 +76,6 @@ public class PersonaService {
         return personaMapper.toDTO(updatedPersona);
     }
 
-    public PersonaDTO createPerson(PersonaDTO person) {
-        PersonaDTO persona = new PersonaDTO();
-        persona.setDocumentoIdentidad(person.getDocumentoIdentidad());
-        persona.setTipoDocumento(person.getTipoDocumento());
-        persona.setNombre(person.getNombre());
-        persona.setApellido(person.getApellido());
-        persona.setNumeroTelefono(person.getNumeroTelefono());
-        persona.setCorreo(person.getCorreo());
-        persona.setFechaNacimiento(person.getFechaNacimiento());
-        return persona;
-    }
-
     public ResponseEntity<PersonaDTO> fetchPersonaById(Long id) {
         Optional<Persona> persona = personaRepository.findById(id);
         if (persona.isEmpty()) {
@@ -103,8 +91,8 @@ public class PersonaService {
                         persona.getNumeroTelefono(), persona.getCorreo(), persona.getFechaNacimiento()));
     }
 
-    public List<PersonaDTO> findByName(String nombre) {
-        List<Persona> personas = personaRepository.findByName(nombre);
+    public List<PersonaDTO> findByNombre(String nombre) {
+        List<Persona> personas = personaRepository.findByNombre(nombre);
         return personas.stream()
                 .map(personaMapper::toDTO)
                 .collect(Collectors.toList());

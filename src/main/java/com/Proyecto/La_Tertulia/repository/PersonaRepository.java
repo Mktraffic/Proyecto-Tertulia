@@ -8,6 +8,6 @@ import com.Proyecto.La_Tertulia.model.Persona;
 
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona, Long> {
-    List<Persona> findByName(String nombre);
+    List<Persona> findByNombre(String nombre);
 }
 
