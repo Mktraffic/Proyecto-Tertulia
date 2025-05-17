@@ -33,21 +33,21 @@ public class PersonaService {
     public PersonaDTO addPersonaInDB(PersonaDTO personaDTO) {
         Persona personaGuardada = new Persona();
         if (!personaDTO.getFechaNacimiento().isAfter(LocalDate.now().minusYears(18))) {
-        try {
-            Persona persona = personaMapper.toEntity(personaDTO);
-            persona.setId(null);
-            personaGuardada = personaRepository.save(persona);
-        } catch (DataIntegrityViolationException e) {
-            String message = e.getMostSpecificCause().getMessage();
-            if (message != null && message.contains("correo_electronico")) {
-                personaGuardada.setNombre("correo_electronico");
-                return personaMapper.toDTO(personaGuardada);
-            } else if (message != null && message.contains("numero_documento")) {
-                personaGuardada.setNombre("numero_documento");
-                return personaMapper.toDTO(personaGuardada);
+            try {
+                Persona persona = personaMapper.toEntity(personaDTO);
+                persona.setId(null);
+                personaGuardada = personaRepository.save(persona);
+            } catch (DataIntegrityViolationException e) {
+                String message = e.getMostSpecificCause().getMessage();
+                if (message != null && message.contains("correo_electronico")) {
+                    personaGuardada.setNombre("correo_electronico");
+                    return personaMapper.toDTO(personaGuardada);
+                } else if (message != null && message.contains("numero_documento")) {
+                    personaGuardada.setNombre("numero_documento");
+                    return personaMapper.toDTO(personaGuardada);
+                }
             }
-        }
-        }else {
+        } else {
             personaGuardada.setNombre("Persona_menor");
             return personaMapper.toDTO(personaGuardada);
         }
@@ -58,45 +58,74 @@ public class PersonaService {
         Persona updatedPersona = new Persona();
         if (!existingPersona.getFechaNacimiento().isAfter(LocalDate.now().minusYears(18))) {
             Persona personaToUpdate = new Persona(existingPersona.getId(),
-                existingPersona.getDocumentoIdentidad(), existingPersona.getTipoDocumento(),
-                existingPersona.getNombre(), existingPersona.getApellido(),
-                existingPersona.getNumeroTelefono(), existingPersona.getCorreo(),
-                existingPersona.getFechaNacimiento());
-        try {
-            updatedPersona = personaRepository.save(personaToUpdate);
-        } catch (DataIntegrityViolationException e) {
-            String message = e.getMostSpecificCause().getMessage();
-            if (message != null && message.contains("correo_electronico")) {
-                personaToUpdate.setNombre("correo_electronico");
-            } else if (message != null && message.contains("numero_documento")) {
-                personaToUpdate.setNombre("numero_documento");
+                    existingPersona.getDocumentoIdentidad(), existingPersona.getTipoDocumento(),
+                    existingPersona.getNombre(), existingPersona.getApellido(), existingPersona.isEstado(),
+                    existingPersona.getNumeroTelefono(), existingPersona.getCorreo(),
+                    existingPersona.getFechaNacimiento());
+            try {
+                updatedPersona = personaRepository.save(personaToUpdate);
+            } catch (DataIntegrityViolationException e) {
+                String message = e.getMostSpecificCause().getMessage();
+                if (message != null && message.contains("correo_electronico")) {
+                    personaToUpdate.setNombre("correo_electronico");
+                } else if (message != null && message.contains("numero_documento")) {
+                    personaToUpdate.setNombre("numero_documento");
+                }
             }
-        }
-        }else {
+        } else {
             updatedPersona.setNombre("Persona_menor");
         }
         return personaMapper.toDTO(updatedPersona);
     }
-
+//ESTO NO LO UTILIZA EL CONTROLADOR ES PARA LAS PRUEBAS UNITARIAS
     public ResponseEntity<PersonaDTO> fetchPersonaById(Long id) {
         Optional<Persona> persona = personaRepository.findById(id);
         if (persona.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } else if (persona.get().isEstado() == false) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(personaMapper.toDTO(persona.get()), HttpStatus.OK);
     }
-
+//OJO PARA VALIDAD EN CONTROLLER HACER FINDBYID.ISPRESENT() SI ES FALSE ES QUE NO EXISTE
+//LA PERSONA O TIENE EL ESTADO INACTIVO
     public Optional<PersonaDTO> findById(Long id) {
-        return personaRepository.findById(id)
-                .map(persona -> new PersonaDTO(persona.getId(), persona.getDocumentoIdentidad(),
-                        persona.getTipoDocumento(), persona.getNombre(), persona.getApellido(),
-                        persona.getNumeroTelefono(), persona.getCorreo(), persona.getFechaNacimiento()));
+        Optional<Persona> foundPersona = personaRepository.findById(id);
+    if (foundPersona.isPresent() && foundPersona.get().isEstado()) {
+        return foundPersona.map(persona -> personaMapper.toDTO(persona));
     }
+    return Optional.empty();
+       
+    }
+   
+    public PersonaDTO borrarPersonaInDB(Long id) {
+        Optional<PersonaDTO> personaOptional = findById(id);
+        if (personaOptional.isPresent()) {
+        PersonaDTO personaDTO = personaOptional.get();
+        personaDTO.setEstado(false);
+        Persona persona = personaMapper.toEntity(personaDTO);
+        Persona personaBorrada = personaRepository.save(persona);
+        return personaMapper.toDTO(personaBorrada);
+    }
+    return null;
+       
+    }
+      public PersonaDTO habiliarPersonaInDB(Long id) {
+        Optional<Persona> personaOptional = personaRepository.findById(id);
+        if (personaOptional.isPresent()&& !personaOptional.get().isEstado()) {
+           Persona persona = personaOptional.get();
+           persona.setEstado(true); 
+           Persona personaHabilitada = personaRepository.save(persona);
+           return personaMapper.toDTO(personaHabilitada);
+        }
+        return null;
+      }
 
-    public List<PersonaDTO> findByNombre(String nombre) {
-        List<Persona> personas = personaRepository.findByNombre(nombre);
-        return personas.stream()
-                .map(personaMapper::toDTO)
-                .collect(Collectors.toList());
-    }
+  public List<PersonaDTO> findByNombre(String nombre) {
+    List<Persona> personas = personaRepository.findByNombre(nombre);
+    return personas.stream()
+            .filter(Persona::isEstado) 
+            .map(personaMapper::toDTO)
+            .collect(Collectors.toList());
+}
 }

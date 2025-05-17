@@ -42,6 +42,9 @@ public class Persona {
     @Column(name = "apellido", length = 100, nullable = false)
     @Size(min = 3, max = 100)
     private String apellido;
+     @Column(name = "estado", length = 15, nullable = false)
+    @Size(min = 2, max = 15)
+    private boolean estado;
 
     @Column(name = "numero_telefono", length = 20, nullable = false)
     @Size(min = 3, max = 20)

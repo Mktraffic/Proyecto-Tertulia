@@ -15,6 +15,7 @@ public class PersonaDTO {
     private String tipoDocumento;
     private String nombre;
     private String apellido;
+    private boolean estado;
     private long numeroTelefono;
     private String correo;
     private LocalDate fechaNacimiento;
