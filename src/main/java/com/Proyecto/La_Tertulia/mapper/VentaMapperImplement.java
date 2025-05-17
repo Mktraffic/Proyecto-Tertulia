@@ -1,14 +1,16 @@
 package com.Proyecto.La_Tertulia.mapper;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
-import com.Proyecto.La_Tertulia.dto.ProductDTO;
-import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
+import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.model.Venta;
-import com.Proyecto.La_Tertulia.model.Product;
-import com.Proyecto.La_Tertulia.model.Usuario;
+import com.Proyecto.La_Tertulia.model.DetalleVenta;
+import com.Proyecto.La_Tertulia.repository.UsuarioRepository;
 
 @Component
 public class VentaMapperImplement implements VentaMapper {
@@ -17,42 +19,59 @@ public class VentaMapperImplement implements VentaMapper {
     private UsuarioMapper usuarioMapper;
 
     @Autowired
-    private ProductMapper productMapper;
+    private DetalleVentaMapper detalleVentaMapper;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
     public VentaDTO toDTO(Venta venta) {
-        VentaDTO ventaDTO = new VentaDTO();
-        if (venta != null) {
-            ventaDTO.setId(venta.getId());
-            ventaDTO.setProducto(productMapper.toDTO(venta.getProducto()));
-            ventaDTO.setNombreProducto(venta.getNombreProducto());
-            ventaDTO.setPrecio(venta.getPrecio());
-            ventaDTO.setFechaVenta(venta.getFechaVenta());
-            ventaDTO.setCantidad(venta.getCantidad());
-            ventaDTO.setVendedor(venta.getVendedor() != null ? usuarioMapper.toDTO(venta.getVendedor()) : null);
-            ventaDTO.setTotalVenta(venta.getTotalVenta());
-            ventaDTO.setNombreCliente(venta.getNombreCliente());
-            ventaDTO.setNumeroDocumentoCliente(venta.getNumeroDocumentoCliente());
-
+        if (venta == null) {
+            return null;
         }
-        return null;
+
+        VentaDTO dto = new VentaDTO();
+        dto.setId(venta.getId());
+        dto.setFechaVenta(venta.getFechaVenta());
+        dto.setNombreCliente(venta.getNombreCliente());
+        dto.setNumeroDocumentoCliente(venta.getNumeroDocumentoCliente());
+        dto.setTotalVenta(venta.getTotalVenta());
+        dto.setVendedor(usuarioMapper.toDTO(venta.getVendedor()));
+
+        List<DetalleVentaDTO> detalles = venta.getDetalles().stream()
+                .map(detalleVentaMapper::toDTO)
+                .collect(Collectors.toList());
+        dto.setDetalles(detalles);
+
+        return dto;
     }
 
     @Override
-    public Venta toEntity(VentaDTO ventaDTO) {
-        Venta venta = new Venta();
-        if (ventaDTO != null) {
-            venta.setId(ventaDTO.getId());
-            venta.setProducto(productMapper.toEntity(ventaDTO.getProducto()));
-            venta.setNombreProducto(ventaDTO.getNombreProducto());
-            venta.setPrecio(ventaDTO.getPrecio());
-            venta.setFechaVenta(ventaDTO.getFechaVenta());
-            venta.setCantidad(ventaDTO.getCantidad());
-            venta.setVendedor(ventaDTO.getVendedor() != null ? usuarioMapper.toEntity(ventaDTO.getVendedor()) : null);
-            venta.setTotalVenta(ventaDTO.getTotalVenta());
-            venta.setNombreCliente(ventaDTO.getNombreCliente());
-            venta.setNumeroDocumentoCliente(ventaDTO.getNumeroDocumentoCliente());
+    public Venta toEntity(VentaDTO dto) {
+        if (dto == null) {
+            return null;
         }
-        return null;
+
+        Venta venta = new Venta();
+        venta.setId(dto.getId());
+        venta.setFechaVenta(dto.getFechaVenta());
+        venta.setNombreCliente(dto.getNombreCliente());
+        venta.setNumeroDocumentoCliente(dto.getNumeroDocumentoCliente());
+        venta.setTotalVenta(dto.getTotalVenta());
+
+        // Se asume que el vendedor ya está creado
+        venta.setVendedor(usuarioRepository.findById(dto.getVendedor().getId())
+                .orElseThrow(() -> new RuntimeException("Vendedor no encontrado")));
+
+        List<DetalleVenta> detalles = dto.getDetalles().stream()
+                .map(detalleVentaDTO -> {
+                    DetalleVenta detalle = detalleVentaMapper.toEntity(detalleVentaDTO);
+                    detalle.setVenta(venta); // importante para la relación bidireccional
+                    return detalle;
+                })
+                .collect(Collectors.toList());
+
+        venta.setDetalles(detalles);
+        return venta;
     }
 }
