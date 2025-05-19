@@ -90,4 +90,12 @@ public class UsuarioService {
         }
         return userList;
     }
+
+    public UsuarioDTO findUsuarioById(Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario != null) {
+            return usuarioMapper.toDTO(usuario);
+        }
+        return null;
+    }
 }

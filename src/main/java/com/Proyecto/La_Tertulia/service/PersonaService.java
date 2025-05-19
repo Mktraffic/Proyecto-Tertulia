@@ -77,7 +77,8 @@ public class PersonaService {
         }
         return personaMapper.toDTO(updatedPersona);
     }
-//ESTO NO LO UTILIZA EL CONTROLADOR ES PARA LAS PRUEBAS UNITARIAS
+
+    // ESTO NO LO UTILIZA EL CONTROLADOR ES PARA LAS PRUEBAS UNITARIAS
     public ResponseEntity<PersonaDTO> fetchPersonaById(Long id) {
         Optional<Persona> persona = personaRepository.findById(id);
         if (persona.isEmpty()) {
@@ -87,45 +88,53 @@ public class PersonaService {
         }
         return new ResponseEntity<>(personaMapper.toDTO(persona.get()), HttpStatus.OK);
     }
-//OJO PARA VALIDAD EN CONTROLLER HACER FINDBYID.ISPRESENT() SI ES FALSE ES QUE NO EXISTE
-//LA PERSONA O TIENE EL ESTADO INACTIVO
+
+    // OJO PARA VALIDAD EN CONTROLLER HACER FINDBYID.ISPRESENT() SI ES FALSE ES QUE
+    // NO EXISTE
+    // LA PERSONA O TIENE EL ESTADO INACTIVO
     public Optional<PersonaDTO> findById(Long id) {
         Optional<Persona> foundPersona = personaRepository.findById(id);
-    if (foundPersona.isPresent() && foundPersona.get().isEstado()) {
-        return foundPersona.map(persona -> personaMapper.toDTO(persona));
+        if (foundPersona.isPresent() && foundPersona.get().isEstado()) {
+            return foundPersona.map(persona -> personaMapper.toDTO(persona));
+        }
+        return Optional.empty();
+
     }
-    return Optional.empty();
-       
-    }
-   
+
     public PersonaDTO borrarPersonaInDB(Long id) {
         Optional<PersonaDTO> personaOptional = findById(id);
         if (personaOptional.isPresent()) {
-        PersonaDTO personaDTO = personaOptional.get();
-        personaDTO.setEstado(false);
-        Persona persona = personaMapper.toEntity(personaDTO);
-        Persona personaBorrada = personaRepository.save(persona);
-        return personaMapper.toDTO(personaBorrada);
-    }
-    return null;
-       
-    }
-      public PersonaDTO habiliarPersonaInDB(Long id) {
-        Optional<Persona> personaOptional = personaRepository.findById(id);
-        if (personaOptional.isPresent()&& !personaOptional.get().isEstado()) {
-           Persona persona = personaOptional.get();
-           persona.setEstado(true); 
-           Persona personaHabilitada = personaRepository.save(persona);
-           return personaMapper.toDTO(personaHabilitada);
+            PersonaDTO personaDTO = personaOptional.get();
+            personaDTO.setEstado(false);
+            Persona persona = personaMapper.toEntity(personaDTO);
+            Persona personaBorrada = personaRepository.save(persona);
+            return personaMapper.toDTO(personaBorrada);
         }
         return null;
-      }
 
-  public List<PersonaDTO> findByNombre(String nombre) {
-    List<Persona> personas = personaRepository.findByNombre(nombre);
-    return personas.stream()
-            .filter(Persona::isEstado) 
-            .map(personaMapper::toDTO)
-            .collect(Collectors.toList());
-}
+    }
+
+    public PersonaDTO habiliarPersonaInDB(Long id) {
+        Optional<Persona> personaOptional = personaRepository.findById(id);
+        if (personaOptional.isPresent() && !personaOptional.get().isEstado()) {
+            Persona persona = personaOptional.get();
+            persona.setEstado(true);
+            Persona personaHabilitada = personaRepository.save(persona);
+            return personaMapper.toDTO(personaHabilitada);
+        }
+        return null;
+    }
+
+    public List<PersonaDTO> findByNombre(String nombreCompleto) {
+        List<Persona> personas = personaRepository.findAll();
+        String nombreBuscado = nombreCompleto.trim().toLowerCase();
+        return personas.stream()
+                .filter(Persona::isEstado)
+                .filter(persona -> (persona.getNombre() + " " + persona.getApellido())
+                        .trim()
+                        .toLowerCase()
+                        .equals(nombreBuscado))
+                .map(personaMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }
