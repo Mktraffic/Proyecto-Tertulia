@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Opciones administrador</title>
     <link rel="stylesheet" th:href="@{/css/StylesAdmOptions.css}" />
 </head>
+
 <body>
     <div th:fragment="amdOptions">
-    <div class="sidebar">
-        <div class="logo">
-            <img th:src="@{/images/logo-tertulia.png}" alt="Logo La Tertulia" width="80" height="80">
-            <h2>LA TERTULIA LICORERA</h2>
+        <div class="sidebar">
+            <div class="logo">
+                <img th:src="@{/images/logo-tertulia.png}" alt="Logo La Tertulia" width="80" height="80">
+                <h2>LA TERTULIA LICORERA</h2>
+            </div>
+            <nav class="menu">
+                <a th:href="@{/managePerson}">
+                    <button class="menu-item">Gestionar Persona</button>
+                </a>
+                <a th:href="@{/productManager}">
+                    <button class="menu-item">Gestionar Producto</button>
+                </a>
+                <button class="menu-item">Registrar compra</button>
+                <button class="menu-item">Gestionar venta</button>
+                <a th:href="@{/logout}">
+                    <button class="menu-item">Cerrar sesion</button>
+                </a>
+            </nav>
         </div>
-        <nav class="menu">
-            <a th:href="@{/managePerson}">
-            <button class="menu-item">Gestionar Persona</button>
-             </a>
-             <a th:href="@{/productManager}">
-            <button class="menu-item">Gestionar Producto</button>
-             </a>
-            <button class="menu-item">Registrar compra</button>
-            <button class="menu-item">Gestionar venta</button>
-            <a th:href="@{/logout}">
-            <button class="menu-item">Cerrar sesion</button>
-            </a>
-        </nav>
     </div>
-
     <div class="main-content">
         <section class="welcome-section">
-            <h1>¡Bienvenido, <span th:text="${usuarioDTO.userName}">Usuario</span>!</h1>
+            <h1>Bienvenido, <span th:text="${usuarioDTO != null} ? ${usuarioDTO.userName} : 'Usuario'">Usuario</span>!</h1>
             <p>Selecciona el modulo a gestionar.</p>
         </section>
     </div>
-    </div>
+
 </body>
+
 </html>

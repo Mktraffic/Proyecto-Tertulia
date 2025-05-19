@@ -31,17 +31,6 @@ body {
     margin-bottom: 20px;
 }
 
-.logo-image {
-    width: 100px;
-    height: auto;
-    margin-bottom: 10px;
-}
-
-.logo h2 {
-    font-size: 18px;
-    margin: 0;
-}
-
 .menu {
     display: flex;
     flex-direction: column;
@@ -80,12 +69,6 @@ body {
     align-items: center;
 }
 
-.user-icon svg {
-    width: 40px;
-    height: 40px;
-    color: #444;
-}
-
 .welcome-section {
     background-color: #e8dddd;
     margin: 20px;
@@ -102,32 +85,4 @@ body {
 .welcome-section p {
     font-size: 18px;
     color: #333;
-}
-.toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-    min-width: 250px;
-}
-
-.alert {
-    padding: 12px 20px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    font-family: Arial, sans-serif;
-}
-.alert-success {
-    color: green;
-    background-color: #d4edda;
-    padding: 10px;
-    border-radius: 4px;
-}
-
-.alert-danger {
-    color: red;
-    background-color: #f8d7da;
-    padding: 10px;
-    border-radius: 4px;
 }

@@ -9,6 +9,7 @@ import com.Proyecto.La_Tertulia.mapper.UsuarioMapper;
 import com.Proyecto.La_Tertulia.model.Usuario;
 import com.Proyecto.La_Tertulia.repository.UsuarioRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,5 +71,23 @@ public class UsuarioService {
         }
         return reponse;
     }
+    public ArrayList<UsuarioDTO> findUserByNameOrID(String id) {
+        ArrayList<UsuarioDTO> userList = new ArrayList<>();
+        List<UsuarioDTO> usuarioDTOs = findAllUsuarios();
+        for (UsuarioDTO usuarioDTO : usuarioDTOs) {
+            if (id.matches("\\d+")) {
+                long idAux = Long.parseLong(id);
+                if (usuarioDTO.getPersona().getId() == idAux) {
+                    userList.add(usuarioDTO);
+                    break;
+                }
+            } else {
+                if (usuarioDTO.getPersona().getNombre().equals(id)) {
+                    userList.add(usuarioDTO);
+                }
+            }
 
+        }
+        return userList;
+    }
 }

@@ -129,14 +129,11 @@ public class SystemController {
             return "AdminRegistration";
         }
         try {
-
+            usuario.getPersona().setEstado(true);
             PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
-
             usuario.setPersona(nuevaPersona);
-            
             String nombreRol = "Administrador";
             Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
-
             usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
             usuarioService.addUsuarioInDB(usuario);
             model.addAttribute("success", "Administrador registrado correctamente.");

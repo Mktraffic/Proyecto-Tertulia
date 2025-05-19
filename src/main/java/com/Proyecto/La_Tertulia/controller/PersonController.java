@@ -19,6 +19,9 @@ import com.Proyecto.La_Tertulia.service.RolService;
 import com.Proyecto.La_Tertulia.service.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
 @Controller
 public class PersonController {
     @Autowired
@@ -28,14 +31,22 @@ public class PersonController {
     @Autowired
     private RolService rolService;
 
-     @GetMapping("/managePerson")
+    @GetMapping("/managePerson")
     public String chargeUsersToManage(Model model, HttpSession session) {
         List<UsuarioDTO> usuarios = usuarioService.findAllUsuarios();
         model.addAttribute("Usuarios", usuarios);
-       // UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");
-       // model.addAttribute("usuarioDTO", usuarioDTO);
+        UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");
+        model.addAttribute("usuarioDTO", usuarioDTO);
         return "PeopleManagement";
     }
+    @PostMapping("/searchPerson")
+    public String postMethodName(@RequestParam("nombrePersona") String nombre,Model model) {
+        List<UsuarioDTO> usuarios = usuarioService.findUserByNameOrID(nombre);
+         model.addAttribute("Usuarios",usuarios);
+        return "PeopleManagement";
+    }
+    
+
     @GetMapping("/addPerson")
     public String addPerson(Model model,
             @RequestParam(value = "success", required = false) String success,
@@ -49,7 +60,8 @@ public class PersonController {
         }
         return "UserRegistration";
     }
-     @PostMapping("/UserRegistration")
+
+    @PostMapping("/UserRegistration")
     public String userRegister(@ModelAttribute UsuarioDTO usuario, Model model) {
         if (personaService.findById(usuario.getPersona().getDocumentoIdentidad()).isPresent()) {
             model.addAttribute("error", "El documento de identidad ya está registrado.");
@@ -69,7 +81,7 @@ public class PersonController {
 
             usuario.setPersona(nuevaPersona);
             usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
-            if(nombreRol.equals("Proveedor")){
+            if (nombreRol.equals("Proveedor")) {
                 usuario.setUserName(null);
                 usuario.setUserPassword(null);
             }
