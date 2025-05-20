@@ -9,76 +9,80 @@
 </head>
 
 <body>
+
     <div class="container">
-        <div class="sidebar" th:replace="AdministratorOptions :: amdOptions"></div>
-        <div class="main-content">
+        <div th:replace="AdministratorOptions :: amdOptions"></div>
+        <section class="personas-card">
             <header class="header">
                 <div class="user-icon">
                     <i class="fas fa-user-circle"></i>
                 </div>
             </header>
-            <section class="personas-card">
-                <div class="personas-header">
-                    <div class="icon-title">
-                        <i class="fas fa-id-badge"></i>
-                        <h2>Personas</h2>
-                    </div>
-                    <div class="search-add">
-                        <form th:action="@{/searchPerson}" method="post">
-                            <input type="text" name="nombrePersona" placeholder="Nombre persona" required
-                                title="Ingrese el nombre o el id de la persona a buscar">
-                            <button type="submit" class="search-button">🔍</button>
-
-                        </form>
-
-                        <form th:action="@{/addPerson}" method="get" style="display: inline;">
-                            <button type="submit" class="add-btn" title="Agregar persona">
-                                <span class="plus-icon">+</span>
-                            </button>
-                        </form>
-                    </div>
+            <div class="personas-header">
+                <div class="icon-title">
+                    <i class="fas fa-id-badge"></i>
+                    <h2>Personas</h2>
                 </div>
+                <div class="search-add">
+                    <form th:action="@{/searchPerson}" method="post">
+                        <input type="text" name="nombrePersona" placeholder="Nombre persona" required
+                            title="Ingrese el nombre o el id de la persona a buscar">
+                        <button type="submit" class="search-button" title="Buscar">🔍</button>
+                    </form>
+                    <form th:action="@{/managePerson}" method="get">
+                        <button type="submit" class="search-button" title="Refrescar">🔄</button>
+                    </form>
+                    <form th:action="@{/addPerson}" method="get" style="display: inline;">
+                        <button type="submit" class="search-button" title="Agregar">
+                            <span class="plus-icon">+</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Apellido</th>
-                            <th>Número documento</th>
-                            <th>Número celular</th>
-                            <th>Correo electrónico</th>
-                            <th>Rol</th>
-                            <th>Editar persona</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="usuario : ${Usuarios}">
-                            <td th:text="${usuario.persona.id}"></td>
-                            <td th:text="${usuario.persona.nombre}"></td>
-                            <td th:text="${usuario.persona.apellido}"></td>
-                            <td th:text="${usuario.persona.documentoIdentidad}"></td>
-                            <td th:text="${usuario.persona.numeroTelefono}"></td>
-                            <td>
-                                <a th:href="|mailto:${usuario.persona.correo}|" th:text="${usuario.persona.correo}"></a>
-                            </td>
-                            <td th:text="${usuario.rol.nombreRol}"></td>
-                            <td>
-                                <button class="edit-btn" th:attr="data-id=${usuario.persona.id},
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Número documento</th>
+                        <th>Número celular</th>
+                        <th>Correo electrónico</th>
+                        <th>Rol</th>
+                        <th>Editar persona</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="usuario : ${Usuarios}">
+                        <td th:text="${usuario.persona.id}"></td>
+                        <td th:text="${usuario.persona.nombre}"></td>
+                        <td th:text="${usuario.persona.apellido}"></td>
+                        <td th:text="${usuario.persona.documentoIdentidad}"></td>
+                        <td th:text="${usuario.persona.numeroTelefono}"></td>
+                        <td>
+                            <a th:href="|mailto:${usuario.persona.correo}|" th:text="${usuario.persona.correo}"></a>
+                        </td>
+                        <td th:text="${usuario.rol.nombreRol}"></td>
+                        <td>
+                            <button class="edit-btn" th:attr="data-id=${usuario.persona.id},
                                     data-nombre=${usuario.persona.nombre},
-                                    data-documento=${usuario.persona.documentoIdentidad},
+                                    data-apellido=${usuario.persona.apellido},
                                     data-telefono=${usuario.persona.numeroTelefono},
                                     data-correo=${usuario.persona.correo},
-                                    data-rol=${usuario.rol.nombreRol}" onclick="openModal(this)">
-                                    <i class="fas fa-pen edit-icon"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-        </div>
-        <div th:replace="ModalModifyPerson :: modalEdit"></div>
+                                    data-rol=${usuario.rol.nombreRol},
+                                    data-userName=${usuario.userName},
+                                    data-password=${usuario.userPassword},
+                                    data-state=${usuario.persona.estado}" onclick="openModal(this)" title="Modificar">
+                                <i class="fas fa-pen edit-icon"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <div th:replace="ModalModifyPerson :: modalEdit"></div>
     </div>
 </body>
 

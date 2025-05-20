@@ -17,7 +17,7 @@ body {
     padding: 20px;
     overflow-x: auto;
 }
-.user-icon i {
+.product-icon i {
     font-size: 30px;
     color: white;
 }
@@ -28,16 +28,15 @@ body {
     height: 100vh;
     width: 100vw;
 }
-.personas-card {
+.product-card {
     background-color: #f2eaea;
     border-radius: 10px;
     height: 100vh;
     width: 100vw;
     padding: 20px;
-    padding-right: 2opx;
 }
 
-.personas-header {
+.product-header {
     display: flex;
     justify-content: space-between;
     align-items: center;

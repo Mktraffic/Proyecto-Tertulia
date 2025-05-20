@@ -62,3 +62,18 @@
 .modal-content button:hover {
     opacity: 0.9;
 }
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input, select {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

@@ -1,11 +1,13 @@
 function openModal(button) {
     document.getElementById('edit-id').value = button.getAttribute('data-id');
     document.getElementById('edit-nombre').value = button.getAttribute('data-nombre');
-    document.getElementById('edit-documento').value = button.getAttribute('data-documento');
+   document.getElementById('edit-apellido').value = button.getAttribute('data-apellido');
     document.getElementById('edit-telefono').value = button.getAttribute('data-telefono');
     document.getElementById('edit-correo').value = button.getAttribute('data-correo');
     document.getElementById('edit-rol').value = button.getAttribute('data-rol');
-
+    document.getElementById('edit-userName').value = button.getAttribute('data-userName');
+    document.getElementById('edit-password').value = button.getAttribute('data-password');
+     document.getElementById('edit-state').value = button.getAttribute('data-state');
     document.getElementById('editModal').style.display = 'block';
 }
 

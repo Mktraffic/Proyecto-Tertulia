@@ -19,7 +19,6 @@ import com.Proyecto.La_Tertulia.service.RolService;
 import com.Proyecto.La_Tertulia.service.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -74,6 +73,7 @@ public class PersonController {
             return "UserRegistration";
         }
         try {
+            usuario.getPersona().setEstado(true);
             PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
             usuario.setPersona(nuevaPersona);
             String nombreRol = usuario.getRol().getNombreRol();
@@ -95,4 +95,20 @@ public class PersonController {
             return "UserRegistration";
         }
     }
+    @PostMapping("/updatePerson")
+     public String updatePerson(@ModelAttribute UsuarioDTO usuario, Model model) {
+        try{
+            PersonaDTO personUpdate = personaService.updatePersona(usuario.getPersona());
+            usuario.setPersona(personUpdate);
+            String password = usuario.getUserPassword();
+            usuario.setUserPassword(password);
+            String nombreRol = usuario.getRol().getNombreRol();
+            usuario.getRol().setNombreRol(nombreRol);
+        } catch (Exception e) {
+            model.addAttribute("error", "Ocurrió un error inesperado. Inténtalo de nuevo.");
+            model.addAttribute("usuarioDTO", usuario);
+            return "redirect:/managePerson";
+        }
+        return "redirect:/managePerson";
+     }
 }

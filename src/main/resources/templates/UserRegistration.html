@@ -9,15 +9,7 @@
 </head>
 
 <body>
-    <div class="toast-container">
-        <div id="success" th:if="${success}" class="alert alert-success">
-            <i class="fas fa-check-circle me-2"></i> <span th:text="${success}"></span>
-        </div>
-
-        <div id="error" th:if="${error}" class="alert alert-danger">
-            <i class="fas fa-exclamation-circle me-2"></i> <span th:text="${error}"></span>
-        </div>
-    </div>
+    <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
         <div class="header">
             <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"

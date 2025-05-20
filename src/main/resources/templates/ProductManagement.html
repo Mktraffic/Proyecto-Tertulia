@@ -4,31 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Productos</title>
-    <link rel="stylesheet" th:href="@{/css/PeopleManagement.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/ProductManagement.css}">
 </head>
 
 <body>
-    <header class="header">
-        <div class="user-icon">
-            <i class="fas fa-user-circle"></i>
-        </div>
-    </header>
-    <main class="main-container">
-        <!--  <div th:replace="~{AdministratorOptions :: amdOptions}"></div>-->
-        <section class="personas-card">
-            <div class="personas-header">
+    <div class="container">
+        <div th:replace="AdministratorOptions :: amdOptions"></div>
+        <section class="product-card">
+            <header class="header">
+                <div class="product-icon">
+                    <i class="fas fa-beer"></i>
+                </div>
+            </header>
+            <div class="product-header">
                 <div class="icon-title">
-                    <i class="fas fa-id-badge"></i>
+                    <i class="fas fa-wine-bottle"></i>
                     <h2>Productos</h2>
                 </div>
                 <div class="search-add">
-                    <form th:action="@{/searchProduct}" method="get" class="search-form">
-                        <input type="text"  placeholder="nombre Producto" class="search-input">
-                        <button type="submit" class="search-button">🔍</button>
+                    <form th:action="@{/searchProduct}" method="get">
+                        <input type="text" name="nombreProducto" placeholder="Nombre Producto" required
+                            title="Ingrese el nombre o código del producto a buscar">
+                        <button type="submit" class="search-button" title="Buscar">🔍</button>
                     </form>
-
+                    <form th:action="@{/manageProduct}" method="get">
+                        <button type="submit" class="search-button" title="Refrescar">🔄</button>
+                    </form>
                     <form th:action="@{/addProduct}" method="get" style="display: inline;">
-                        <button type="submit" class="add-btn" title="Agregar producto">
+                        <button type="submit" class="search-button" title="Añadir">
                             <span class="plus-icon">+</span>
                         </button>
                     </form>
@@ -53,15 +57,13 @@
                         <td th:text="${producto.descripcion_producto}"></td>
                         <td th:text="${producto.presentacion}"></td>
                         <td th:text="${producto.price}"></td>
-                            <a th:href="@{/modifyProduct}">
-                                <i class="fas fa-pen edit-icon"></i>
-                            </a>
+                            <i class="fas fa-pen edit-icon"></i>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </section>
-    </main>
+    </div>
 </body>
 
 </html>
