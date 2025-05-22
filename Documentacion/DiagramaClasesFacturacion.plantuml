@@ -1,0 +1,215 @@
+@startuml
+package Model{
+    package Adapter{
+        class ItemFactura{
+            - descripcion: String
+            - precio : double
+            - cantidad : int
+        }
+        class ProductoItemFacturaAdapter extends ItemFactura{
+            + ProductoItemFacturaAdapter(producto:Producto, cantidad: int)
+        }
+    }
+    class Persona{
+        - nombre: String
+        - apellido : String 
+        - id: Long
+        - numeroTelefono : String
+        - correo : String
+        - fechaNacimiento: String
+        
+    }
+
+    class Rol{
+        - id: Long 
+        - nombreRol: String 
+    }
+    class Usuario{
+        - id : Long
+        -user_name: String
+        -user_password :String
+        -persona : Persona
+        - rol: Rol
+    }
+    abstract Producto{
+        - id: Long
+        - nombreProducto: String
+        - precio: double
+        - stock : int 
+    }
+    class Cerveza{
+        - gradosAlcohol:double
+        - tipo:String
+    }
+    class Vino{
+        - region:String
+        - anio:int 
+    }
+    class Vodka{}
+    class Aguardiente{}
+    interface Factura{}
+    class FacturaCompra implements Factura{
+        - fechaCompra:Date
+    }
+    class FacturaVenta implements Factura{
+        - fechaVenta:Date
+    }
+    class Venta{
+        - fechaVenta: Date 
+        - numeroDocumentoCliente: String
+        - numeroDocumentoRolVendedor: String 
+    }
+    class Compra {}
+
+    Usuario ..> Persona
+    Rol <.. Usuario
+
+}
+package dto{
+    class PersonaDTO{
+        - nombre: String
+        - apellido : String 
+        - id: Long
+        - numeroTelefono : String
+        - correo : String
+        - fechaNacimiento: String
+    }
+    class RolDTO{
+        - id: Long 
+        - nombreRol: String
+    }
+    class UsuarioDTO{
+         - id : Long
+        -user_name: String
+        -user_password :String
+        -persona : PersonaDTO
+        - rol: RolDTO
+    }
+    class ProductoDTO{
+        - tipoProducto:String
+        - nombreProducto:String
+        - precio:double
+        - stock:int
+    }
+}
+package mapper{
+    interface PersonaMapper{
+        + toDTO(persona:Persona) : PersonaDTO
+        + toEntity(personaDTO : PersonaDTO) : Persona
+    }
+    class PersonaMapperImplement{
+        + toDTO(persona:Persona) : PersonaDTO
+        + toEntity(personaDTO : PersonaDTO) : Persona
+    }
+    interface RolMapper{
+        + toDTO(rol:Rol) : RolDTO
+        + toEntity(rolDTO : RolDTO) : Rol
+    }
+    class RolMapperImplement{
+        + toDTO(rol:Rol) : RolDTO
+        + toEntity(rolDTO : RolDTO) : Rol
+    }
+    interface UsuarioMapper{
+        + toDTO(usuario:Usuario) : UsuarioDTO
+        + toEntity(usuarioDTO : UsuarioDTO) : Usuario
+    }
+    class UsuarioMapperImplement{
+        + toDTO(usuario:Usuario) : UsuarioDTO
+        + toEntity(usuarioDTO : UsuarioDTO) : Usuario
+    }
+    interface ProductoMapper{
+        + toDTO(producto:Producto): ProductoDTO
+        + toEntity(productoDTO:ProductoDTO):Producto
+    }
+    class ProductoMapperImplement{
+        + toDTO(producto:Producto): ProductoDTO
+        + toEntity(productoDTO:ProductoDTO):Producto
+    }
+    interface FacturaMapper{}
+    class FacturaMapperImplement implements FacturaMapper{}
+}
+package service{
+    package Factory{
+        interface ProductoFactory{
+            + crearProducto(dto:ProductoDTO):Producto
+        }
+        class CervezaFactory{}
+        class VinoFactory{}
+        class AguardienteFactory{}
+        class VodkaFactory{}
+        class ProcuctoFactoryProducer{
+            + getFactory(tipo:String): ProductoFactory
+        }
+    }
+    class PersonaService{
+        - personaRepository : PersonaRepository
+        - personaMapper : PersonaMapper
+        + addPersonaInDB(personaDTO:PersonaDTO):PersonaDTO
+        + findAllPersonas(): List<PersonaDTO>
+        + fetchPersonaById(id:Long):ResponseEntity<PersonaDTO>
+        + findById(id: Long): Optional<PersonaDTO>
+
+        
+    }
+    class RolService{
+        - rolRepository : RolRepository
+        + guardarRol(rol:Rol): Rol
+    }
+    class UsuarioService{
+        - usuarioRepository:UsuarioRepository
+        - usuarioMapper:UsuarioMapper
+        + findAllUsuarios(): List<UsuarioDTO>
+        + addUsuarioInDB(usuarioDTO:UsuarioDTO):UsuarioDTO
+        + validateUserByUserName(userName:String,password:String):String
+        + validateExistUserName(userName:String):boolean
+    }
+    class InventarioService{
+        - productoRepository: ProductoRepository
+        + crearProducto(dto:ProductoDTO):ProductoDTO
+        + findAllProductos():List<ProductoDTO>
+    }
+    class FacturaService{}
+}
+package repository{
+    interface PersonaRepository{}
+    interface RolRepository{}
+    interface UsuarioRepository{}
+    interface ProductoRepository{}
+}
+PersonaService <-- PersonaRepository
+PersonaService <-- PersonaMapperImplement
+RolService <-- RolRepository
+UsuarioService <-- UsuarioRepository
+UsuarioService <-- UsuarioMapperImplement
+PersonaMapperImplement ..|> PersonaMapper
+RolMapperImplement ..|> RolMapper
+UsuarioMapperImplement ..|> UsuarioMapper
+UsuarioDTO ..> PersonaDTO
+RolDTO <.. UsuarioDTO
+UsuarioMapperImplement <-- Usuario
+UsuarioMapperImplement <-- UsuarioDTO
+RolMapperImplement <-- Rol
+RolMapperImplement <-- RolDTO
+PersonaMapperImplement <-- Persona
+PersonaMapperImplement <-- PersonaDTO
+UsuarioService <-- UsuarioDTO
+PersonaService <-- PersonaDTO
+Producto <|-- Cerveza
+Producto <|-- Vino
+Producto <|-- Vodka
+Producto <|-- Aguardiente
+ProductoFactory <|.. CervezaFactory
+ProductoFactory <|.. VodkaFactory
+ProductoFactory <|.. VinoFactory
+ProductoFactory <|.. AguardienteFactory
+ProductoFactory --> ProcuctoFactoryProducer
+InventarioService <-- AguardienteFactory
+InventarioService <-- VinoFactory
+InventarioService <-- CervezaFactory
+InventarioService <-- VodkaFactory
+ProductoMapper <|.. ProductoMapperImplement
+ProductoRepository --> InventarioService
+ProductoMapperImplement --> InventarioService
+ProductoMapperImplement <-- Producto
+ProductoMapperImplement <-- ProductoDTO
+@enduml

@@ -1,4 +1,4 @@
-@startuml
+@startuml name "DiagramaContexto"
 class Persona{
     - nombre: String
     - numeroDocumento: String
