@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="modalEditProduct">
+        <link rel="stylesheet" th:href="@{/css/ModalModifyPerson.css}">
+        <div id="editModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>Editar Producto</h3>
+                <form th:action="@{/updateProduct}" method="post">
+                    <div>
+                        <label for="edit-code">Código:</label>
+                        <input type="number" name="code" id="edit-code" required>
+                    </div>
+                    <div>
+                        <label for="edit-type">Tipo producto:</label>
+                        <input type="text" name="type" id="edit-type" required>
+                    </div>
+                    <div>
+                        <label for="edit-name">Nombre producto:</label>
+                        <input type="text" name="name" id="edit-name" required>
+                    </div>
+                    <div>
+                        <label for="edit-description">Descripción producto:</label>
+                        <input type="text" name="description" id="edit-description" required 
+                        title="Añade una descripción del producto">
+                    </div>
+                    <div>
+                        <label for="edit-presentation">Presentación:</label>
+                        <input type="text" name="presentation" id="edit-presentation" required 
+                        title="Presentación del producto (Botella de vidrio)">
+                    </div>
+                    <div>
+                        <label for="edit-quantity">Cantidad:</label>
+                        <input type="number" name="quantity" id="edit-quantity" required>
+                    </div>
+                    <div>
+                        <label for="edit-price">Precio:</label>
+                        <input type="number" name="price" id="edit-price" required>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button type="submit">Guardar</button>
+                        <button type="button" onclick="closeModal()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script th:src="@{/js/ModalModifyProduct.js}"></script>
+    </div>
+</body>
+
+</html>

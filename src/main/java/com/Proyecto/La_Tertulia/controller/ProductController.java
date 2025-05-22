@@ -14,13 +14,14 @@ import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class ProductController {
      
      @Autowired
     private ProductService productService; 
 
-    @GetMapping("/productManager")
+    @GetMapping("/manageProduct")
     public String chargeUsersToManage(Model model, HttpSession session) {
         List<ProductDTO> productos = productService.findAllProducts();
         model.addAttribute("Productos", productos);
@@ -30,12 +31,42 @@ public class ProductController {
     }
     
     @PostMapping("/searchProduct")
-    public String postMethodName(@RequestParam("nombrePersona") String nombre,Model model) {
-        List<ProductDTO> products = productService.findAllProductoByName(nombre);
+    public String postMethodName(@RequestParam("codigoProducto") String nombre,Model model) {
+        List<ProductDTO> products = productService.findProductByNameOrId(nombre);
         if(products.isEmpty()){
             products = productService.findAllProducts();
+            model.addAttribute("error", "Producto no encontrado");
+        }else{
+            model.addAttribute("success", "Producto encontrado");
         }
         model.addAttribute("Productos",products);
+        return "ProductManagement";
+    }
+    @GetMapping("/addProduct")
+    public String agregarProducto(Model model,
+            @RequestParam(value = "success", required = false) String success,
+            @RequestParam(value = "error", required = false) String error) {
+        model.addAttribute("productDTO", new ProductDTO());
+        if (success != null) {
+            model.addAttribute("mensajeExito", success);
+        }
+        if (error != null) {
+            model.addAttribute("mensajeError", error);
+        }
+        return "ProductRegistration";
+    }
+    @PostMapping("productRegistration")
+    public String recordProduct(@ModelAttribute ProductDTO producto, Model model) {
+        ProductDTO productDTO = new ProductDTO(
+            producto.getId(),
+            producto.getType(),
+            producto.getName(),
+            producto.getDescripcion_producto(),
+            producto.getPresentation(),
+            producto.getStock(),
+            producto.getPrice()
+        );
+        productService.addProductInDB(productDTO);
         return "ProductManagement";
     }
 }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VentaDTO {
 
-    private Long id;
+    private long id;
     private LocalDate fechaVenta;
     private UsuarioDTO vendedor;
     private String nombreCliente;

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
+import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.mapper.ProductMapperImplement;
 
 import com.Proyecto.La_Tertulia.model.Product;
@@ -67,6 +68,26 @@ public class ProductService {
             }
         }
         return null;
+    }
+
+    public List<ProductDTO> findProductByNameOrId(String nombre) {
+        ArrayList<ProductDTO> productList = new ArrayList<>();
+        List<ProductDTO> productDTOs = findAllProducts();
+        for (ProductDTO productDTO: productDTOs) {
+            if (nombre.matches("\\d+")) {
+                long idAux = Long.parseLong(nombre);
+                if (productDTO.getId() == idAux) {
+                    productList.add(productDTO);
+                    break;
+                }
+            } else {
+                if (productDTO.getName().equalsIgnoreCase(nombre)) {
+                    productList.add(productDTO);
+                }
+            }
+
+        }
+        return productList;
     }
 
 

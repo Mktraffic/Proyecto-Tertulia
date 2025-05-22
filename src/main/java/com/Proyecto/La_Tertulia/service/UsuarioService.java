@@ -82,7 +82,7 @@ public class UsuarioService {
                     break;
                 }
             } else {
-                if (usuarioDTO.getPersona().getNombre().equals(id)) {
+                if (usuarioDTO.getPersona().getNombre().equalsIgnoreCase(id)) {
                     userList.add(usuarioDTO);
                 }
             }

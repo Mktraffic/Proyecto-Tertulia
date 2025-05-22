@@ -5,26 +5,24 @@
     <meta charset="UTF-8">
     <title>Productos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/ProductManagement.css}">
+    <link rel="stylesheet" th:href="@{/css/PeopleManagement.css}">
 </head>
 
 <body>
+    <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
         <div th:replace="AdministratorOptions :: amdOptions"></div>
-        <section class="product-card">
+        <section class="personas-card">
             <header class="header">
-                <div class="product-icon">
-                    <i class="fas fa-beer"></i>
-                </div>
             </header>
-            <div class="product-header">
+            <div class="personas-header">
                 <div class="icon-title">
                     <i class="fas fa-wine-bottle"></i>
                     <h2>Productos</h2>
                 </div>
                 <div class="search-add">
                     <form th:action="@{/searchProduct}" method="get">
-                        <input type="text" name="nombreProducto" placeholder="Nombre Producto" required
+                        <input type="text" name="codigoProducto" placeholder="Código Producto" required
                             title="Ingrese el nombre o código del producto a buscar">
                         <button type="submit" class="search-button" title="Buscar">🔍</button>
                     </form>
@@ -59,11 +57,23 @@
                         <td th:text="${producto.price}"></td>
                             <i class="fas fa-pen edit-icon"></i>
                         </td>
+                        <td>
+                             <button class="edit-btn" th:attr="data-code=${producto.id},
+                                    data-type=${producto.type},
+                                    data-name=${producto.name},
+                                    data-description=${producto.descripcion_producto},
+                                    data-presentation=${producto.presentation},
+                                    data-quantity=${producto.stock},
+                                    data-price=${producto.price}" onclick="openModal(this)" title="Modificar">
+                                <i class="fas fa-pen edit-icon"></i>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </section>
     </div>
+    <div th:replace="ModalModifyProduct :: modalEditProduct"></div>
 </body>
 
 </html>

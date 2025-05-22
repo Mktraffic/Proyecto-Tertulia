@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Personas</title>
+    <title>Compras</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/PeopleManagement.css}">
 </head>
@@ -17,19 +17,19 @@
             </header>
             <div class="personas-header">
                 <div class="icon-title">
-                    <i class="fas fa-id-badge"></i>
-                    <h2>Personas</h2>
+                     <i class="fas fa-shopping-bag"></i>
+                    <h2>Compras</h2>
                 </div>
                 <div class="search-add">
-                    <form th:action="@{/searchPerson}" method="post">
-                        <input type="text" name="nombrePersona" placeholder="Nombre persona" required
-                            title="Ingrese el nombre o el id de la persona a buscar">
+                    <form th:action="@{/searchBuy}" method="post">
+                        <input type="date" name="fechaCompra" placeholder="Fecha compra" required
+                            title="Seleccione la fecha de la compra">
                         <button type="submit" class="search-button" title="Buscar">🔍</button>
                     </form>
-                    <form th:action="@{/managePerson}" method="get">
+                    <form th:action="@{/manageBuy}" method="get">
                         <button type="submit" class="search-button" title="Refrescar">🔄</button>
                     </form>
-                    <form th:action="@{/addPerson}" method="get" style="display: inline;">
+                    <form th:action="@{/addBuy}" method="get" style="display: inline;">
                         <button type="submit" class="search-button" title="Agregar">
                             <span class="plus-icon">+</span>
                         </button>
@@ -40,31 +40,24 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Número documento</th>
-                        <th>Número celular</th>
-                        <th>Correo electrónico</th>
-                        <th>Rol</th>
-                        <th>Editar persona</th>
+                        <th>Id compra</th>
+                        <th>Nombre proveedor</th>
+                        <th>Documento proveedor</th>
+                        <th>Fecha compra</th>
+                        <th>Valor total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="usuario : ${Usuarios}">
-                        <td th:text="${usuario.persona.id}"></td>
-                        <td th:text="${usuario.persona.nombre}"></td>
-                        <td th:text="${usuario.persona.apellido}"></td>
-                        <td th:text="${usuario.persona.documentoIdentidad}"></td>
-                        <td th:text="${usuario.persona.numeroTelefono}"></td>
-                        <td>
-                            <a th:href="|mailto:${usuario.persona.correo}|" th:text="${usuario.persona.correo}"></a>
-                        </td>
-                        <td th:text="${usuario.rol.nombreRol}"></td>
-                        <td>
-                            <button class="edit-btn" th:attr="data-id=${usuario.persona.id},
-                                    data-nombre=${usuario.persona.nombre},
-                                    data-apellido=${usuario.persona.apellido},
+                    <tr th:each="compra : ${Compras}">
+                        <td th:text="${compra.id}"></td>
+                        <td th:text="${compra.proveedor}"></td>
+                        <td th:text="${compra.documentoProveedor}"></td>
+                        <td th:text="${compra.fecha}"></td>
+                        <td th:text="${compra.totalcompra}"></td>
+                       <!-- <td>
+                            <button class="edit-btn" th:attr="data-id=${compra.id},
+                                    data-vendedor=${compra.vendedor},
+                                    data-fecha=${compra.fecha},
                                     data-telefono=${usuario.persona.numeroTelefono},
                                     data-correo=${usuario.persona.correo},
                                     data-rol=${usuario.rol.nombreRol},
@@ -73,7 +66,7 @@
                                     data-state=${usuario.persona.estado}" onclick="openModal(this)" title="Modificar">
                                 <i class="fas fa-pen edit-icon"></i>
                             </button>
-                        </td>
+                        </td>-->
                     </tr>
                 </tbody>
             </table>

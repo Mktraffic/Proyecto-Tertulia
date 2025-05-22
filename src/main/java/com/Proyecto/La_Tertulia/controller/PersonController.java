@@ -41,6 +41,12 @@ public class PersonController {
     @PostMapping("/searchPerson")
     public String postMethodName(@RequestParam("nombrePersona") String nombre,Model model) {
         List<UsuarioDTO> usuarios = usuarioService.findUserByNameOrID(nombre);
+        if(usuarios.isEmpty()){
+            usuarios = usuarioService.findAllUsuarios();
+            model.addAttribute("error", "Usuario no registrado");
+        }else{
+            model.addAttribute("success", "Usuario encontrado");
+        }
          model.addAttribute("Usuarios",usuarios);
         return "PeopleManagement";
     }
