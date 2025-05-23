@@ -39,6 +39,7 @@ public class ProductService {
         Product product = productMapper.toEntity(productdto);
         return productRepository.save(product);
     }
+    
  public ResponseEntity<ProductDTO> fetchProductById(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {

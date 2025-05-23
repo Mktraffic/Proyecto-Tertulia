@@ -20,7 +20,6 @@ import com.Proyecto.La_Tertulia.service.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
 
-
 @Controller
 public class PersonController {
     @Autowired
@@ -38,72 +37,57 @@ public class PersonController {
         model.addAttribute("usuarioDTO", usuarioDTO);
         return "PeopleManagement";
     }
+
     @PostMapping("/searchPerson")
-    public String postMethodName(@RequestParam("nombrePersona") String nombre,Model model) {
+    public String postMethodName(@RequestParam("nombrePersona") String nombre, Model model) {
         List<UsuarioDTO> usuarios = usuarioService.findUserByNameOrID(nombre);
-        if(usuarios.isEmpty()){
+        if (usuarios.isEmpty()) {
             usuarios = usuarioService.findAllUsuarios();
             model.addAttribute("error", "Usuario no registrado");
-        }else{
+        } else {
             model.addAttribute("success", "Usuario encontrado");
         }
-         model.addAttribute("Usuarios",usuarios);
+        model.addAttribute("Usuarios", usuarios);
         return "PeopleManagement";
     }
-    
 
     @GetMapping("/addPerson")
-    public String addPerson(Model model,
-            @RequestParam(value = "success", required = false) String success,
-            @RequestParam(value = "error", required = false) String error) {
+    public String addPerson(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
-        if (success != null) {
-            model.addAttribute("mensajeExito", success);
-        }
-        if (error != null) {
-            model.addAttribute("mensajeError", error);
-        }
         return "UserRegistration";
     }
 
     @PostMapping("/UserRegistration")
     public String userRegister(@ModelAttribute UsuarioDTO usuario, Model model) {
-        if (personaService.findById(usuario.getPersona().getDocumentoIdentidad()).isPresent()) {
-            model.addAttribute("error", "El documento de identidad ya está registrado.");
-            model.addAttribute("usuarioDTO", usuario);
-            return "UserRegistration";
+        usuario.getPersona().setEstado(true);
+        PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
+        usuario.setPersona(nuevaPersona);
+        if("correo_electronico".equals(nuevaPersona.getNombre())){
+            model.addAttribute("error", "Correo electronico ya vinculado a un usuario");
+        }else if("numero_documento".equals(nuevaPersona.getNombre())){
+            model.addAttribute("error", "Documento de identidad repetido");
+        }else if("Persona_menor".equals(nuevaPersona.getNombre())){
+            model.addAttribute("error", "La persona es menor de edad");
+        }else{
+            model.addAttribute("success", "Usuario registrado exitosamente");
         }
-        if (usuarioService.validateExistUserName(usuario.getUserName())) {
-            model.addAttribute("error", "El nombre de usuario ya esta registrado.");
-            model.addAttribute("usuarioDTO", usuario);
-            return "UserRegistration";
+        String nombreRol = usuario.getRol().getNombreRol();
+        Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
+        usuario.setPersona(nuevaPersona);
+        usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
+        if (nombreRol.equals("Proveedor")) {
+            usuario.setUserName(null);
+            usuario.setUserPassword(null);
         }
-        try {
-            usuario.getPersona().setEstado(true);
-            PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
-            usuario.setPersona(nuevaPersona);
-            String nombreRol = usuario.getRol().getNombreRol();
-            Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
-
-            usuario.setPersona(nuevaPersona);
-            usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
-            if (nombreRol.equals("Proveedor")) {
-                usuario.setUserName(null);
-                usuario.setUserPassword(null);
-            }
-            usuarioService.addUsuarioInDB(usuario);
-            model.addAttribute("success", "Usuario registrado correctamente.");
-            model.addAttribute("usuarioDTO", new UsuarioDTO());
-            return "UserRegistration";
-        } catch (Exception e) {
-            model.addAttribute("error", "Ocurrió un error inesperado. Inténtalo de nuevo.");
-            model.addAttribute("usuarioDTO", usuario);
-            return "UserRegistration";
-        }
+        usuarioService.addUsuarioInDB(usuario);
+        model.addAttribute("success", "Usuario registrado correctamente.");
+        model.addAttribute("usuarioDTO", new UsuarioDTO());
+        return "UserRegistration";
     }
+
     @PostMapping("/updatePerson")
-     public String updatePerson(@ModelAttribute UsuarioDTO usuario, Model model) {
-        try{
+    public String updatePerson(@ModelAttribute UsuarioDTO usuario, Model model) {
+        try {
             PersonaDTO personUpdate = personaService.updatePersona(usuario.getPersona());
             usuario.setPersona(personUpdate);
             String password = usuario.getUserPassword();
@@ -116,5 +100,5 @@ public class PersonController {
             return "redirect:/managePerson";
         }
         return "redirect:/managePerson";
-     }
+    }
 }

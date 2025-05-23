@@ -46,7 +46,7 @@ public class ProductController {
     public String agregarProducto(Model model,
             @RequestParam(value = "success", required = false) String success,
             @RequestParam(value = "error", required = false) String error) {
-        model.addAttribute("productDTO", new ProductDTO());
+        model.addAttribute("ProductDTO", new ProductDTO());
         if (success != null) {
             model.addAttribute("mensajeExito", success);
         }
@@ -55,10 +55,10 @@ public class ProductController {
         }
         return "ProductRegistration";
     }
-    @PostMapping("productRegistration")
+    @PostMapping("/productRegistration")
     public String recordProduct(@ModelAttribute ProductDTO producto, Model model) {
         ProductDTO productDTO = new ProductDTO(
-            producto.getId(),
+            null,
             producto.getType(),
             producto.getName(),
             producto.getDescripcion_producto(),
@@ -67,6 +67,7 @@ public class ProductController {
             producto.getPrice()
         );
         productService.addProductInDB(productDTO);
-        return "ProductManagement";
+          model.addAttribute("ProductDTO", new ProductDTO());
+        return "ProductRegistration";
     }
 }

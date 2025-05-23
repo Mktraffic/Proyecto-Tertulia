@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.Proyecto.La_Tertulia.dto.PersonaDTO;
@@ -30,16 +29,8 @@ public class SystemController {
     private RolService rolService;
 
     @GetMapping("/login")
-    public String mostrarLogin(Model model,
-            @RequestParam(value = "success", required = false) String success,
-            @RequestParam(value = "error", required = false) String error) {
+    public String mostrarLogin(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
-        if (success != null) {
-            model.addAttribute("mensajeExito", success);
-        }
-        if (error != null) {
-            model.addAttribute("mensajeError", error);
-        }
         return "Login";
     }
 
@@ -103,47 +94,32 @@ public class SystemController {
     }
 
     @GetMapping("/")
-    public String mostrarFormularioRegistroUsuarios(Model model,
-            @RequestParam(value = "success", required = false) String success,
-            @RequestParam(value = "error", required = false) String error) {
+    public String mostrarFormularioRegistroUsuarios(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
-        if (success != null) {
-            model.addAttribute("mensajeExito", success);
-        }
-        if (error != null) {
-            model.addAttribute("mensajeError", error);
-        }
         return "AdminRegistration";
     }
 
     @PostMapping("/AdminRegistration")
     public String userRegister(@ModelAttribute UsuarioDTO usuario, Model model) {
-        if (personaService.findById(usuario.getPersona().getDocumentoIdentidad()).isPresent()) {
-            model.addAttribute("error", "El documento de identidad ya está registrado.");
-            model.addAttribute("usuarioDTO", usuario);
-            return "AdminRegistration";
+        usuario.getPersona().setEstado(true);
+        PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
+        usuario.setPersona(nuevaPersona);
+       if("correo_electronico".equals(nuevaPersona.getNombre())){
+            model.addAttribute("error", "Correo electronico ya vinculado a un usuario");
+        }else if("numero_documento".equals(nuevaPersona.getNombre())){
+            model.addAttribute("error", "Documento de identidad repetido");
+        }else if("Persona_menor".equals(nuevaPersona.getNombre())){
+            model.addAttribute("error", "La persona es menor de edad");
+        }else{
+            model.addAttribute("success", "Usuario registrado exitosamente");
         }
-        if (usuarioService.validateExistUserName(usuario.getUserName())) {
-            model.addAttribute("error", "El nombre de usuario ya esta registrado.");
-            model.addAttribute("usuarioDTO", usuario);
-            return "AdminRegistration";
-        }
-        try {
-            usuario.getPersona().setEstado(true);
-            PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
-            usuario.setPersona(nuevaPersona);
-            String nombreRol = "Administrador";
-            Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
-            usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
-            usuarioService.addUsuarioInDB(usuario);
-            model.addAttribute("success", "Administrador registrado correctamente.");
-            model.addAttribute("usuarioDTO", new UsuarioDTO());
-            return "AdminRegistration";
-        } catch (Exception e) {
-            model.addAttribute("error", "Ocurrió un error inesperado. Inténtalo de nuevo.");
-            model.addAttribute("usuarioDTO", usuario);
-            return "AdminRegistration";
-        }
+        String nombreRol = "Administrador";
+        Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
+        usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
+        usuarioService.addUsuarioInDB(usuario);
+        model.addAttribute("success", "Administrador registrado correctamente.");
+        model.addAttribute("usuarioDTO", new UsuarioDTO());
+        return "AdminRegistration";
     }
 
     @GetMapping("/dashboardAdm")

@@ -21,11 +21,7 @@
         </div>
         
         <div class="form-container">
-            <form th:action="@{/productRegistration}" th:object="${productDTO}" method="POST">
-                <div class="form-group">
-                    <label for="codigo">Código:</label>
-                    <input type="number" class="form-control" th:field="*{id}" required>
-                </div>
+            <form th:action="@{/productRegistration}" th:object="${ProductDTO}" method="POST">
                 <div class="form-group">
                     <label for="tipo-producto">Tipo de producto:</label>
                     <input type="text" class="form-control" th:field="*{type}" required>
@@ -52,7 +48,7 @@
                 </div> 
                 <div class="buttons">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a th:href="@{/manageProduct}" class="btn btn-secondary" style="text-decoration: none; text-align: center;">Salir</a>
+                    <a th:href="@{/manageProduct}" class="btn btn-secondary" style="text-decoration: none; text-align: center;">Atras</a>
                 </div>
             </form>
         </div>

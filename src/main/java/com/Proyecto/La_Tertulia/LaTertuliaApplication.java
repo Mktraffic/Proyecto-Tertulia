@@ -9,5 +9,4 @@ public class LaTertuliaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LaTertuliaApplication.class, args);
 	}
-
 }
