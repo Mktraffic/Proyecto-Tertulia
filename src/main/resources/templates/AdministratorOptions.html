@@ -22,9 +22,11 @@
                     <button class="menu-item">Gestionar Producto</button>
                 </a>
                 <a th:href="@{/manageBuy}">
-                <button class="menu-item">Registrar compra</button>
-                    </a>
+                    <button class="menu-item">Registrar compra</button>
+                </a>
+                <a th:href="@{/manageSales}">
                 <button class="menu-item">Gestionar venta</button>
+                </a>
                 <a th:href="@{/logout}">
                     <button class="menu-item">Cerrar sesion</button>
                 </a>
@@ -33,7 +35,8 @@
     </div>
     <div class="main-content">
         <section class="welcome-section">
-            <h1>Bienvenido, <span th:text="${usuarioDTO != null} ? ${usuarioDTO.userName} : 'Usuario'">Usuario</span>!</h1>
+            <h1>Bienvenido, <span th:text="${usuarioDTO != null} ? ${usuarioDTO.userName} : 'Usuario'">Usuario</span>!
+            </h1>
             <p>Selecciona el modulo a gestionar.</p>
         </section>
     </div>

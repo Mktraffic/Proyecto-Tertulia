@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ventas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/PeopleManagement.css}">
+</head>
+
+<body>
+    <div th:replace="ToastContainer :: toastContainer"></div>
+    <div class="container">
+        <div th:replace="AdministratorOptions :: amdOptions"></div>
+        <section class="personas-card">
+            <header class="header">
+            </header>
+            <div class="personas-header">
+                <div class="icon-title">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h2>Ventas</h2>
+                </div>
+                <div class="search-add">
+                    <form th:action="@{/searchSale}" method="post">
+                        <input type="date" name="fechaInicial" placeholder="Fecha Inicio" required
+                            title="Seleccione la fecha inicial">
+                        <input type="date" name="fechaFinal" placeholder="Fecha Fin" required
+                            title="Seleccione la fecha final">
+                        <button type="submit" class="search-button" title="Buscar">🔍</button>
+                    </form>
+                    <form th:action="@{/manageSales}" method="get">
+                        <button type="submit" class="search-button" title="Refrescar">🔄</button>
+                    </form>
+                    <form th:action="@{/addSale}" method="get" style="display: inline;">
+                        <button type="submit" class="search-button" title="Agregar">
+                            <span class="plus-icon">+</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id venta</th>
+                        <th>Vendedor</th>
+                        <th>Tipo doc cliente</th>
+                        <th>N° doc cliente</th>
+                        <th>Fecha</th>
+                        <th>Valor total</th>
+                        <th>Cancelar venta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="venta : ${Ventas}">
+                        <td th:text="{venta.id}"></td>
+                        <td th:text="${venta.nombreVendedor}"></td>
+                        <td th:text="${venta.tipoDocumentoCliente}"></td>
+                        <td th:text="${venta.numeroDocumentoCliente}"></td>
+                        <td th:text="${venta.fechaVenta}"></td>
+                        <td th:text="${venta.totalVenta}"></td>
+                        <td>
+                            <button class="delete-btn" th:attr="data-id=${venta.id}" onclick="confirmDelete(this)"
+                                title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <div th:replace="ModalDeleteSale :: deleteSale"></div>
+    </div>
+</body>
+
+</html>

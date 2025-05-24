@@ -1,6 +1,7 @@
 package com.Proyecto.La_Tertulia.service;
 
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
+import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.mapper.DetalleVentaMapper;
 import com.Proyecto.La_Tertulia.mapper.UsuarioMapper;
@@ -70,5 +71,10 @@ public class VentaService {
                 .map(ventaMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
+     public List<VentaDTO> findAllSales() {
+        List<Venta> ventas = ventaRepository.findAll();
+        return ventas.stream()
+                .map(ventaMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

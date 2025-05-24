@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="deleteSale">
+        <div id="deleteModal" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <p>¿Desea eliminar esta venta?</p>
+                <form th:action="@{/deleteSale}" method="post">
+                    <input type="hidden" name="id" id="ventaId">
+                    <button type="submit">Sí, eliminar</button>
+                    <button type="button" onclick="closeModal()">Cancelar</button>
+                </form>
+            </div>
+        </div>
+        <script th:src="@{/js/DeleteSale.js}"></script>
+    </div>
+</body>
