@@ -22,7 +22,7 @@ public class ProductController {
     private ProductService productService; 
 
     @GetMapping("/manageProduct")
-    public String chargeUsersToManage(Model model, HttpSession session) {
+    public String chargeProductsToManage(Model model, HttpSession session) {
         List<ProductDTO> productos = productService.findAllProducts();
         model.addAttribute("Productos", productos);
         UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");
@@ -31,7 +31,7 @@ public class ProductController {
     }
     
     @PostMapping("/searchProduct")
-    public String postMethodName(@RequestParam("codigoProducto") String nombre,Model model) {
+    public String searchProduct(@RequestParam("codigoProducto") String nombre,Model model) {
         List<ProductDTO> products = productService.findProductByNameOrId(nombre);
         if(products.isEmpty()){
             products = productService.findAllProducts();
@@ -43,7 +43,7 @@ public class ProductController {
         return "ProductManagement";
     }
     @GetMapping("/addProduct")
-    public String agregarProducto(Model model,
+    public String showFormAddProduct(Model model,
             @RequestParam(value = "success", required = false) String success,
             @RequestParam(value = "error", required = false) String error) {
         model.addAttribute("ProductDTO", new ProductDTO());

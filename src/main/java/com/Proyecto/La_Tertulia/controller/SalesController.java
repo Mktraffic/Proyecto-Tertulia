@@ -9,14 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.service.ProductService;
 import com.Proyecto.La_Tertulia.service.VentaService;
-
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class SalesController {
@@ -26,7 +23,7 @@ public class SalesController {
     private ProductService productoService;
 
     @GetMapping("/manageSales")
-    public String chargeSales(Model model, HttpSession session) {
+    public String chargeSalesToManage(Model model, HttpSession session) {
         List<VentaDTO> ventas = ventaService.findAllSales();
         model.addAttribute("Ventas", ventas);
         UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");
@@ -57,7 +54,7 @@ public class SalesController {
     }
 
     @GetMapping("/addSale")
-    public String addPerson(Model model) {
+    public String showFormAddSale(Model model) {
         List<String> categorias = productoService.productCategories();
         model.addAttribute("categorias", categorias);
         model.addAttribute("ventaDTO", new VentaDTO());
@@ -78,12 +75,12 @@ public class SalesController {
 //Para cargar lo que se necesita para agregar venta   @GetMapping("/productos")
 
     @GetMapping("/productos")
-    public List<String> obtenerProductos(@RequestParam String categoria) {
+    public List<String> obtainProducts(@RequestParam String categoria) {
         return productoService.productsByCategory(categoria);
     }
 
     @GetMapping("/presentaciones")
-    public List<String> obtenerPresentaciones(@RequestParam String producto) {
+    public List<String> obtainPresentations(@RequestParam String producto) {
         return productoService.presentationByProductName(producto);
     }
 

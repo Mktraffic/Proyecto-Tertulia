@@ -24,19 +24,27 @@
             <form th:action="@{/productRegistration}" th:object="${ProductDTO}" method="POST">
                 <div class="form-group">
                     <label for="tipo-producto">Tipo de producto:</label>
-                    <input type="text" class="form-control" th:field="*{type}" required>
+                    <input type="text" class="form-control" th:field="*{type}" required
+                    minlength="3"
+                        maxlength="100" title="El tipo de producto debe tener como minimo tres caracteres">
                 </div>
                 <div class="form-group">
                     <label for="nombre-producto">Nombre producto:</label>
-                     <input type="text" class="form-control" th:field="*{name}" required>
+                     <input type="text" class="form-control" th:field="*{name}" required
+                     minlength="3"
+                        maxlength="100" title="El nombre del producto debe tener como minimo tres caracteres">
                 </div> 
                <div class="form-group">
                     <label for="descripción-producto">Descripción producto:</label>
-                     <input type="text" class="form-control" th:field="*{descripcion_producto}" required>
+                     <input type="text" class="form-control" th:field="*{descripcion_producto}" required
+                     minlength="3"
+                        maxlength="100" title="El produto debe tener una descripción">
                 </div> 
                 <div class="form-group">
                     <label for="presentacion">Presentación:</label>
-                     <input type="text" class="form-control" th:field="*{presentation}" required>
+                     <input type="text" class="form-control" th:field="*{presentation}" required
+                     minlength="2"
+                        maxlength="100" title="El producto debe tener una presentación (contenido)">
                 </div> 
                 <div class="form-group">
                     <label for="cantidad">Cantidad:</label>

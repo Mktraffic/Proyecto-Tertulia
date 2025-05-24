@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Tertulia - Login</title>
     <link rel="stylesheet" th:href="@{/css/StylesLogin.css}" />
 </head>
+
 <body>
     <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
@@ -17,24 +19,28 @@
         <div class="login-form">
             <h2 th:text="'Bienvenido a la Tertulia.'">Bienvenido a la Tertulia.</h2>
             <p th:text="'Por favor inicia sesión para continuar.'">Por favor inicia sesión para continuar.</p>
-            
+
             <form th:action="@{/loggeo}" th:object="${usuarioDTO}" method="post">
                 <div class="form-group">
-                    <input type="text" id="username" name="username"
-                           th:placeholder="'Nombre de usuario'" placeholder="Nombre de usuario" th:field="*{userName}" required>
+                    <input type="text" id="username" name="username" th:placeholder="'Nombre de usuario'"
+                        placeholder="Nombre de usuario" th:field="*{userName}" required minlength="5" maxlength="50"
+                        title="El nombre de usuario debe tener mas de cinco caracteres">
                 </div>
-                
+
                 <div class="form-group">
-                    <input type="password" id="password" name="password"
-                           th:placeholder="'Contraseña'" placeholder="Contraseña" th:field="*{userPassword}" required>
+                    <input type="password" id="password" name="password" th:placeholder="'Contraseña'"
+                        placeholder="Contraseña" th:field="*{userPassword}" required minlength="5" maxlength="20"
+                        title="La contraseña debe tener mas de cinco caracteres">
                 </div>
-                
+
                 <div class="form-group">
                     <button type="submit" th:text="'Iniciar sesión'">Iniciar sesión</button>
-                    <a th:href="@{/}" class="btn btn-secondary" style="text-decoration: none; text-align: center;">Registrarse</a>
+                    <a th:href="@{/}" class="btn btn-secondary"
+                        style="text-decoration: none; text-align: center;">Registrarse</a>
                 </div>
             </form>
         </div>
     </div>
 </body>
+
 </html>

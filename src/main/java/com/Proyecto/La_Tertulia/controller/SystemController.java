@@ -35,7 +35,7 @@ public class SystemController {
     }
 
     @PostMapping("/loggeo")
-    public String procesarLogin(@ModelAttribute UsuarioDTO usuarioDTO, Model model, HttpSession session) {
+    public String processLogin(@ModelAttribute UsuarioDTO usuarioDTO, Model model, HttpSession session) {
         try {
             String[] data = usuarioService
                     .validateUserByUserName(usuarioDTO.getUserName(), usuarioDTO.getUserPassword())
@@ -88,19 +88,24 @@ public class SystemController {
     }
 
     @GetMapping("/logout")
-    public String cerrarSesion(HttpSession session) {
+    public String longOut(HttpSession session) {
         session.invalidate();
         return "redirect:/login";
     }
 
     @GetMapping("/")
-    public String mostrarFormularioRegistroUsuarios(Model model) {
+    public String showAdminRegistration(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         return "AdminRegistration";
     }
 
     @PostMapping("/AdminRegistration")
-    public String userRegister(@ModelAttribute UsuarioDTO usuario, Model model) {
+    public String adminRegistration(@ModelAttribute UsuarioDTO usuario, Model model) {
+         if (usuarioService.validateExistUserName(usuario.getUserName())) {
+            model.addAttribute("error", "El nombre de usuario ya esta registrado.");
+            model.addAttribute("usuarioDTO", usuario);
+            return "AdminRegistration";
+        }
         usuario.getPersona().setEstado(true);
         PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
         usuario.setPersona(nuevaPersona);
@@ -127,13 +132,13 @@ public class SystemController {
     }
 
     @GetMapping("/dashboardAdm")
-    public String administratorOptions(Model model) {
+    public String showAdministratorOptions(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         return "AdministratorOptions";
     }
 
     @GetMapping("/dashboardSeller")
-    public String sellerOptions(Model model) {
+    public String showSellerOptions(Model model) {
         model.addAttribute("usuarioDTO", new UsuarioDTO());
         return "SellerOptions";
     }

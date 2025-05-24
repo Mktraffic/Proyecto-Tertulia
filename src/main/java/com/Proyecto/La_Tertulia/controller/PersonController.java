@@ -39,7 +39,7 @@ public class PersonController {
     }
 
     @PostMapping("/searchPerson")
-    public String postMethodName(@RequestParam("nombrePersona") String nombre, Model model) {
+    public String searchUser(@RequestParam("nombrePersona") String nombre, Model model) {
         List<UsuarioDTO> usuarios = usuarioService.findUserByNameOrID(nombre);
         if (usuarios.isEmpty()) {
             usuarios = usuarioService.findAllUsuarios();
@@ -59,6 +59,11 @@ public class PersonController {
 
     @PostMapping("/UserRegistration")
     public String userRegister(@ModelAttribute UsuarioDTO usuario, Model model) {
+         if (usuarioService.validateExistUserName(usuario.getUserName())) {
+            model.addAttribute("error", "El nombre de usuario ya esta registrado.");
+            model.addAttribute("usuarioDTO", usuario);
+            return "UserRegistration";
+        }
         usuario.getPersona().setEstado(true);
         PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
         usuario.setPersona(nuevaPersona);
@@ -75,7 +80,6 @@ public class PersonController {
             model.addAttribute("usuarioDTO", new UsuarioDTO());
             return "UserRegistration";
         }
-
         String nombreRol = usuario.getRol().getNombreRol();
         Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
         usuario.setPersona(nuevaPersona);
@@ -92,18 +96,12 @@ public class PersonController {
 
     @PostMapping("/updatePerson")
     public String updatePerson(@ModelAttribute UsuarioDTO usuario, Model model) {
-        try {
-            PersonaDTO personUpdate = personaService.updatePersona(usuario.getPersona());
-            usuario.setPersona(personUpdate);
-            String password = usuario.getUserPassword();
-            usuario.setUserPassword(password);
-            String nombreRol = usuario.getRol().getNombreRol();
-            usuario.getRol().setNombreRol(nombreRol);
-        } catch (Exception e) {
-            model.addAttribute("error", "Ocurrió un error inesperado. Inténtalo de nuevo.");
-            model.addAttribute("usuarioDTO", usuario);
-            return "redirect:/managePerson";
-        }
+        PersonaDTO personUpdate = personaService.updatePersona(usuario.getPersona());
+        usuario.setPersona(personUpdate);
+        String password = usuario.getUserPassword();
+        usuario.setUserPassword(password);
+        String nombreRol = usuario.getRol().getNombreRol();
+        usuario.getRol().setNombreRol(nombreRol);
         return "redirect:/managePerson";
     }
 }

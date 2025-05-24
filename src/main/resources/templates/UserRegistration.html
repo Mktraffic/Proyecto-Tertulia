@@ -27,11 +27,13 @@
             <form th:action="@{/UserRegistration}" th:object="${usuarioDTO}" method="POST">
                 <div class="form-group">
                     <label for="nombre">Nombre *</label>
-                    <input type="text" class="form-control" th:field="*{persona.nombre}" required>
+                    <input type="text" class="form-control" th:field="*{persona.nombre}" required minlength="3"
+                        maxlength="100" title="El nombre debe tener como minimo tres caracteres">
                 </div>
                 <div class="form-group">
                     <label for="nombre">Apellido *</label>
-                    <input type="text" class="form-control" th:field="*{persona.apellido}" required>
+                    <input type="text" class="form-control" th:field="*{persona.apellido}" required minlength="3"
+                        maxlength="100" title="El apellido debe tener como minimo tres caracteres">
                 </div>,
                 <div class="form-group">
                     <label for="tipoDocumento">Tipo de documento *</label>
@@ -62,7 +64,7 @@
                 <div class="form-group">
                     <label for="correo">Correo electrónico </label>
                     <input type="email" class="form-control" th:field="*{persona.correo}" required
-                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" minlength="14" maxlength="150"
                         title="Introduce un correo válido (usuario@gmail.com)">
                 </div>
 
@@ -75,23 +77,25 @@
                         <option value="Proveedor">Proveedor</option>
                     </select>
                 </div>
-            <div id="accesoSistema"></div>
+                <div id="accesoSistema"></div>
                 <h3>Datos de acceso al sistema</h3>
                 <div class="form-group">
                     <label class="form-label">Usuario *</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        <input type="text" class="form-control" th:field="*{userName}" required />
+                        <input type="text" class="form-control" th:field="*{userName}" required minlength="5"
+                            maxlength="50" title="El nombre de usuario debe tener mas de cinco caracteres">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Contraseña *</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" class="form-control" th:field="*{userPassword}" required />
+                        <input type="password" class="form-control" th:field="*{userPassword}" required minlength="5"
+                            maxlength="20" title="La contraseña debe tener mas de cinco caracteres">
                     </div>
                 </div>
-            </div>
+        </div>
         <div class="buttons">
             <button type="submit" class="btn btn-primary">Guardar</button>
             <a th:href="@{/managePerson}" class="btn btn-secondary"

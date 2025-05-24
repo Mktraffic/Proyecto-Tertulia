@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de usuarios</title>
     <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
 </head>
+
 <body>
     <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
         <div class="header">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -19,75 +22,80 @@
             </svg>
             <h1>Registro administrador</h1>
         </div>
-        
+
         <div class="form-container">
             <form th:action="@{/AdminRegistration}" th:object="${usuarioDTO}" method="POST">
                 <div class="form-group">
-                    <label for="nombre">Nombre *</label>
-                    <input type="text" class="form-control" th:field="*{persona.nombre}" required>
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" class="form-control" th:field="*{persona.nombre}" required minlength="3"
+                        maxlength="100" title="El nombre debe tener como minimo tres caracteres">
                 </div>
                 <div class="form-group">
-                    <label for="nombre">Apellido *</label>
-                    <input type="text" class="form-control" th:field="*{persona.apellido}" required>
+                    <label for="nombre">Apellido:</label>
+                    <input type="text" class="form-control" th:field="*{persona.apellido}" required minlength="3"
+                        maxlength="100" title="El apellido debe tener como minimo tres caracteres">
                 </div>,
                 <div class="form-group">
-                    <label for="tipoDocumento">Tipo de documento *</label>
+                    <label for="tipoDocumento">Tipo de documento:</label>
                     <select class="form-control" th:field="*{persona.tipoDocumento}" required>
                         <option value="" selected disabled>Selecciona una opción</option>
                         <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
                         <option value="Cedula de extranjeria">Cédula de extranjería</option>
                     </select>
-                </div> 
-                <div class="form-group">
-                    <label for="id">Documento de Identidad *</label>
-                    <input type="text" class="form-control" th:field="*{persona.documentoIdentidad}" required 
-                           minlength="7" maxlength="10"
-                           title="El documento de identidad debe tener entre 7 y 10 dígitos numéricos">
-                </div>
-                
-                <div class="form-group">
-                    <label for="fechaNacimiento">Fecha de nacimiento * </label>
-                    <input type="date" class="form-control" th:field="*{persona.fechaNacimiento}" required 
-                    title="Seleccione una fecha de nacimiento">
                 </div>
                 <div class="form-group">
-                    <label for="celular">Numero de contacto *</label>
-                    <input type="text" class="form-control" th:field="*{persona.numeroTelefono}" required
-                           minlength="7" maxlength="10" 
-                           title="El numero de telefono debe tener entre 7 y 10 dígitos numéricos">
+                    <label for="id">Documento de Identidad:</label>
+                    <input type="text" class="form-control" th:field="*{persona.documentoIdentidad}" required
+                        minlength="7" maxlength="10"
+                        title="El documento de identidad debe tener entre 7 y 10 dígitos numéricos">
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="correo">Correo electrónico </label>
+                    <label for="fechaNacimiento">Fecha de nacimiento:</label>
+                    <input type="date" class="form-control" th:field="*{persona.fechaNacimiento}" required
+                        title="Seleccione una fecha de nacimiento">
+                </div>
+                <div class="form-group">
+                    <label for="celular">Numero de contacto:</label>
+                    <input type="text" class="form-control" th:field="*{persona.numeroTelefono}" required minlength="7"
+                        maxlength="10" title="El numero de telefono debe tener entre 7 y 10 dígitos numéricos">
+                </div>
+
+                <div class="form-group">
+                    <label for="correo">Correo electrónico:</label>
                     <input type="email" class="form-control" th:field="*{persona.correo}" required
-                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" minlength="14" maxlength="150"
                         title="Introduce un correo válido (usuario@gmail.com)">
                 </div>
-                
+
                 <div id="accesoSistema"></div>
-                    <h3>Datos de acceso al sistema</h3>
-                    <div class="form-group">
-                        <label class="form-label">Usuario *</label>
-                        <div class="input-group">
-                         <span class="input-group-text"><i class="fas fa-user"></i></span>
-                         <input type="text" class="form-control" th:field="*{userName}" required />
-                        </div>
-                 </div>
-                 <div class="form-group">
-                    <label class="form-label">Contraseña *</label>
+                <h3>Datos de acceso al sistema</h3>
+                <div class="form-group">
+                    <label class="form-label">Usuario:</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" class="form-control" th:field="*{userPassword}" required />
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" class="form-control" th:field="*{userName}" required minlength="5"
+                            maxlength="50" title="El nombre de usuario debe tener mas de cinco caracteres">
                     </div>
                 </div>
-            </div>
-                <div class="buttons">
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a th:href="@{/login}" class="btn btn-secondary" style="text-decoration: none; text-align: center;">Ya tiene una cuenta</a>
+                <div class="form-group">
+                    <label class="form-label">Contraseña:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        <input type="password" class="form-control" th:field="*{userPassword}" required minlength="5"
+                            maxlength="20" title="La contraseña debe tener mas de cinco caracteres">
+                    </div>
                 </div>
-            </form>
         </div>
+        <div class="buttons">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a th:href="@{/login}" class="btn btn-secondary" style="text-decoration: none; text-align: center;">Ya tiene
+                una cuenta</a>
+        </div>
+        </form>
+    </div>
     </div>
     <script src="/js/information.js"></script>
 </body>
+
 </html>

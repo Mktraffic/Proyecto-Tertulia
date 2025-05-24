@@ -22,8 +22,10 @@
                 </div>
                 <div class="search-add">
                     <form th:action="@{/searchBuy}" method="post">
-                        <input type="date" name="fechaCompra" placeholder="Fecha compra" required
-                            title="Seleccione la fecha de la compra">
+                        <input type="date" name="fechaInicial"  required
+                            title="Seleccione la fecha inicial">
+                             <input type="date" name="fechaFinal"  required
+                            title="Seleccione la final">
                         <button type="submit" class="search-button" title="Buscar">🔍</button>
                     </form>
                     <form th:action="@{/manageBuy}" method="get">
