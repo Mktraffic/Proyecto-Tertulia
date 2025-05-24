@@ -31,27 +31,23 @@ public class PersonaService {
     }
 
     public PersonaDTO addPersonaInDB(PersonaDTO personaDTO) {
-        Persona personaGuardada = new Persona();
+        PersonaDTO personaGuardada = new PersonaDTO();
         if (!personaDTO.getFechaNacimiento().isAfter(LocalDate.now().minusYears(18))) {
             try {
-                Persona persona = personaMapper.toEntity(personaDTO);
-                persona.setId(null);
-                personaGuardada = personaRepository.save(persona);
+                personaDTO.setId(null);
+                personaGuardada = personaMapper.toDTO(personaRepository.save(personaMapper.toEntity(personaDTO)));
             } catch (DataIntegrityViolationException e) {
                 String message = e.getMostSpecificCause().getMessage();
                 if (message != null && message.contains("correo_electronico")) {
                     personaGuardada.setNombre("correo_electronico");
-                    return personaMapper.toDTO(personaGuardada);
                 } else if (message != null && message.contains("numero_documento")) {
                     personaGuardada.setNombre("numero_documento");
-                    return personaMapper.toDTO(personaGuardada);
                 }
             }
         } else {
             personaGuardada.setNombre("Persona_menor");
-            return personaMapper.toDTO(personaGuardada);
         }
-        return personaMapper.toDTO(personaGuardada);
+        return personaGuardada;
     }
 
     public PersonaDTO updatePersona(PersonaDTO existingPersona) {
