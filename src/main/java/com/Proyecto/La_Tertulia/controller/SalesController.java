@@ -60,7 +60,7 @@ public class SalesController {
     public String addPerson(Model model) {
         List<String> categorias = productoService.productCategories();
         model.addAttribute("categorias", categorias);
-        model.addAttribute("VentaDTO", new VentaDTO());
+        model.addAttribute("ventaDTO", new VentaDTO());
         return "SaleRegistration";
     }
 
@@ -69,7 +69,7 @@ public class SalesController {
             @ModelAttribute("producto") String nombreProd, Model model) {
         // registrar la venta, crear una nueva ventaDTO y pasarle por parametros lo que
         // se optiene de "venta"
-        model.addAttribute("VentaDTO", new VentaDTO());
+        model.addAttribute("ventaDTO", new VentaDTO());
         return "redirect:/SaleRegistration";
     }
 

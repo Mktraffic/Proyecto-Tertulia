@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpSession;
 public class BuyController {
     
    @GetMapping("/manageBuy")
-    public String chargeUsersToManage(Model model, HttpSession session) {
+    public String chargeBuysToManage(Model model, HttpSession session) {
       //  List<UsuarioDTO> compras = usuarioService.findAllUsuarios();
       //  model.addAttribute("Compras", compras);
         UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");

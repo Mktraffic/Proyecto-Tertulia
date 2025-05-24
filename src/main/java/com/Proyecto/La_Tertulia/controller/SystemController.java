@@ -104,18 +104,18 @@ public class SystemController {
         usuario.getPersona().setEstado(true);
         PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
         usuario.setPersona(nuevaPersona);
+         String message = "";
         if ("correo_electronico".equals(nuevaPersona.getNombre())) {
-            model.addAttribute("error", "Correo electrónico ya vinculado a un usuario");
-            model.addAttribute("usuarioDTO", usuario);
-            return "AdminRegistration";
+            message = "Correo electrónico ya vinculado a un usuario";
         } else if ("numero_documento".equals(nuevaPersona.getNombre())) {
-            model.addAttribute("error", "Documento de identidad repetido");
-            model.addAttribute("usuarioDTO", usuario);
-            return "AdminRegistration";
+            message = "Documento de identidad repetido";
         } else if ("Persona_menor".equals(nuevaPersona.getNombre())) {
-            model.addAttribute("error", "La persona es menor de edad");
-            model.addAttribute("usuarioDTO", usuario);
-            return "AdminRegistration";
+            message = "La persona es menor de edad";
+        }
+        if (!message.isEmpty()) {
+            model.addAttribute("error", message);
+            model.addAttribute("usuarioDTO", new UsuarioDTO());
+            return "UserRegistration";
         }
         String nombreRol = "Administrador";
         Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
