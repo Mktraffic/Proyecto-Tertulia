@@ -90,6 +90,21 @@ public class ProductService {
         }
         return productList;
     }
+    public ProductDTO updateProduct(ProductDTO productDTO) {
+        Optional<Product> optionalProduct = productRepository.findById(productDTO.getId());
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            product.setType(productDTO.getType());
+            product.setName(productDTO.getName());
+            product.setDescripcion_producto(productDTO.getDescripcion_producto());
+            product.setPresentation(productDTO.getPresentation());
+            product.setStock(productDTO.getStock());
+            product.setPrice(productDTO.getPrice());
+            Product updatedProduct = productRepository.save(product);
+            return productMapper.toDTO(updatedProduct);
+        }
+        return null;
+    }
 
 
 
