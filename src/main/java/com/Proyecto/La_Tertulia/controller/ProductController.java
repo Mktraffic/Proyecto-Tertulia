@@ -16,6 +16,8 @@ import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.dto.VinoDTO;
 import com.Proyecto.La_Tertulia.dto.VodkaDTO;
 import com.Proyecto.La_Tertulia.service.ProductService;
+import com.Proyecto.La_Tertulia.service.factory.ProductoFactory;
+import com.Proyecto.La_Tertulia.service.factory.ProductoFactoryProducer;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -48,46 +50,61 @@ public class ProductController {
     }
 
     @GetMapping("/fragment")
-public String getProductFragment(@RequestParam("typeProduct") String typeProduct, Model model) {
-    switch (typeProduct.toUpperCase()) {
-        case "AGUARDIENTE":
-            model.addAttribute("productDTO", new AguardienteDTO());
-            return "FragmentsProducts :: aguardienteFields";
-        case "CERVEZA":
-            model.addAttribute("productDTO", new CervezaDTO());
-            return "FragmentsProducts :: cervezaFields";
-        case "VINO":
-            model.addAttribute("productDTO", new VinoDTO());
-            return "FragmentsProducts :: vinoFields";
-        case "VODKA":
-            model.addAttribute("productDTO", new VodkaDTO());
-            return "FragmentsProducts :: vodkaFields";
-        default:
-            return "FragmentsProducts :: none";
+    public String getProductFragment(@RequestParam("typeProduct") String typeProduct, Model model) {
+        switch (typeProduct.toUpperCase()) {
+            case "AGUARDIENTE":
+                model.addAttribute("productDTO", new AguardienteDTO());
+                return "FragmentsProducts :: aguardienteFields";
+            case "CERVEZA":
+                model.addAttribute("productDTO", new CervezaDTO());
+                return "FragmentsProducts :: cervezaFields";
+            case "VINO":
+                model.addAttribute("productDTO", new VinoDTO());
+                return "FragmentsProducts :: vinoFields";
+            case "VODKA":
+                model.addAttribute("productDTO", new VodkaDTO());
+                return "FragmentsProducts :: vodkaFields";
+            default:
+                return "FragmentsProducts :: none";
+        }
     }
-}
-
 
     @GetMapping("/addProduct")
     public String showFormAddProduct(Model model) {
-       if (!model.containsAttribute("productDTO")) {
-        model.addAttribute("productDTO", new VinoDTO());
-    }
-    return "ProductRegistration";
+        if (!model.containsAttribute("productDTO")) {
+            model.addAttribute("productDTO", new VinoDTO());
+        }
+        return "ProductRegistration";
     }
 
-  /*  @PostMapping("/productRegistration")
+    /*
+     * @PostMapping("/productRegistration")
+     * public String recordProduct(@ModelAttribute ProductDTO producto, Model model)
+     * {
+     * ProductDTO productDTO = new ProductDTO(
+     * null,
+     * producto.getType(),
+     * producto.getName(),
+     * producto.getDescripcion(),
+     * producto.getPresentation(),
+     * producto.getStock(),
+     * producto.getPrice());
+     * productService.addProductInDB(productDTO);
+     * model.addAttribute("ProductDTO", new ProductDTO());
+     * return "ProductRegistration";
+     * }
+     */
+
+    @PostMapping("/productRegistration")
     public String recordProduct(@ModelAttribute ProductDTO producto, Model model) {
-        ProductDTO productDTO = new ProductDTO(
-                null,
-                producto.getType(),
-                producto.getName(),
-                producto.getDescripcion(),
-                producto.getPresentation(),
-                producto.getStock(),
-                producto.getPrice());
-        productService.addProductInDB(productDTO);
-        model.addAttribute("ProductDTO", new ProductDTO());
+        ProductoFactoryProducer factoryProducer = new ProductoFactoryProducer();
+        ProductoFactory factory = factoryProducer.getFactory(producto);
+        if (factory != null) {
+            model.addAttribute("success", "Producto registrado correctamente");
+            return "ProductRegistration";
+        }
+        model.addAttribute("error", "Tipo de producto no válido");
         return "ProductRegistration";
-    }*/ 
+    }
+
 }
