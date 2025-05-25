@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
-@Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_name"})})
+@Table(name = "usuario")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,11 +17,11 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name", nullable =  false)
+    @Column(name = "user_name")
     @Size(min = 1, max = 50, message = "El usuario debe tener entre 5 y 50 caracteres")
     private String userName;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     @Size(min = 1, max = 30, message = "La contraseña debe tener entre 5 y 20 caracteres")
     private String userPassword;
 

@@ -13,7 +13,6 @@ import com.Proyecto.La_Tertulia.dto.*;
 import com.Proyecto.La_Tertulia.mapper.ProductMapperImplement;
 import com.Proyecto.La_Tertulia.model.*;
 import com.Proyecto.La_Tertulia.repository.ProductRepository;
-import com.Proyecto.La_Tertulia.service.factory.ProductoFactory;
 import com.Proyecto.La_Tertulia.service.factory.ProductoFactoryProducer;
 
 @Service

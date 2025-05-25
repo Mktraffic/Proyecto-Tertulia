@@ -1,10 +1,8 @@
 package com.Proyecto.La_Tertulia.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
 
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 
@@ -25,11 +23,9 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private RolRepository rolRepository;
- 
 
     @Autowired
     private UsuarioMapper usuarioMapper;
-   
 
     public List<UsuarioDTO> findAllUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAll();
@@ -39,17 +35,12 @@ public class UsuarioService {
     }
 
     public UsuarioDTO addUsuarioInDB(UsuarioDTO usuarioDTO) {
-        System.out.println("Usuario antes de persistir: " + usuarioDTO);
-        System.out.println("Contraseña antes de persistir: " + usuarioDTO.getUserPassword());
         Usuario usuarioGuardado = new Usuario();
-        try {
+        if (usuarioDTO.getRol().getNombreRol().toLowerCase().equals("proveedor")) {
             usuarioGuardado = usuarioRepository.save(usuarioMapper.toEntity(usuarioDTO));
-        } catch (DataIntegrityViolationException e) {
-            String message = e.getMostSpecificCause().getMessage();
-            if (message != null && message.contains("user_name")) {
-                usuarioGuardado.setUserName("user_name");
-            } else {
-                usuarioGuardado.setUserName("error");
+        } else {
+            if (usuarioDTO.getUserName() != null || usuarioDTO.getUserPassword() != null) {
+                    usuarioGuardado = usuarioRepository.save(usuarioMapper.toEntity(usuarioDTO));
             }
         }
         return usuarioMapper.toDTO(usuarioGuardado);
@@ -181,8 +172,8 @@ public class UsuarioService {
 
     /**
      * Actualiza un usuario existente en la base de datos.
-    
      *
+     * 
      * @param datosActualizados Datos actualizados del usuario.
      * @return El usuario actualizado como UsuarioDTO o null si lo actualizo con un
      *         dato que ya era el mismo ejemplo la misma contrasena.
@@ -194,8 +185,8 @@ public class UsuarioService {
         if (changePasword(datosActualizados.getId(), datosActualizados.getUserPassword()) &&
                 updtaeRolUsuario(datosActualizados.getId(), datosActualizados.getRol().getId()) != null &&
                 changeUsername(datosActualizados.getId(), datosActualizados.getUserName())) {
-        Usuario usuarioToUpdate = usuarioRepository.findById(datosActualizados.getId())
-        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+            Usuario usuarioToUpdate = usuarioRepository.findById(datosActualizados.getId())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             return usuarioMapper.toDTO(usuarioToUpdate);
         }
         return null;
