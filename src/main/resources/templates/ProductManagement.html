@@ -52,14 +52,13 @@
                     <tr th:each="producto : ${Productos}">
                         <td th:text="${producto.id}"></td>
                         <td th:text="${producto.name}"></td>
-                        <td th:text="${producto.descripcion_producto}"></td>
+                        <td th:text="${producto.descripcion}"></td>
                         <td th:text="${producto.presentation}"></td>
                         <td th:text="${#numbers.formatDecimal(producto.price, 1, 'COMMA', 2, 'POINT')}"></td>
                         <td>
                              <button class="edit-btn" th:attr="data-code=${producto.id},
-                                    data-type=${producto.type},
                                     data-name=${producto.name},
-                                    data-description=${producto.descripcion_producto},
+                                    data-description=${producto.descripcion},
                                     data-presentation=${producto.presentation},
                                     data-quantity=${producto.stock},
                                     data-price=${producto.price}" onclick="openModal(this)" title="Modificar">

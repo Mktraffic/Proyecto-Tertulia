@@ -92,6 +92,16 @@ public class UsuarioService {
         return userList;
     }
 
+    public UsuarioDTO findUserByName(String name) {
+        List<UsuarioDTO> usuarioDTOs = findAllUsuarios();
+        for (UsuarioDTO usuarioDTO : usuarioDTOs) {
+            if (usuarioDTO.getUserName().equals(name)) {
+                return usuarioDTO;
+            }
+        }
+        return null;
+    }
+
     public UsuarioDTO findUsuarioById(Long id) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
         if (usuario != null) {
@@ -146,31 +156,6 @@ public class UsuarioService {
     }
 
     /**
-     * Cambia el nombre de usuario de un usuario existente.
-     *
-     * @param idUsuario          ID del usuario cuyo nombre de usuario se va a
-     *                           cambiar.
-     * @param nuevoNombreUsuario Nuevo nombre de usuario a establecer.
-     * @return true si el nombre de usuario se cambió correctamente, false si no se
-     *         realizó ningún cambio.
-     */
-    public boolean changeUsername(Long idUsuario, String nuevoNombreUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        if (nuevoNombreUsuario != null &&
-                !nuevoNombreUsuario.isBlank() &&
-                !usuario.getUserName().equals(nuevoNombreUsuario)) {
-
-            usuario.setUserName(nuevoNombreUsuario);
-            usuarioRepository.save(usuario);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Actualiza un usuario existente en la base de datos.
      *
      * 
@@ -183,14 +168,17 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (changePasword(datosActualizados.getId(), datosActualizados.getUserPassword()) &&
+<<<<<<< Updated upstream
                 updtaeRolUsuario(datosActualizados.getId(), datosActualizados.getRol().getId()) != null &&
                 changeUsername(datosActualizados.getId(), datosActualizados.getUserName())) {
+=======
+                updtaeRolUsuario(datosActualizados.getId(), datosActualizados.getRol().getId()) != null) {
+>>>>>>> Stashed changes
             Usuario usuarioToUpdate = usuarioRepository.findById(datosActualizados.getId())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             return usuarioMapper.toDTO(usuarioToUpdate);
         }
         return null;
-
     }
 
 }

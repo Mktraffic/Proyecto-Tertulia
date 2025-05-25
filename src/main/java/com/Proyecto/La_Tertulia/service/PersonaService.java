@@ -90,7 +90,7 @@ public class PersonaService {
         return Optional.empty();
 
     }
-
+//Habilitar e inhabilitar
     public PersonaDTO borrarPersonaInDB(Long id) {
         Optional<PersonaDTO> personaOptional = findById(id);
         if (personaOptional.isPresent()) {

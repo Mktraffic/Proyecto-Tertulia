@@ -59,10 +59,12 @@ public class PersonController {
 
     @PostMapping("/UserRegistration")
     public String userRegister(@ModelAttribute UsuarioDTO usuario, Model model) {
-         if (usuarioService.validateExistUserName(usuario.getUserName())) {
-            model.addAttribute("error", "El nombre de usuario ya esta registrado.");
-            model.addAttribute("usuarioDTO", usuario);
-            return "UserRegistration";
+        if (usuario.getUserName() != null || !usuario.getRol().getNombreRol().equals("Proveedor")) {
+            if (usuarioService.validateExistUserName(usuario.getUserName())) {
+                model.addAttribute("error", "El nombre de usuario ya esta registrado.");
+                model.addAttribute("usuarioDTO", usuario);
+                return "UserRegistration";
+            }
         }
         usuario.getPersona().setEstado(true);
         PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
@@ -84,10 +86,6 @@ public class PersonController {
         Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);
         usuario.setPersona(nuevaPersona);
         usuario.setRol(new RolDTO(rolGuardado.getId(), rolGuardado.getNombreRol()));
-        if (nombreRol.equals("Proveedor")) {
-            usuario.setUserName(null);
-            usuario.setUserPassword(null);
-        }
         usuarioService.addUsuarioInDB(usuario);
         model.addAttribute("success", "Usuario registrado correctamente.");
         model.addAttribute("usuarioDTO", new UsuarioDTO());
@@ -96,12 +94,26 @@ public class PersonController {
 
     @PostMapping("/updatePerson")
     public String updatePerson(@ModelAttribute UsuarioDTO usuario, Model model) {
-        PersonaDTO personUpdate = personaService.updatePersona(usuario.getPersona());
-        usuario.setPersona(personUpdate);
-        String password = usuario.getUserPassword();
-        usuario.setUserPassword(password);
-        String nombreRol = usuario.getRol().getNombreRol();
-        usuario.getRol().setNombreRol(nombreRol);
+        System.out.println("\n \n \nEntra a modificarUsuario");
+        UsuarioDTO usuarioDTO=usuarioService.findUserByName(usuario.getUserName());
+        usuarioDTO.getRol().setNombreRol(usuario.getRol().getNombreRol());
+        usuarioDTO.setUserPassword(usuario.getUserPassword());
+        System.out.println("\n \n \n Revisa modificacion de persona");
+        System.out.println("\n \n \n \nNombre persona"+usuario.getPersona().getNombre());
+        PersonaDTO personaDTO = personaService.updatePersona(usuario.getPersona());
+
+        
+        String message = "";
+        if ("correo_electronico".equals(personaDTO.getNombre())) {
+            message = "Correo electrónico ya vinculado a un usuario";
+        } 
+        if (!message.isEmpty()) {
+            model.addAttribute("error", message);
+            model.addAttribute("usuarioDTO", new UsuarioDTO());
+            return "UserRegistration";
+        }else{
+            model.addAttribute("sucess", "Persona modificada correctamente");
+        }
         return "redirect:/managePerson";
     }
 }

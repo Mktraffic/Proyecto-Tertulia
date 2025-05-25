@@ -43,17 +43,8 @@ public class ProductController {
         return "ProductManagement";
     }
     @GetMapping("/addProduct")
-    public String showFormAddProduct(Model model,
-            @RequestParam(value = "success", required = false) String success,
-            @RequestParam(value = "error", required = false) String error) {
-        model.addAttribute("ProductDTO", new ProductDTO());
-        if (success != null) {
-            model.addAttribute("mensajeExito", success);
-        }
-        if (error != null) {
-            model.addAttribute("mensajeError", error);
-        }
-        return "ProductRegistration";
+    public String showFormAddProduct(Model model) {
+        return "typeProduct";
     }
     @PostMapping("/productRegistration")
     public String recordProduct(@ModelAttribute ProductDTO producto, Model model) {
@@ -61,7 +52,7 @@ public class ProductController {
             null,
             producto.getType(),
             producto.getName(),
-            producto.getDescripcion_producto(),
+            producto.getDescripcion(),
             producto.getPresentation(),
             producto.getStock(),
             producto.getPrice()

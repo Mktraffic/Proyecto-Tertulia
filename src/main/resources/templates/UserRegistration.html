@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de usuarios</title>
+    <title>Registro de Personas</title>
     <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
 </head>
 
@@ -20,7 +20,7 @@
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
-            <h1>Registro de usuarios</h1>
+            <h1>Registro de Personas</h1>
         </div>
 
         <div class="form-container">
@@ -77,32 +77,32 @@
                         <option value="Proveedor">Proveedor</option>
                     </select>
                 </div>
-                <div id="accesoSistema"></div>
-                <h3>Datos de acceso al sistema</h3>
-                <div class="form-group">
-                    <label class="form-label">Usuario *</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        <input type="text" class="form-control" th:field="*{userName}" required minlength="5"
-                            maxlength="50" title="El nombre de usuario debe tener mas de cinco caracteres">
+                <div id="accesoSistema">
+                    <h3>Datos de acceso al sistema</h3>
+                    <div class="form-group">
+                        <label class="form-label">Usuario *</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" th:field="*{userName}" required minlength="5"
+                                maxlength="50" title="El nombre de usuario debe tener mas de cinco caracteres">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Contraseña *</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" th:field="*{userPassword}" required
+                                minlength="5" maxlength="20" title="La contraseña debe tener mas de cinco caracteres">
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Contraseña *</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input type="password" class="form-control" th:field="*{userPassword}" required minlength="5"
-                            maxlength="20" title="La contraseña debe tener mas de cinco caracteres">
-                    </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <a th:href="@{/managePerson}" class="btn btn-secondary"
+                        style="text-decoration: none; text-align: center;">Atras</a>
                 </div>
+            </form>
         </div>
-        <div class="buttons">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a th:href="@{/managePerson}" class="btn btn-secondary"
-                style="text-decoration: none; text-align: center;">Atras</a>
-        </div>
-        </form>
-    </div>
     </div>
     <script src="/js/information.js"></script>
     <script src="/js/userRegister.js"></script>

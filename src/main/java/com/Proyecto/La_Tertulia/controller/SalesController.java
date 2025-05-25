@@ -58,8 +58,8 @@ public class SalesController {
 
     @GetMapping("/addSale")
     public String showFormAddSale(Model model) {
-        List<String> categorias = productoService.productCategories();
-        model.addAttribute("categorias", categorias);
+       // List<String> categorias = productoService.productCategories();
+       // model.addAttribute("categorias", categorias);
         model.addAttribute("ventaDTO", new VentaDTO());
         return "SaleRegistration";
     }

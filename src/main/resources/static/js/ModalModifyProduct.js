@@ -1,6 +1,5 @@
 function openModal(button) {
     document.getElementById('edit-code').value = button.getAttribute('data-code');
-    document.getElementById('edit-type').value = button.getAttribute('data-type');
    document.getElementById('edit-name').value = button.getAttribute('data-name');
     document.getElementById('edit-description').value = button.getAttribute('data-description');
     document.getElementById('edit-presentation').value = button.getAttribute('data-presentation');
