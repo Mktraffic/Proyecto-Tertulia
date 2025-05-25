@@ -50,9 +50,20 @@ public class PersonaService {
         return personaGuardada;
     }
 
-    public PersonaDTO updatePersona(PersonaDTO personaExistente) {
+    public PersonaDTO updatePersona(PersonaDTO personaExistente, PersonaDTO datos) {
         PersonaDTO personaActualizada = new PersonaDTO();
-        if (personaExistente.isEstado() == false) {
+        System.out.println(personaExistente);
+        if (datos.getNumeroTelefono() != null && datos.getNumeroTelefono() != personaExistente.getNumeroTelefono()) {
+            personaExistente.setNumeroTelefono(datos.getNumeroTelefono());
+        }
+        if(datos.getCorreo() != null && datos.getCorreo() != personaExistente.getCorreo()) {
+            personaExistente.setCorreo(datos.getCorreo());
+        }
+        if (datos.isEstado() != personaExistente.isEstado()) {
+            personaExistente.setEstado(datos.isEstado());
+        }
+
+        if (!personaExistente.isEstado()) {
             personaActualizada = borrarPersonaInDB(personaExistente.getId());
         } else {
             try {

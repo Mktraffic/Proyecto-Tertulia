@@ -49,7 +49,7 @@ public class Persona {
 
     @Column(name = "numero_telefono", length = 20, nullable = false)
     @Size(min = 3, max = 20)
-    private long numeroTelefono;
+    private Long numeroTelefono;
 
     @Column(name = "correo_electronico", length = 200)
     @Size(min = 3, max = 200)

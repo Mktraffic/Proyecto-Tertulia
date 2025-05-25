@@ -5,7 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
-
+import com.Proyecto.La_Tertulia.mapper.RolMapper;
 import com.Proyecto.La_Tertulia.mapper.UsuarioMapper;
 import com.Proyecto.La_Tertulia.model.Rol;
 import com.Proyecto.La_Tertulia.model.Usuario;
@@ -26,6 +26,8 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
+    @Autowired
+    private RolMapper rolMapper;
 
     public List<UsuarioDTO> findAllUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAll();
@@ -96,6 +98,8 @@ public class UsuarioService {
         List<UsuarioDTO> usuarioDTOs = findAllUsuarios();
         for (UsuarioDTO usuarioDTO : usuarioDTOs) {
             if (usuarioDTO.getUserName().equals(name)) {
+                System.out.println(usuarioDTO);
+                System.out.println(usuarioDTO.getPersona());
                 return usuarioDTO;
             }
         }
@@ -110,70 +114,24 @@ public class UsuarioService {
         return null;
     }
 
-    /**
-     * Actualiza el rol de un usuario existente.
-     *
-     * @param idUsuario      ID del usuario a actualizar.
-     * @param nuevoNombreRol ID del nuevo rol a asignar al usuario.
-     * @return El usuario actualizado como UsuarioDTO. y null si no se realizó
-     *         ningún cambio.
-     */
-    public UsuarioDTO updtaeRolUsuario(Long idUsuario, Long nuevoNombreRol) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public UsuarioDTO updateUsuario(UsuarioDTO usuarioExistente, UsuarioDTO datos) {
+        if (datos.getRol().getNombreRol() != null && !datos.getRol().getNombreRol().isEmpty() && datos.getRol().getNombreRol() != usuarioExistente.getRol().getNombreRol()) {
+            usuarioExistente.getRol().setNombreRol(datos.getRol().getNombreRol());
+            rolRepository.save(rolMapper.toEntity(usuarioExistente.getRol()));
 
-        Rol nuevoRol = rolRepository.findById(nuevoNombreRol)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-        if (!usuario.getRol().getId().equals(nuevoRol.getId())) {
-            usuario.setRol(nuevoRol);
-            usuarioRepository.save(usuario);
-            return usuarioMapper.toDTO(usuario);
-
+            System.out.println(datos.getRol().getNombreRol());
+            System.out.println(usuarioExistente.getRol().getNombreRol());
         }
-        return null;
+        if(datos.getUserPassword() != null && !datos.getUserPassword().isEmpty() && !datos.getUserPassword().equals(usuarioExistente.getUserPassword())) {
+            usuarioExistente.setUserPassword(datos.getUserPassword());
 
-    }
-
-    /**
-     * Cambia la contraseña de un usuario existente.
-     *
-     * @param idUsuario       ID del usuario cuya contraseña se va a cambiar.
-     * @param nuevaContrasena Nueva contraseña a establecer.
-     * @return true si la contraseña se cambió correctamente, false si no se realizó
-     *         ningún cambio.
-     */
-    public boolean changePasword(Long idUsuario, String nuevaContrasena) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        if (nuevaContrasena != null && !nuevaContrasena.isBlank()
-                && !usuario.getUserPassword().equals(nuevaContrasena)) {
-            usuario.setUserPassword(nuevaContrasena);
-            usuarioRepository.save(usuario);
-            return true;
+            System.out.println(datos.getUserPassword());
+            System.out.println(usuarioExistente.getUserPassword());
         }
-        return false;
 
-    }
+        System.out.println(usuarioExistente);
 
-    /**
-     * Actualiza un usuario existente en la base de datos.
-     *
-     * 
-     * @param datosActualizados Datos actualizados del usuario.
-     * @return El usuario actualizado como UsuarioDTO o null si lo actualizo con un
-     *         dato que ya era el mismo ejemplo la misma contrasena.
-     */
-    public UsuarioDTO updateUsuario(UsuarioDTO datosActualizados) {
-        Usuario usuario = usuarioRepository.findById(datosActualizados.getId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        if (changePasword(datosActualizados.getId(), datosActualizados.getUserPassword()) &&
-                updtaeRolUsuario(datosActualizados.getId(), datosActualizados.getRol().getId()) != null) {
-            Usuario usuarioToUpdate = usuarioRepository.findById(datosActualizados.getId())
-                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-            return usuarioMapper.toDTO(usuarioToUpdate);
-        }
-        return null;
+        return usuarioMapper.toDTO(usuarioRepository.save(usuarioMapper.toEntity(usuarioExistente)));
     }
 
 }

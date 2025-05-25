@@ -59,7 +59,8 @@ public class PersonController {
 
     @PostMapping("/UserRegistration")
     public String userRegister(@ModelAttribute UsuarioDTO usuario, Model model) {
-        if (usuario.getUserName() != null || !usuario.getRol().getNombreRol().equals("Proveedor")) {
+        // Solo valida nombre de usuario si no es proveedor o si el campo no está vacío
+        if (!usuario.getRol().getNombreRol().equals("Proveedor") && usuario.getUserName() != null && !usuario.getUserName().isEmpty()) {
             if (usuarioService.validateExistUserName(usuario.getUserName())) {
                 model.addAttribute("error", "El nombre de usuario ya esta registrado.");
                 model.addAttribute("usuarioDTO", usuario);
@@ -94,13 +95,12 @@ public class PersonController {
 
     @PostMapping("/updatePerson")
     public String updatePerson(@ModelAttribute UsuarioDTO usuario, Model model) {
-        System.out.println("\n \n \nEntra a modificarUsuario");
-        UsuarioDTO usuarioDTO=usuarioService.findUserByName(usuario.getUserName());
-        usuarioDTO.getRol().setNombreRol(usuario.getRol().getNombreRol());
-        usuarioDTO.setUserPassword(usuario.getUserPassword());
-        System.out.println("\n \n \n Revisa modificacion de persona");
-        System.out.println("\n \n \n \nNombre persona"+usuario.getPersona().getNombre());
-        PersonaDTO personaDTO = personaService.updatePersona(usuario.getPersona());
+        System.out.println("\n \n \nEntra a modificarUsuario con el username: " + usuario);
+        UsuarioDTO usuarioDTO = usuarioService.findUserByName(usuario.getUserName());
+        System.out.println("\n \n \n Revisa modificacion de persona"); 
+        System.out.println("\n \n \n \nNombre persona" + usuarioDTO);
+        PersonaDTO personaDTO = personaService.updatePersona(usuarioDTO.getPersona(), usuario.getPersona());
+        usuarioService.updateUsuario(usuarioDTO, usuario);
         String message = "";
         if ("correo_electronico".equals(personaDTO.getNombre())) {
             message = "Correo electrónico ya vinculado a un usuario";
