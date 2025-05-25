@@ -25,7 +25,7 @@ public class ProductController {
     public String chargeProductsToManage(Model model, HttpSession session) {
         List<ProductDTO> productos = productService.findAllProducts();
         model.addAttribute("Productos", productos);
-        UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");
+        UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
         model.addAttribute("usuarioDTO", usuarioDTO);
         return "ProductManagement";
     }

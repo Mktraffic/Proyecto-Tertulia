@@ -20,7 +20,7 @@ public class BuyController {
   public String chargeBuysToManage(Model model, HttpSession session) {
     // List<BuyDTO> compras = buyService.findAllCompras();
     // model.addAttribute("Compras", compras);
-    UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");
+    UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
     model.addAttribute("usuarioDTO", usuarioDTO);
     return "BuyManagement";
   }

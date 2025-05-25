@@ -4,25 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Opciones vendedor</title>
-    <link rel="stylesheet" th:href="@{/css/StylesAdmOptions.css}" />
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <img th:src="@{/images/logo-tertulia.png}" alt="Logo La Tertulia" width="80" height="80">
-            <h2>LA TERTULIA LICORERA</h2>
+    <div th:fragment="opcSeller">
+        <link rel="stylesheet" th:href="@{/css/StylesAdmOptions.css}" />
+        <div class="sidebar">
+            <div class="logo">
+                <img th:src="@{/images/logo-tertulia.png}" alt="Logo La Tertulia" width="80" height="80">
+                <h2>LA TERTULIA LICORERA</h2>
+            </div>
+            <nav class="menu">
+                <a th:href="@{/manageSales}">
+                    <button class="menu-item">Gestionar venta</button>
+                </a>
+                <a th:href="@{/logout}">
+                    <button class="menu-item">Cerrar sesión</button>
+                </a>
+            </nav>
         </div>
-        <nav class="menu">
-            <a th:href="@{/manageSales}">
-                <button class="menu-item">Gestionar venta</button>
-            </a>
-            <a th:href="@{/logout}">
-                <button class="menu-item">Cerrar sesión</button>
-            </a>
-        </nav>
     </div>
-
     <div class="main-content">
         <section class="welcome-section">
             <h1>¡Bienvenido, <span th:text="${usuarioDTO.userName}">Usuario</span>!</h1>

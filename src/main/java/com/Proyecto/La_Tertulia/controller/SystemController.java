@@ -61,7 +61,9 @@ public class SystemController {
                 return "Login";
             }
             String rol = data[1];
-            session.setAttribute("usuario", searchPersonByUserName(usuarioDTO.getUserName()));
+            UsuarioDTO usuarioSession = searchPersonByUserName(usuarioDTO.getUserName());
+            usuarioSession.getRol().setNombreRol(rol);
+            session.setAttribute("usuario", usuarioSession);
             session.setAttribute("rol", rol);
             switch (rol) {
                 case "Administrador":
@@ -76,15 +78,14 @@ public class SystemController {
         return null;
     }
 
-    public String searchPersonByUserName(String user_name) {
+    public UsuarioDTO searchPersonByUserName(String user_name) {
         List<UsuarioDTO> userList = usuarioService.findAllUsuarios();
-        String nombre = "";
-        for (int i = 0; i < userList.size(); i++) {
-            if (userList.get(i).getUserName().equals(user_name)) {
-                nombre = userList.get(i).getPersona().getNombre() + " " + userList.get(i).getPersona().getApellido();
+        for (UsuarioDTO usuario : userList) {
+            if (usuario.getUserName().equals(user_name)) {
+                return usuario;
             }
         }
-        return nombre;
+        return null;
     }
 
     @GetMapping("/logout")
@@ -101,7 +102,7 @@ public class SystemController {
 
     @PostMapping("/AdminRegistration")
     public String adminRegistration(@ModelAttribute UsuarioDTO usuario, Model model) {
-         if (usuarioService.validateExistUserName(usuario.getUserName())) {
+        if (usuarioService.validateExistUserName(usuario.getUserName())) {
             model.addAttribute("error", "El nombre de usuario ya esta registrado.");
             model.addAttribute("usuarioDTO", usuario);
             return "AdminRegistration";
@@ -109,7 +110,7 @@ public class SystemController {
         usuario.getPersona().setEstado(true);
         PersonaDTO nuevaPersona = personaService.addPersonaInDB(usuario.getPersona());
         usuario.setPersona(nuevaPersona);
-         String message = "";
+        String message = "";
         if ("correo_electronico".equals(nuevaPersona.getNombre())) {
             message = "Correo electrónico ya vinculado a un usuario";
         } else if ("numero_documento".equals(nuevaPersona.getNombre())) {
