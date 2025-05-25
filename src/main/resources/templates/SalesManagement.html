@@ -11,7 +11,10 @@
 <body>
     <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
-        <div th:replace="AdministratorOptions :: amdOptions"></div>
+        <div th:switch="${rol}">
+            <div th:case="'Vendedor'" th:insert="SellerOptions :: opcSeller"></div>
+            <div th:case="'Administrador'" th:insert="AdministratorOptions :: amdOptions"></div>
+        </div>
         <section class="personas-card">
             <header class="header">
             </header>
@@ -53,7 +56,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="venta : ${Ventas}">
-                        <td th:text="{venta.id}"></td>
+                        <td th:text="${venta.id}"></td>
                         <td th:text="${venta.nombreVendedor}"></td>
                         <td th:text="${venta.tipoDocumentoCliente}"></td>
                         <td th:text="${venta.numeroDocumentoCliente}"></td>

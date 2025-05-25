@@ -33,7 +33,7 @@ public class PersonController {
     public String chargeUsersToManage(Model model, HttpSession session) {
         List<UsuarioDTO> usuarios = usuarioService.findAllUsuarios();
         model.addAttribute("Usuarios", usuarios);
-        UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");
+        UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
         model.addAttribute("usuarioDTO", usuarioDTO);
         return "PeopleManagement";
     }

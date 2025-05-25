@@ -24,13 +24,16 @@ public class SalesController {
 
     @GetMapping("/manageSales")
     public String chargeSalesToManage(Model model, HttpSession session) {
+        UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
+        if (usuarioDTO == null) {
+            return "redirect:/login";
+        }
         List<VentaDTO> ventas = ventaService.findAllSales();
         model.addAttribute("Ventas", ventas);
-        UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuarioDTO");
-        model.addAttribute("usuarioDTO", usuarioDTO);
+        model.addAttribute("usuario", usuarioDTO);
+        model.addAttribute("rol", usuarioDTO.getRol().getNombreRol().trim());
         return "SalesManagement";
     }
-
     @PostMapping("/searchSale")
     public String searchSale(@RequestParam("fechaInicial") LocalDate initialDate,
             @RequestParam("fechaFinal") LocalDate finaldate, Model model) {
@@ -70,9 +73,7 @@ public class SalesController {
         return "redirect:/SaleRegistration";
     }
 
-
-
-//Para cargar lo que se necesita para agregar venta   @GetMapping("/productos")
+    // Para cargar lo que se necesita para agregar venta @GetMapping("/productos")
 
     @GetMapping("/productos")
     public List<String> obtainProducts(@RequestParam String categoria) {
