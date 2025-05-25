@@ -1,0 +1,22 @@
+package com.Proyecto.La_Tertulia.service.factory;
+import com.Proyecto.La_Tertulia.mapper.ProductMapperImplement;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.Proyecto.La_Tertulia.dto.ProductDTO;
+import com.Proyecto.La_Tertulia.model.Vino;
+import com.Proyecto.La_Tertulia.repository.ProductRepository;
+import com.Proyecto.La_Tertulia.model.Product;
+
+public class VinoFactory implements ProductoFactory {
+
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private ProductMapperImplement productMapper;
+    
+    @Override
+    public Product crearProducto(ProductDTO dto) {
+        return productRepository.save((Vino) productMapper.toEntity(dto));
+    }
+}
