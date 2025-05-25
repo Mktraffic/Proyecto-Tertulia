@@ -168,12 +168,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         if (changePasword(datosActualizados.getId(), datosActualizados.getUserPassword()) &&
-<<<<<<< Updated upstream
-                updtaeRolUsuario(datosActualizados.getId(), datosActualizados.getRol().getId()) != null &&
-                changeUsername(datosActualizados.getId(), datosActualizados.getUserName())) {
-=======
                 updtaeRolUsuario(datosActualizados.getId(), datosActualizados.getRol().getId()) != null) {
->>>>>>> Stashed changes
             Usuario usuarioToUpdate = usuarioRepository.findById(datosActualizados.getId())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
             return usuarioMapper.toDTO(usuarioToUpdate);

@@ -58,6 +58,8 @@ public class PersonaService {
             try {
                 personaActualizada = personaMapper
                         .toDTO(personaRepository.save(personaMapper.toEntity(personaExistente)));
+                        System.out.println("\n \n \n \n PersonaActualizada");
+                        System.out.println(personaActualizada);
             } catch (DataIntegrityViolationException e) {
                 String message = e.getMostSpecificCause().getMessage();
                 if (message != null && message.contains("correo_electronico")) {

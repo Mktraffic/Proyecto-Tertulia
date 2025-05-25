@@ -101,8 +101,6 @@ public class PersonController {
         System.out.println("\n \n \n Revisa modificacion de persona");
         System.out.println("\n \n \n \nNombre persona"+usuario.getPersona().getNombre());
         PersonaDTO personaDTO = personaService.updatePersona(usuario.getPersona());
-
-        
         String message = "";
         if ("correo_electronico".equals(personaDTO.getNombre())) {
             message = "Correo electrónico ya vinculado a un usuario";
@@ -110,7 +108,7 @@ public class PersonController {
         if (!message.isEmpty()) {
             model.addAttribute("error", message);
             model.addAttribute("usuarioDTO", new UsuarioDTO());
-            return "UserRegistration";
+            return "ModalModifyPerson";
         }else{
             model.addAttribute("sucess", "Persona modificada correctamente");
         }
