@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de productos</title>
     <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
 </head>
+
 <body>
     <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
         <div class="header">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -19,41 +22,52 @@
             </svg>
             <h1>Registro producto</h1>
         </div>
-        
+
         <div class="form-container">
-            <form th:action="@{/productRegistration}" th:object="${ProductDTO}" method="POST">
+            <form th:action="@{/productRegistration}" th:object="${productDTO}" method="POST">
+                <div class="form-group">
+                    <label for="tipoProducto">Tipo de producto:</label>
+                    <select id="tipoProducto" class="form-control" name="typeProduct" required
+                        onchange="loadExtraFields()">
+                        <option value="" selected disabled>Selecciona una opción</option>
+                        <option value="AGUARDIENTE">AGUARDIENTE</option>
+                        <option value="CERVEZA">CERVEZA</option>
+                        <option value="VINO">VINO</option>
+                        <option value="VODKA">VODKA</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="nombre-producto">Nombre producto:</label>
-                     <input type="text" class="form-control" th:field="*{name}" required
-                     minlength="3"
-                        maxlength="100" title="El nombre del producto debe tener como minimo tres caracteres">
-                </div> 
-               <div class="form-group">
-                    <label for="descripción-producto">Descripción producto:</label>
-                     <input type="text" class="form-control" th:field="*{descripcion_producto}" required
-                     minlength="3"
+                    <input type="text" class="form-control" th:field="*{name}" required minlength="3" maxlength="100"
+                        title="El nombre del producto debe tener como minimo tres caracteres">
+                </div>
+                <div class="form-group">
+                    <label for="description">Descripción producto:</label>
+                    <input type="text" class="form-control" th:field="*{description}" required minlength="3"
                         maxlength="100" title="El produto debe tener una descripción">
-                </div> 
+                </div>
                 <div class="form-group">
                     <label for="presentacion">Presentación:</label>
-                     <input type="text" class="form-control" th:field="*{presentation}" required
-                     minlength="2"
+                    <input type="text" class="form-control" th:field="*{presentation}" required minlength="2"
                         maxlength="100" title="El producto debe tener una presentación (contenido)">
-                </div> 
+                </div>
                 <div class="form-group">
                     <label for="cantidad">Cantidad:</label>
-                     <input type="number" class="form-control" th:field="*{stock}" required>
-                </div> 
+                    <input type="number" class="form-control" th:field="*{stock}" required>
+                </div>
                 <div class="form-group">
                     <label for="cantidad">Precio:</label>
-                     <input type="number" class="form-control" th:field="*{price}" required>
-                </div> 
+                    <input type="number" class="form-control" th:field="*{price}" required>
+                </div>
+                <div id="extra-fields"></div>
                 <div class="buttons">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a th:href="@{/manageProduct}" class="btn btn-secondary" style="text-decoration: none; text-align: center;">Atras</a>
+                    <a th:href="@{/manageProduct}" class="btn btn-secondary"
+                        style="text-decoration: none; text-align: center;">Atras</a>
                 </div>
             </form>
         </div>
+        <script src="/js/ChargeFragments.js"></script>
     </div>
 </body>
 </html>
