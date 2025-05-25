@@ -50,28 +50,22 @@ public class PersonaService {
         return personaGuardada;
     }
 
-    public PersonaDTO updatePersona(PersonaDTO existingPersona) {
-        Persona updatedPersona = new Persona();
-        if (!existingPersona.getFechaNacimiento().isAfter(LocalDate.now().minusYears(18))) {
-            Persona personaToUpdate = new Persona(existingPersona.getId(),
-                    existingPersona.getDocumentoIdentidad(), existingPersona.getTipoDocumento(),
-                    existingPersona.getNombre(), existingPersona.getApellido(), existingPersona.isEstado(),
-                    existingPersona.getNumeroTelefono(), existingPersona.getCorreo(),
-                    existingPersona.getFechaNacimiento());
+    public PersonaDTO updatePersona(PersonaDTO personaExistente) {
+        PersonaDTO personaActualizada = new PersonaDTO();
+        if (personaExistente.isEstado() == false) {
+            personaActualizada = borrarPersonaInDB(personaExistente.getId());
+        } else {
             try {
-                updatedPersona = personaRepository.save(personaToUpdate);
+                personaActualizada = personaMapper
+                        .toDTO(personaRepository.save(personaMapper.toEntity(personaExistente)));
             } catch (DataIntegrityViolationException e) {
                 String message = e.getMostSpecificCause().getMessage();
                 if (message != null && message.contains("correo_electronico")) {
-                    personaToUpdate.setNombre("correo_electronico");
-                } else if (message != null && message.contains("numero_documento")) {
-                    personaToUpdate.setNombre("numero_documento");
+                    personaActualizada.setNombre("correo_electronico");
                 }
             }
-        } else {
-            updatedPersona.setNombre("Persona_menor");
         }
-        return personaMapper.toDTO(updatedPersona);
+        return personaActualizada;
     }
 
     // ESTO NO LO UTILIZA EL CONTROLADOR ES PARA LAS PRUEBAS UNITARIAS
