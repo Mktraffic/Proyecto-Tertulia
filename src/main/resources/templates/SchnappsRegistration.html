@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de productos</title>
+    <title>Registro de aguardiente</title>
     <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
 </head>
 
@@ -20,22 +20,11 @@
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
-            <h1>Registro producto</h1>
+            <h1>Registro de aguardiente</h1>
         </div>
 
         <div class="form-container">
-            <form th:action="@{/productRegistration}" th:object="${productDTO}" method="POST">
-                <div class="form-group">
-                    <label for="tipoProducto">Tipo de producto:</label>
-                    <select id="tipoProducto" class="form-control" name="typeProduct" required
-                        onchange="loadExtraFields()">
-                        <option value="" selected disabled>Selecciona una opción</option>
-                        <option value="AGUARDIENTE">AGUARDIENTE</option>
-                        <option value="CERVEZA">CERVEZA</option>
-                        <option value="VINO">VINO</option>
-                        <option value="VODKA">VODKA</option>
-                    </select>
-                </div>
+            <form th:action="@{/schnapppsRegistration}" th:object="${aguardienteDTO}" method="POST">
                 <div class="form-group">
                     <label for="nombre-producto">Nombre producto:</label>
                     <input type="text" class="form-control" th:field="*{name}" required minlength="3" maxlength="100"
@@ -59,15 +48,22 @@
                     <label for="cantidad">Precio:</label>
                     <input type="number" class="form-control" th:field="*{price}" required>
                 </div>
-                <div id="extra-fields"></div>
+                <div class="form-group">
+                    <label>Grado alcohólico (%):</label>
+                    <input type="number" step="0.1" th:field="*{graduacionAlcoholica}" required >
+                </div>
+                <div class="form-group">
+                    <label>Tipo de aguardiente:</label>
+                    <input type="text" th:field="*{tipo}" required minlength="3" maxlength="50">
+                </div>
                 <div class="buttons">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a th:href="@{/manageProduct}" class="btn btn-secondary"
+                    <a th:href="@{/addProduct}" class="btn btn-secondary"
                         style="text-decoration: none; text-align: center;">Atras</a>
                 </div>
             </form>
         </div>
-        <script src="/js/ChargeFragments.js"></script>
     </div>
 </body>
+
 </html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tipo de producto</title>
+    <link rel="stylesheet" href="/css/StylesTypeProduct.css">
+</head>
+
+<body>
+    <form action="/openProductRegister" method="post">
+        <div class="form-group">
+            <label for="tipo-producto">Tipo de producto:</label>
+            <select id="tipo-producto" class="form-control" name="typeProduct" required>
+                <option value="" selected disabled>Selecciona una opción</option>
+                <option value="AGUARDIENTE">AGUARDIENTE</option>
+                <option value="CERVEZA">CERVEZA</option>
+                <option value="VINO">VINO</option>
+                <option value="VODKA">VODKA</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Continuar</button>
+        <a href="/manageProduct" class="btn btn-primary">Atrás</a>
+    </form>
+</body>
+
+</html>
