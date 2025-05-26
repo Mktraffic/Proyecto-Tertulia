@@ -1,27 +1,21 @@
 package com.Proyecto.La_Tertulia.model;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "producto")
-@DiscriminatorColumn(name = "tipo_producto", discriminatorType = DiscriminatorType.STRING)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class  Product {
+public class  Product {
 
     @Id
     @Column(name = "id_producto", length = 50, nullable = false)
@@ -31,10 +25,16 @@ public abstract class  Product {
     @Column(name = "nombre_producto", nullable = false)
     private String name;
 
-    @Column(name = "descripcion_producto")
+    @Column(name = "tipo_producto", nullable = false)
+    private String type;
+
+    @Column(name = "descripcion_producto", nullable = false)
     private String description;
 
-    @Column(name = "presentacion_producto")
+    @Column(name = "grados_alcohol", nullable = false)
+    private String GradosAlcohol;
+
+    @Column(name = "presentacion_producto", nullable = false)
     private String presentation;
 
     @Column(name = "stock_producto", nullable = false)
@@ -42,5 +42,6 @@ public abstract class  Product {
 
     @Column(name = "precio_producto", nullable = false)
     private int price;
+
 
 }

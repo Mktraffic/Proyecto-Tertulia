@@ -8,13 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
-import com.Proyecto.La_Tertulia.dto.AguardienteDTO;
-import com.Proyecto.La_Tertulia.dto.CervezaDTO;
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
-import com.Proyecto.La_Tertulia.dto.VinoDTO;
-import com.Proyecto.La_Tertulia.dto.VodkaDTO;
 import com.Proyecto.La_Tertulia.service.ProductService;
 
 import jakarta.servlet.http.HttpSession;
@@ -47,9 +42,34 @@ public class ProductController {
     return "ProductManagement";
   }
 
-  @GetMapping("/addProduct")
-  public String showFormAddProduct(Model model) {
+  @PostMapping("/addProduct")
+  public String showFormAddProduct(@ModelAttribute ProductDTO productDTO ,Model model) {
+    String message = productService.addProductInDB(productDTO);
+    if(message.equals("Producto agregado correctamente")){
+      model.addAttribute("success", message);
+    } else {
+      model.addAttribute("error", message);
+    }
     return "TypeProduct";
+  }
+
+  @GetMapping("/formProduct")
+  public String showFormModifyProduct(@ModelAttribute String nameProduct ,Model model) {
+    //
+    List<ProductDTO> product = productService.findProductoByName(nameProduct); //obtiene la lista de productos que en el nombre contengan el que buscamos
+    //
+    return "TypeProduct";
+  }
+
+  @PostMapping("/modifyProduct")
+  public String modifyProduct(@ModelAttribute ProductDTO productDTO ,Model model) {
+    String message = productService.updateProduct(productDTO);
+    if (message.equals("Producto actualizado correctamente")) {
+      model.addAttribute("success", message);
+    } else {
+      model.addAttribute("error", message);
+    }
+    return "formProduct";
   }
 
   @PostMapping("/openProductRegister")

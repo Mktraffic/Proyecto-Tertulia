@@ -13,7 +13,6 @@ import com.Proyecto.La_Tertulia.dto.*;
 import com.Proyecto.La_Tertulia.mapper.ProductMapperImplement;
 import com.Proyecto.La_Tertulia.model.*;
 import com.Proyecto.La_Tertulia.repository.ProductRepository;
-import com.Proyecto.La_Tertulia.service.factory.ProductoFactoryProducer;
 
 @Service
 public class ProductService {
@@ -31,19 +30,19 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public String saveProduct(ProductDTO productdto) {
-        System.out.println("Guardando producto: " + productdto.getName() + "////////////////////////");
-        String message = "";
-        ProductoFactoryProducer factoryProducer = new ProductoFactoryProducer();
-        try {
-            factoryProducer.getFactory(productdto);
-            message = "Producto registrado correctamente";
-        } catch (Exception e) {
-            message = "Error al registrar el producto: " + e.getMessage();
+    public String addProductInDB(ProductDTO productdto) {
+        String result = "";
+        if (productdto != null) {
+            try {
+                productdto.setId(null);
+                productRepository.save(productMapper.toEntity(productdto));
+                result = "Producto agregado correctamente";
+            } catch (Exception e) {
+                result = "Error al agregar el producto";
+            }
         }
-        return message;
+        return result;
     }
-
 
     public ResponseEntity<ProductDTO> fetchProductById(Long id) {
         Optional<Product> product = productRepository.findById(id);
@@ -69,14 +68,15 @@ public class ProductService {
         return products;
     }
 
-    public ProductDTO findProductoByName(String nombre) {
+    public List<ProductDTO> findProductoByName(String nombre) {
         List<ProductDTO> products = findAllProducts();
+        List<ProductDTO> result = new ArrayList<>();
         for (ProductDTO product : products) {
             if (product.getName().toLowerCase().contains(nombre.trim().toLowerCase())) {
-                return product;
+                result.add(product);
             }
         }
-        return null;
+        return result;
     }
 
     public List<ProductDTO> findProductByNameOrId(String nombre) {
@@ -98,15 +98,15 @@ public class ProductService {
         return productList;
     }
 
-    public ProductDTO updateProduct(ProductDTO productDTO) {
-        Optional<Product> optionalProduct = productRepository.findById(productDTO.getId());
-        if (optionalProduct.isPresent()) {
-            Product updatedProduct = productMapper.toEntity(productDTO);
-            // Asegúrate de mantener el mismo ID
-            updatedProduct.setId(productDTO.getId());
-            updatedProduct = productRepository.save(updatedProduct);
-            return productMapper.toDTO(updatedProduct);
-        }
-        return null;
+    public String updateProduct(ProductDTO datos) {
+        String result = "";
+       try {
+        productRepository.save(productMapper.toEntity(datos));
+        result = "Producto modificado correctamente";
+       } catch (Exception e) {
+        result = "Error en la modificacion del producto: " + datos.getName();
+        System.out.println("El error es: " + e.getMessage());
+       }
+       return result;
     }
 }
