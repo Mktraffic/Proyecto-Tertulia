@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Proyecto.La_Tertulia.dto.PersonaDTO;
 import com.Proyecto.La_Tertulia.dto.RolDTO;
@@ -94,11 +95,8 @@ public class PersonController {
     }
 
     @PostMapping("/updatePerson")
-    public String updatePerson(@ModelAttribute UsuarioDTO usuario, Model model) {
-        System.out.println("\n \n \nEntra a modificarUsuario con el username: " + usuario);
+    public String updatePerson(@ModelAttribute UsuarioDTO usuario, Model model, RedirectAttributes redirectAttributes) {
         UsuarioDTO usuarioDTO = usuarioService.findUserByName(usuario.getUserName());
-        System.out.println("\n \n \n Revisa modificacion de persona"); 
-        System.out.println("\n \n \n \nNombre persona" + usuarioDTO);
         PersonaDTO personaDTO = personaService.updatePersona(usuarioDTO.getPersona(), usuario.getPersona());
         usuarioService.updateUsuario(usuarioDTO, usuario);
         String message = "";
@@ -106,11 +104,11 @@ public class PersonController {
             message = "Correo electrónico ya vinculado a un usuario";
         } 
         if (!message.isEmpty()) {
-            model.addAttribute("error", message);
+            redirectAttributes.addFlashAttribute("error", message);
             model.addAttribute("usuarioDTO", new UsuarioDTO());
             return "ModalModifyPerson";
         }else{
-            model.addAttribute("sucess", "Persona modificada correctamente");
+            redirectAttributes.addFlashAttribute("success", "Persona modificada correctamente");
         }
         return "redirect:/managePerson";
     }

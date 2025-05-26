@@ -34,9 +34,23 @@ public class ProductService {
         String result = "";
         if (productdto != null) {
             try {
-                productdto.setId(null);
-                productRepository.save(productMapper.toEntity(productdto));
-                result = "Producto agregado correctamente";
+                List<ProductDTO> productosExistentes = findAllProducts().stream()
+                    .filter(p -> p.getName().equalsIgnoreCase(productdto.getName())
+                        && p.getDescription().equalsIgnoreCase(productdto.getDescription())
+                        && p.getPresentation().equalsIgnoreCase(productdto.getPresentation())
+                        && p.getPrice() == productdto.getPrice())
+                    .collect(Collectors.toList());
+
+                if (!productosExistentes.isEmpty()) {
+                    ProductDTO existente = productosExistentes.get(0);
+                    existente.setStock(existente.getStock() + productdto.getStock());
+                    productRepository.save(productMapper.toEntity(existente));
+                    result = "Producto ya existente, stock actualizado correctamente";
+                } else {
+                    productdto.setId(null);
+                    productRepository.save(productMapper.toEntity(productdto));
+                    result = "Producto agregado correctamente";
+                }
             } catch (Exception e) {
                 result = "Error al agregar el producto";
             }
@@ -100,13 +114,69 @@ public class ProductService {
 
     public String updateProduct(ProductDTO datos) {
         String result = "";
-       try {
-        productRepository.save(productMapper.toEntity(datos));
-        result = "Producto modificado correctamente";
-       } catch (Exception e) {
-        result = "Error en la modificacion del producto: " + datos.getName();
-        System.out.println("El error es: " + e.getMessage());
-       }
-       return result;
+        try {
+            Optional<Product> optionalProduct = productRepository.findById(datos.getId());
+            if (optionalProduct.isPresent()) {
+                Product original = optionalProduct.get();
+                boolean changed = false;
+
+                if (!original.getName().equals(datos.getName())) {
+                    original.setName(datos.getName());
+                    changed = true;
+                }
+                if (original.getPrice() != datos.getPrice()) {
+                    original.setPrice(datos.getPrice());
+                    changed = true;
+                }
+                if (original.getStock() != datos.getStock()) {
+                    original.setStock(datos.getStock());
+                    changed = true;
+                }
+
+                if (changed) {
+                    productRepository.save(original);
+                    result = "Producto modificado correctamente";
+                } else {
+                    result = "No hubo cambios en el producto";
+                }
+            } else {
+                result = "Producto no encontrado";
+            }
+        } catch (Exception e) {
+            result = "Error en la modificacion del producto: " + datos.getName();
+            System.out.println("El error es: " + e.getMessage());
+        }
+        return result;
+    }
+       public List<String> productCategories() {
+        return findAllProducts().stream()
+                .map(ProductDTO::getType)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public List<String> productsByCategory(String category) {
+        return findAllProducts().stream()
+                .filter(p -> p.getType().equalsIgnoreCase(category))
+                .map(ProductDTO::getName)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public List<String> presentationByProductName(String productName) {
+        return findAllProducts().stream()
+                .filter(p -> p.getName().equalsIgnoreCase(productName))
+                .map(ProductDTO::getPresentation)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public int productPrice(String productName, String presentation) {
+        return findAllProducts().stream()
+                .filter(p -> p.getName().equalsIgnoreCase(productName)
+                        && p.getPresentation().equalsIgnoreCase(presentation))
+                .map(ProductDTO::getPrice)
+                .findFirst()
+                .orElse(0);
     }
 }

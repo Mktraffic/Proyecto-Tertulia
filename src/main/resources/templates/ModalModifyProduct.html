@@ -11,7 +11,7 @@
                 <form th:action="@{/updateProduct}" method="post">
                     <div>
                         <label for="edit-code">Código:</label>
-                        <input type="number" name="code" id="edit-code" readonly>
+                        <input type="number" name="id" id="edit-code" readonly>
                     </div>
                     <div>
                         <label for="edit-name">Nombre producto:</label>
@@ -19,17 +19,17 @@
                     </div>
                     <div>
                         <label for="edit-description">Descripción producto:</label>
-                        <input type="text" name="description" id="edit-description" required 
+                        <input type="text" name="description" id="edit-description" readonly 
                         title="Añade una descripción del producto">
                     </div>
                     <div>
                         <label for="edit-presentation">Presentación:</label>
-                        <input type="text" name="presentation" id="edit-presentation" required 
+                        <input type="text" name="presentation" id="edit-presentation" readonly 
                         title="Presentación del producto (Botella de vidrio)">
                     </div>
                     <div>
                         <label for="edit-quantity">Cantidad:</label>
-                        <input type="number" name="quantity" id="edit-quantity" required>
+                        <input type="number" name="stock" id="edit-quantity" required>
                     </div>
                     <div>
                         <label for="edit-price">Precio:</label>

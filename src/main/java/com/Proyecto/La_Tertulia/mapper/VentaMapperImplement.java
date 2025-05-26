@@ -33,7 +33,7 @@ public class VentaMapperImplement implements VentaMapper {
         VentaDTO dto = new VentaDTO();
         dto.setId(venta.getId());
         dto.setFechaVenta(venta.getFechaVenta());
-        dto.setNombreCliente(venta.getNombreCliente());
+        dto.setNumeroDocumentoCliente(venta.getNumeroDocumentoCliente());
         dto.setNumeroDocumentoCliente(venta.getNumeroDocumentoCliente());
         dto.setTotalVenta(venta.getTotalVenta());
         dto.setVendedor(usuarioMapper.toDTO(venta.getVendedor()));
@@ -55,7 +55,7 @@ public class VentaMapperImplement implements VentaMapper {
         Venta venta = new Venta();
         venta.setId(dto.getId());
         venta.setFechaVenta(dto.getFechaVenta());
-        venta.setNombreCliente(dto.getNombreCliente());
+        venta.setTipoDocumentoCliente(dto.getTipoDocumentoCliente());
         venta.setNumeroDocumentoCliente(dto.getNumeroDocumentoCliente());
         venta.setTotalVenta(dto.getTotalVenta());
 

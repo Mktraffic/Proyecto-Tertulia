@@ -43,7 +43,7 @@ public class VentaService {
         Venta venta = new Venta();
         venta.setFechaVenta(LocalDate.now());
         venta.setVendedor(vendedor);
-        venta.setNombreCliente(ventaDTO.getNombreCliente());
+        venta.setTipoDocumentoCliente(ventaDTO.getTipoDocumentoCliente());
         venta.setNumeroDocumentoCliente(ventaDTO.getNumeroDocumentoCliente());
 
         List<DetalleVenta> detalles = ventaDTO.getDetalles().stream().map(dto -> {

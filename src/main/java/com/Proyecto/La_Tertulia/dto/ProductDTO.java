@@ -14,7 +14,7 @@ public class ProductDTO {
     private String type;
     private String description;
     private String presentation;
-    private String GradosAlcohol;
+    private String gradosAlcohol;
     private int stock;
     private int price;
 }

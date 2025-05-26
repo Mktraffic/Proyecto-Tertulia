@@ -1,6 +1,7 @@
 package com.Proyecto.La_Tertulia.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.service.ProductService;
@@ -45,7 +48,7 @@ public class SalesController {
             model.addAttribute("success", "Ventas encontradas");
         }
         model.addAttribute("Ventas", ventas);
-        return "SalesManagement";
+        return "redirect:/manageSales";
     }
 
     @PostMapping("/deleteSale")
@@ -58,9 +61,11 @@ public class SalesController {
 
     @GetMapping("/addSale")
     public String showFormAddSale(Model model) {
-       // List<String> categorias = productoService.productCategories();
-       // model.addAttribute("categorias", categorias);
+        List<String> categorias = productoService.productCategories();
+        model.addAttribute("categorias", categorias);
         model.addAttribute("ventaDTO", new VentaDTO());
+        model.addAttribute("productos", new ArrayList<>());
+        model.addAttribute("presentaciones", new ArrayList<>());
         return "SaleRegistration";
     }
 
@@ -76,17 +81,20 @@ public class SalesController {
     // Para cargar lo que se necesita para agregar venta @GetMapping("/productos")
 
     @GetMapping("/productos")
+     @ResponseBody
     public List<String> obtainProducts(@RequestParam String categoria) {
         return productoService.productsByCategory(categoria);
     }
 
     @GetMapping("/presentaciones")
+     @ResponseBody
     public List<String> obtainPresentations(@RequestParam String producto) {
         return productoService.presentationByProductName(producto);
     }
 
     @GetMapping("/precio")
-    public Double obtainProductPrice(@RequestParam String presentacion, @RequestParam String producto) {
+     @ResponseBody
+    public int obtainProductPrice(@RequestParam String presentacion, @RequestParam String producto) {
         return productoService.productPrice(producto, presentacion);
     }
 

@@ -31,11 +31,11 @@ public class  Product {
     @Column(name = "descripcion_producto", nullable = false)
     private String description;
 
-    @Column(name = "grados_alcohol", nullable = false)
-    private String GradosAlcohol;
-
     @Column(name = "presentacion_producto", nullable = false)
     private String presentation;
+    
+    @Column(name = "grados_alcohol", nullable = false)
+    private String gradosAlcohol;
 
     @Column(name = "stock_producto", nullable = false)
     private int stock;

@@ -27,37 +27,44 @@
             <form th:action="@{/SaleRegistration}" th:object="${ventaDTO}" method="POST">
                 <div class="form-group">
                     <label for="categoria">Tipo producto:</label>
-                    <select id="categoria" name="categoria" required>
+                    <select id="categoria" name="categoria" class="form-control" required>
                         <option th:each="type : ${categorias}" th:value="${type}" th:text="${type}"></option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="nombre-producto">Nombre producto:</label>
-                    <select id="producto" name="producto" required>
+                    <select id="producto" name="producto" class="form-control" required>
                         <option th:each="name : ${productos}" th:value="${name}" th:text="${name}"></option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="presentacion">Presentación:</label>
-                    <select id="presentacion" name="presentacion" required>
-                        <option th:each="presentation : ${productos}" th:value="${presentation}" th:text="${presentation}"></option>
+                    <select id="presentacion" name="presentacion" class="form-control" required>
+                        <option th:each="presentation : ${productos}" th:value="${presentation}"
+                            th:text="${presentation}"></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="precio">precio:</label>
-                    <input type="number" class="form-control" name="price" required>
+                    <label for="precio">Precio:</label>
+                    <input type="number" class="form-control" name="price" readonly>
                 </div>
                 <div class="form-group">
                     <label for="cantidad">Cantidad:</label>
-                    <input type="number" class="form-control" th:field="*{quantity}" required>
+                    <input type="number" class="form-control" name="cantidad" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombreCliente">Tipo doc cliente:</label>
+                    <select class="form-control" th:field="*{tipoDocumentoCliente}" required>
+                        <option value="" selected disabled>Selecciona una opción</option>
+                        <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
+                        <option value="Cedula de extranjeria">Cédula de extranjería</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="docCliente">Tipo doc cliente:</label>
-                    <input type="text" class="form-control" th:field="*{tipoDocumentoCliente}" required>
-                </div>
-                <div class="form-group">
-                    <label for="numDocCliente">Numero doc cliente:</label>
-                    <input type="text" class="form-control" th:field="*{numeroDocumentoCliente}" required>
+                    <label for="numDocCliente">Número doc cliente:</label>
+                    <input type="text" class="form-control" th:field="*{numeroDocumentoCliente}" required minlength="7" maxlength="10"
+                        title="El documento de identidad debe tener entre 7 y 10 dígitos numéricos">
                 </div>
                 <div class="buttons">
                     <button type="submit" class="btn btn-primary">Guardar</button>

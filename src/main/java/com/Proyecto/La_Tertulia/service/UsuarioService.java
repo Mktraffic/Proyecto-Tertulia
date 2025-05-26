@@ -1,13 +1,12 @@
 package com.Proyecto.La_Tertulia.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.mapper.RolMapper;
 import com.Proyecto.La_Tertulia.mapper.UsuarioMapper;
-import com.Proyecto.La_Tertulia.model.Rol;
 import com.Proyecto.La_Tertulia.model.Usuario;
 import com.Proyecto.La_Tertulia.repository.RolRepository;
 import com.Proyecto.La_Tertulia.repository.UsuarioRepository;
@@ -133,5 +132,4 @@ public class UsuarioService {
 
         return usuarioMapper.toDTO(usuarioRepository.save(usuarioMapper.toEntity(usuarioExistente)));
     }
-
 }

@@ -26,7 +26,7 @@ public class Venta {
     private Usuario vendedor;
 
     @Column(name = "nombre_cliente", nullable = false)
-    private String nombreCliente;
+    private String tipoDocumentoCliente;
 
     @Column(name = "documento_cliente", length = 50, nullable = false)
     private Long numeroDocumentoCliente;

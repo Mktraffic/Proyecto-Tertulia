@@ -15,7 +15,7 @@ public class VentaDTO {
     private long id;
     private LocalDate fechaVenta;
     private UsuarioDTO vendedor;
-    private String nombreCliente;
+    private String tipoDocumentoCliente;
     private Long numeroDocumentoCliente;
     private double totalVenta;
     private List<DetalleVentaDTO> detalles;
