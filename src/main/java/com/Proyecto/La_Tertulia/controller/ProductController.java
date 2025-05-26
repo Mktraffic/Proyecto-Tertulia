@@ -73,66 +73,51 @@ public class ProductController {
 
   @PostMapping("/wineRegistration")
   public String recordWine(@ModelAttribute VinoDTO vino, Model model) {
-    /*
-     * VinoDTO vinoDTO = new VinoDTO(
-     * null,
-     * vinoDTO.getName(),
-     * vinoDTO.getDescription(),
-     * vinoDTO.getPresentation(),
-     * vinoDTO.getStock(),
-     * vinoDTO.getPrice());
-     * // productService.addProductInDB(vinoDTO);
-     */
+    System.out.println("Registro de vino: " + vino + "---------------------------------------------------------------------");
+    String message = productService.saveProduct(vino);
+    if (message.contains("Producto registrado correctamente")) {
+      model.addAttribute("Producto registrado correctamente", message);
+    } else {
+      model.addAttribute("Error al resgitrar el producto: ", message);
+    }
     model.addAttribute("vinoDTO", new VinoDTO());
-    return "WineRegistration";
+    return "wineRegistration";
   }
 
   @PostMapping("/vodkaRegistration")
   public String recordVodka(@ModelAttribute VodkaDTO vodka, Model model) {
-    /*
-     * VinoDTO vinoDTO = new VinoDTO(
-     * null,
-     * vinoDTO.getName(),
-     * vinoDTO.getDescription(),
-     * vinoDTO.getPresentation(),
-     * vinoDTO.getStock(),
-     * vinoDTO.getPrice());
-     * // productService.addProductInDB(vinoDTO);
-     */
+    String message = productService.saveProduct(vodka);
+    if (message.contains("Producto registrado correctamente")) {
+      model.addAttribute("Producto registrado correctamente", message);
+    } else {
+      model.addAttribute("Error al resgitrar el producto: ", message);
+    }
     model.addAttribute("vodkaDTO", new VodkaDTO());
-    return "VodkaRegistration";
+    return "vodkaRegistration";
   }
 
   @PostMapping("/beerRegistration")
   public String recordBeer(@ModelAttribute CervezaDTO cerveza, Model model) {
-    /*
-     * VinoDTO vinoDTO = new VinoDTO(
-     * null,
-     * vinoDTO.getName(),
-     * vinoDTO.getDescription(),
-     * vinoDTO.getPresentation(),
-     * vinoDTO.getStock(),
-     * vinoDTO.getPrice());
-     * // productService.addProductInDB(vinoDTO);
-     */
+    String message = productService.saveProduct(cerveza);
+    if (message.contains("Producto registrado correctamente")) {
+      model.addAttribute("success", message);
+    } else {
+      model.addAttribute("Error al resgitrar el producto: ", message);
+    }
     model.addAttribute("cervezaDTO", new CervezaDTO());
-    return "BeerRegistration";
+    return "beerRegistration";
   }
 
   @PostMapping("/schnappsRegistration")
   public String recordSchnapps(@ModelAttribute AguardienteDTO aguardiente, Model model) {
-    /*
-     * VinoDTO vinoDTO = new VinoDTO(
-     * null,
-     * vinoDTO.getName(),
-     * vinoDTO.getDescription(),
-     * vinoDTO.getPresentation(),
-     * vinoDTO.getStock(),
-     * vinoDTO.getPrice());
-     * // productService.addProductInDB(vinoDTO);
-     */
+    String message = productService.saveProduct(aguardiente);
+    if (message.contains("Producto registrado correctamente")) {
+      model.addAttribute("Producto registrado correctamente", message);
+    } else {
+      model.addAttribute("Error al resgitrar el producto: ", message);
+    }
     model.addAttribute("aguardienteDTO", new AguardienteDTO());
-    return "SchnappsRegistration";
+    return "schnappsRegistration";
   }
 
 }

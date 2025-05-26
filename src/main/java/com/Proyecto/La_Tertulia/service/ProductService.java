@@ -32,6 +32,7 @@ public class ProductService {
     }
 
     public String saveProduct(ProductDTO productdto) {
+        System.out.println("Guardando producto: " + productdto.getName() + "////////////////////////");
         String message = "";
         ProductoFactoryProducer factoryProducer = new ProductoFactoryProducer();
         try {

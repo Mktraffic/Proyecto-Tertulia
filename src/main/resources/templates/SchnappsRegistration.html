@@ -24,7 +24,7 @@
         </div>
 
         <div class="form-container">
-            <form th:action="@{/schnapppsRegistration}" th:object="${aguardienteDTO}" method="POST">
+            <form th:action="@{/schnappsRegistration}" th:object="${aguardienteDTO}" method="POST">
                 <div class="form-group">
                     <label for="nombre-producto">Nombre producto:</label>
                     <input type="text" class="form-control" th:field="*{name}" required minlength="3" maxlength="100"

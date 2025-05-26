@@ -10,8 +10,7 @@ public class ProductMapperImplement implements ProductMapper {
 
     @Override
     public ProductDTO toDTO(Product product) {
-        if (product == null) return null;
-
+        System.out.println("Convirtiendo producto a DTO: " + product);
         if (product instanceof Vodka vodka) {
             return new VodkaDTO(
                 vodka.getId(),
@@ -62,7 +61,7 @@ public class ProductMapperImplement implements ProductMapper {
 
     @Override
     public Product toEntity(ProductDTO dto) {
-        if (dto == null) return null;
+        System.out.println("Convirtiendo DTO a entidad: " + dto);
 
         if (dto instanceof VodkaDTO vodkaDTO) {
             return new Vodka(
@@ -85,6 +84,7 @@ public class ProductMapperImplement implements ProductMapper {
                 cervezaDTO.getGraduacionAlcoholica()
             );
         } else if (dto instanceof VinoDTO vinoDTO) {
+            System.out.println("llego al to entity de vino");
             return new Vino(
                 vinoDTO.getId(),
                 vinoDTO.getName(),
@@ -108,6 +108,28 @@ public class ProductMapperImplement implements ProductMapper {
                 aguardienteDTO.getTipo()
             );
         } else {
+            System.out.println("Tipo de producto no reconocido: " + dto.getClass().getSimpleName());
+            return null;
+        }
+    }
+
+    @Override
+    public Vino toEntityVino(ProductDTO productDTO) {
+        System.out.println("Convirtiendo DTO a entidad Vino: " + productDTO);
+        if (productDTO instanceof VinoDTO vinoDTO) {
+            return new Vino(
+                vinoDTO.getId(),
+                vinoDTO.getName(),
+                vinoDTO.getDescription(),
+                vinoDTO.getPresentation(),
+                vinoDTO.getStock(),
+                vinoDTO.getPrice(),
+                vinoDTO.getGraduacionAlcoholica(),
+                vinoDTO.getRegionOrigen(),
+                vinoDTO.getAnejamiento()
+            );
+        } else {
+            System.out.println("El DTO no es una instancia de VinoDTO");
             return null;
         }
     }
