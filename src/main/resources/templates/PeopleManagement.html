@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<div th:replace="ToastContainer :: toastContainer"></div>
+    <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
         <div th:replace="AdministratorOptions :: amdOptions"></div>
         <section class="personas-card">
@@ -47,6 +47,7 @@
                         <th>Número celular</th>
                         <th>Correo electrónico</th>
                         <th>Rol</th>
+                        <th>Estado</th>
                         <th>Editar persona</th>
                     </tr>
                 </thead>
@@ -61,6 +62,10 @@
                             <a th:href="|mailto:${usuario.persona.correo}|" th:text="${usuario.persona.correo}"></a>
                         </td>
                         <td th:text="${usuario.rol.nombreRol}"></td>
+                        <td th:text="${usuario.persona.estado} ? 'Activo' : 'Inactivo'"
+                            th:class="${usuario.persona.estado} ? 'estado-activo' : 'estado-inactivo'">
+                        </td>
+
                         <td>
                             <button class="edit-btn" th:attr="data-id=${usuario.persona.id},
                                     data-nombre=${usuario.persona.nombre},

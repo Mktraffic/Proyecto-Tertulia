@@ -20,8 +20,8 @@
                     </div>
                     <div>
                         <label for="edit-telefono">Número de Teléfono:</label>
-                        <input type="text" name="persona.numeroTelefono" id="edit-telefono" required minlength="7" maxlength="10"
-                            title="El numero de telefono debe tener entre 7 y 10 dígitos numéricos">
+                        <input type="text" name="persona.numeroTelefono" id="edit-telefono" required minlength="7"
+                            maxlength="10" title="El numero de telefono debe tener entre 7 y 10 dígitos numéricos">
                     </div>
                     <div>
                         <label for="edit-correo">Correo Electrónico:</label>
@@ -30,28 +30,31 @@
                             title="Introduce un correo válido (usuario@gmail.com)" minlength="14" maxlength="150">
                     </div>
                     <div class="form-group">
-                        <label for="edit-rol">Rol:</label>
-                        <select name="rol.nombreRol" id="edit-rol" required>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Vendedor">Vendedor</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="edit-state">Estado:</label>
                         <select name="persona.estado" id="edit-state" required>
                             <option value="true">Activo</option>
                             <option value="false">Inactivo</option>
                         </select>
                     </div>
-                    <div>
-                        <label for="edit-userName">Nombre usuario:</label>
-                        <input type="text" name="userName" id="edit-userName" readonly>
-                    </div>
+                   <div id="datosUsuario" th:unless="${session.usuario != null and session.usuario.rol.nombreRol == 'Proveedor'}">
+                    <p th:text="'Rol actual: ' + ${session.usuario?.rol?.nombreRol}"></p>
+                        <div class="form-group">
+                            <label for="edit-rol">Rol:</label>
+                            <select name="rol.nombreRol" id="edit-rol" required>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Vendedor">Vendedor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="edit-userName">Nombre usuario:</label>
+                            <input type="text" name="userName" id="edit-userName" readonly>
+                        </div>
 
-                    <div>
-                        <label for="edit-password">Contraseña:</label>
-                        <input type="password" name="userPassword" id="edit-password" required minlength="5" maxlength="20"
-                            title="La contraseña debe tener mas de cinco caracteres">
+                        <div>
+                            <label for="edit-password">Contraseña:</label>
+                            <input type="password" name="userPassword" id="edit-password" required minlength="5"
+                                maxlength="20" title="La contraseña debe tener mas de cinco caracteres">
+                        </div>
                     </div>
                     <div style="margin-top: 15px;">
                         <button type="submit">Guardar</button>

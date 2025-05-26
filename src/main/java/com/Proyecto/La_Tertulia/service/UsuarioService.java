@@ -41,7 +41,7 @@ public class UsuarioService {
             usuarioGuardado = usuarioRepository.save(usuarioMapper.toEntity(usuarioDTO));
         } else {
             if (usuarioDTO.getUserName() != null || usuarioDTO.getUserPassword() != null) {
-                    usuarioGuardado = usuarioRepository.save(usuarioMapper.toEntity(usuarioDTO));
+                usuarioGuardado = usuarioRepository.save(usuarioMapper.toEntity(usuarioDTO));
             }
         }
         return usuarioMapper.toDTO(usuarioGuardado);
@@ -51,10 +51,14 @@ public class UsuarioService {
         List<UsuarioDTO> userList = findAllUsuarios();
         for (UsuarioDTO usuario : userList) {
             if (usuario.getUserName().equals(userName)) {
-                if (usuario.getUserPassword().equals(password)) {
-                    return true + "," + usuario.getRol().getNombreRol();
-                } else {
-                    return "false,WRONG_PASSWORD";
+                if(usuario.getUserPassword().equals(password)){
+                    if (usuario.getPersona().isEstado()!=false) {
+                         return true + "," + usuario.getRol().getNombreRol();
+                    } else {
+                        return "false,DISABLED_USER";
+                     }  
+                 }else{
+                     return "false,INVALID_CREDENTIALS";
                 }
             }
         }
@@ -114,14 +118,16 @@ public class UsuarioService {
     }
 
     public UsuarioDTO updateUsuario(UsuarioDTO usuarioExistente, UsuarioDTO datos) {
-        if (datos.getRol().getNombreRol() != null && !datos.getRol().getNombreRol().isEmpty() && datos.getRol().getNombreRol() != usuarioExistente.getRol().getNombreRol()) {
+        if (datos.getRol().getNombreRol() != null && !datos.getRol().getNombreRol().isEmpty()
+                && datos.getRol().getNombreRol() != usuarioExistente.getRol().getNombreRol()) {
             usuarioExistente.getRol().setNombreRol(datos.getRol().getNombreRol());
             rolRepository.save(rolMapper.toEntity(usuarioExistente.getRol()));
 
             System.out.println(datos.getRol().getNombreRol());
             System.out.println(usuarioExistente.getRol().getNombreRol());
         }
-        if(datos.getUserPassword() != null && !datos.getUserPassword().isEmpty() && !datos.getUserPassword().equals(usuarioExistente.getUserPassword())) {
+        if (datos.getUserPassword() != null && !datos.getUserPassword().isEmpty()
+                && !datos.getUserPassword().equals(usuarioExistente.getUserPassword())) {
             usuarioExistente.setUserPassword(datos.getUserPassword());
 
             System.out.println(datos.getUserPassword());

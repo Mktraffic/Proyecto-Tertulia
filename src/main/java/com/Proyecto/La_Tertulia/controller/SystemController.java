@@ -49,8 +49,11 @@ public class SystemController {
                     case "USER_NOT_FOUND":
                         mensajeError = "El usuario no existe.";
                         break;
-                    case "WRONG_PASSWORD":
-                        mensajeError = "Contraseña incorrecta.";
+                    case "INVALID_CREDENTIALS":
+                        mensajeError = "Credenciales incorrectas.";
+                        break;
+                    case "DISABLED_USER":
+                        mensajeError = "Usuario sin acceso al sistema";
                         break;
                     default:
                         mensajeError = "Credenciales incorrectas.";

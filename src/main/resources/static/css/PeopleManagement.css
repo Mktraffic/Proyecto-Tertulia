@@ -117,4 +117,12 @@ th, td {
     color: #007bff;
     cursor: pointer;
 }
+.estado-activo {
+    color: green;
+    font-weight: bold;
+}
+.estado-inactivo {
+    color: red;
+    font-weight: bold;
+}
 

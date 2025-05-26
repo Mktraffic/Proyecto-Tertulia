@@ -1,0 +1,59 @@
+<div th:fragment="Cerveza">
+    <div class="form-group">
+        <label for="description">Descripción producto:</label>
+        <select id="description" class="form-control" th:field="*{description}" required>
+            <option value="" selected disabled>Selecciona una opción</option>
+            <option value="Lata">Lata</option>
+            <option value="Botella">Botella</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="presentacion">Presentación:</label>
+        <select id="presentacion" class="form-control" th:field="*{presentation}" required>
+            <option value="" selected disabled>Selecciona una opción</option>
+            <option value="330 cm^3">330 cm^3</option>
+            <option value="473 cm^3">473 cm^3</option>
+            <option value="1000 cm^3">1000 cm^3</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="cantidad">Cantidad:</label>
+        <select id="cantidad" class="form-control" th:field="*{stock}" required>
+            <option value="1">Unidad</option>
+            <option value="6">Sixpac</option>
+            <option value="24">Bandeja</option>
+            <option value="30">Canasta</option>
+        </select>
+    </div>
+</div>
+
+
+<div th:fragment="otrosTipos">
+    <div class="form-group">
+        <label for="description">Descripción producto:</label>
+        <select id="description" class="form-control" th:field="*{description}" required>
+            <option value="" selected disabled>Selecciona una opción</option>
+            <option value="Botella">Botella</option>
+            <option value="TetraPac">TetraPac</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="presentacion">Presentación:</label>
+        <select id="presentacion" class="form-control" th:field="*{presentation}" required>
+            <option value="" selected disabled>Selecciona una opción</option>
+            <option value="200 ml">200 ml</option>
+            <option value="375 ml">375 ml</option>
+            <option value="750 ml">750 ml</option>
+            <option value="1000 ml">1000 ml</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="cantidad">Cantidad:</label>
+        <select id="cantidad" class="form-control" th:field="*{stock}" required>
+            <option value="1">Unidad</option>
+            <option value="6">Sixpac</option>
+            <option value="24">Bandeja</option>
+            <option value="30">Canasta</option>
+        </select>
+    </div>
+</div>
