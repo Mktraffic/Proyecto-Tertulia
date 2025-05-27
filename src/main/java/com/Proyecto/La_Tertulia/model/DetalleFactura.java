@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,10 @@ public class DetalleFactura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_detalle_factura")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_factura", nullable = false)
+    private Factura factura;
 
     @Column(name = "tipo_documento", nullable = false)
     private String tipoDocumento;
