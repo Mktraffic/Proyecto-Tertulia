@@ -74,6 +74,7 @@ public class SalesController {
             @ModelAttribute("producto") String nombreProd, Model model) {
         // registrar la venta, crear una nueva ventaDTO y pasarle por parametros lo que
         // se optiene de "venta"
+        //Revisar como van a agregar la venta de ese usuario a su arreglo
         model.addAttribute("ventaDTO", new VentaDTO());
         return "redirect:/SaleRegistration";
     }

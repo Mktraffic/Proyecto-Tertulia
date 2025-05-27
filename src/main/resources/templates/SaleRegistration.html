@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de venta</title>
     <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
+    <style>
+        .disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .form-control:disabled {
+            background-color: #f8f9fa;
+            opacity: 0.65;
+        }
+    </style>
 </head>
 
 <body>
@@ -28,29 +39,33 @@
                 <div class="form-group">
                     <label for="categoria">Tipo producto:</label>
                     <select id="categoria" name="categoria" class="form-control" required>
+                        <option disabled selected>Seleccione una categoría</option>
                         <option th:each="type : ${categorias}" th:value="${type}" th:text="${type}"></option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="nombre-producto">Nombre producto:</label>
-                    <select id="producto" name="producto" class="form-control" required>
-                        <option th:each="name : ${productos}" th:value="${name}" th:text="${name}"></option>
+                    <select id="producto" name="producto" class="form-control" required disabled>
+                        <option disabled selected>Seleccione un producto</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="presentacion">Presentación:</label>
-                    <select id="presentacion" name="presentacion" class="form-control" required>
-                        <option th:each="presentation : ${productos}" th:value="${presentation}"
-                            th:text="${presentation}"></option>
+                    <select id="presentacion" name="presentacion" class="form-control" required disabled>
+                        <option disabled selected>Seleccione presentación</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="precio">Precio:</label>
                     <input type="number" class="form-control" name="price" readonly>
                 </div>
+
                 <div class="form-group">
                     <label for="cantidad">Cantidad:</label>
-                    <input type="number" class="form-control" name="cantidad" required>
+                    <input type="number" class="form-control" name="cantidad" required min="1">
                 </div>
 
                 <div class="form-group">
@@ -61,20 +76,22 @@
                         <option value="Cedula de extranjeria">Cédula de extranjería</option>
                     </select>
                 </div>
+
                 <div class="form-group">
                     <label for="numDocCliente">Número doc cliente:</label>
-                    <input type="text" class="form-control" th:field="*{numeroDocumentoCliente}" required minlength="7" maxlength="10"
+                    <input type="text" class="form-control" th:field="*{numeroDocumentoCliente}" required minlength="7"
+                        maxlength="10" pattern="[0-9]{7,10}"
                         title="El documento de identidad debe tener entre 7 y 10 dígitos numéricos">
                 </div>
+
                 <div class="buttons">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <a th:href="@{/manageSales}" class="btn btn-secondary"
-                        style="text-decoration: none; text-align: center;">Atras</a>
+                        style="text-decoration: none; text-align: center;">Atrás</a>
                 </div>
             </form>
         </div>
         <script th:src="@{/js/chargeDetailsSale.js}"></script>
     </div>
 </body>
-
 </html>

@@ -38,6 +38,7 @@
                     </div>
                    <div id="datosUsuario" th:unless="${session.usuario != null and session.usuario.rol.nombreRol == 'Proveedor'}">
                     <p th:text="'Rol actual: ' + ${session.usuario?.rol?.nombreRol}"></p>
+                    
                         <div class="form-group">
                             <label for="edit-rol">Rol:</label>
                             <select name="rol.nombreRol" id="edit-rol" required>
