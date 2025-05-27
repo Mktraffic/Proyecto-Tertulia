@@ -1,0 +1,252 @@
+@startuml
+package Model{
+    class Persona{
+        - nombre: String
+        - apellido : String 
+        - id: Long
+        - numeroTelefono : Long
+        - correo : String
+        - fechaNacimiento: LocalDate
+        - documentoIdentidad : Long
+        - tipoDocumento : String
+        - estado: boolean
+
+    }
+
+    class Rol{
+        - id: Long 
+        - nombreRol: String 
+    }
+    class Usuario{
+        - id : Long
+        -userName: String
+        -userPassword :String
+        -persona : Persona
+        - rol: Rol
+    }
+    class Product{
+        - id: Long
+        - name: String
+        - price: double
+        - stock : int 
+        - description:String
+        - presentation:String
+    }
+    class DetalleVenta{
+        - id:Long
+        - venta: Venta
+        - producto: Product
+        - nombreProducto:String
+        - precioUnitario:double
+        - cantidad: int
+        - subtotal: double 
+    }
+    class Venta{
+        - id: Long
+        - fechaVenta: LocalDate
+        - vendedor: Usuario
+        - tipoDocumentoCliente: String
+        - numeroDocumentoCliente: Long
+        - totalVenta: double
+        - detalles: List<DetalleVenta> 
+        
+    }
+    Usuario ..> Persona
+    Rol <.. Usuario
+
+}
+package dto{
+    class PersonaDTO{
+        - nombre: String
+        - apellido : String 
+        - id: Long
+        - numeroTelefono : Long
+        - correo : String
+        - fechaNacimiento: LocalDate
+        - documentoIdentidad : Long
+        - tipoDocumento : String
+        - estado: boolean
+    }
+    class RolDTO{
+        - id: Long 
+        - nombreRol: String
+    }
+    class UsuarioDTO{
+         - id : Long
+        -userName: String
+        -userPassword :String
+        -persona : PersonaDTO
+        - rol: RolDTO
+    }
+    class ProductDTO{
+        - id: Long
+        - name: String
+        - price: double
+        - stock : int 
+        - description:String
+        - presentation:String
+    }
+    class VentaDTO{
+        - id: Long
+        - fechaVenta: LocalDate
+        - vendedor: Usuario
+        - tipoDocumentoCliente: String
+        - numeroDocumentoCliente: Long
+        - totalVenta: double
+        - detalles: List<DetalleVenta>
+    }
+    class DetalleVentaDTO{
+        - id:Long
+        - idProducto: Long
+        - nombreProducto:String
+        - precioUnitario:double
+        - cantidad: int
+        - subtotal: double
+    }
+}
+
+package mapper{
+    interface PersonaMapper{
+        + toDTO(persona:Persona) : PersonaDTO
+        + toEntity(personaDTO : PersonaDTO) : Persona
+    }
+    class PersonaMapperImplement{
+        + toDTO(persona:Persona) : PersonaDTO
+        + toEntity(personaDTO : PersonaDTO) : Persona
+    }
+    interface RolMapper{
+        + toDTO(rol:Rol) : RolDTO
+        + toEntity(rolDTO : RolDTO) : Rol
+    }
+    class RolMapperImplement{
+        + toDTO(rol:Rol) : RolDTO
+        + toEntity(rolDTO : RolDTO) : Rol
+    }
+    interface UsuarioMapper{
+        + toDTO(usuario:Usuario) : UsuarioDTO
+        + toEntity(usuarioDTO : UsuarioDTO) : Usuario
+    }
+    class UsuarioMapperImplement{
+        + toDTO(usuario:Usuario) : UsuarioDTO
+        + toEntity(usuarioDTO : UsuarioDTO) : Usuario
+    }
+    interface ProductMapper{
+        + toDTO(product:Product): ProductDTO
+        + toEntity(productDTO:ProductDTO):Product
+    }
+    class ProductMapperImplement{
+        + toDTO(product:Product): ProductDTO
+        + toEntity(productDTO:ProductDTO):Product
+    }
+    interface VentaMapper{
+        + toDTO(venta:Venta):VentaDTO
+        + toEntity(productoDTO:ProductoDTO): Venta
+    }
+    class VentaMapperImplement implements VentaMapper{
+        + toDTO(venta:Venta):VentaDTO
+        + toEntity(ventaDTO:VentaDTO): Venta
+    }
+    interface DetalleVentaMapper{
+        + toDTO(detalleVenta:DetalleVenta):DetalleVentaDTO
+        + toEntity(detalleVentaDTO:DetalleVentaDTO): DetalleVenta
+    }
+    class DetalleVentaMapperImplement implements DetalleVenta{
+        + toDTO(detalleVenta:DetalleVenta):DetalleVentaDTO
+        + toEntity(detalleVentaDTO:DetalleVentaDTO): DetalleVenta
+    }
+}
+package service{
+    class PersonaService{
+        - personaRepository : PersonaRepository
+        - personaMapper : PersonaMapper
+        + addPersonaInDB(personaDTO:PersonaDTO):PersonaDTO
+        + updatePersona(existingPersona PersonaDTO): PersonaDTO
+        + findAllPersonas(): List<PersonaDTO>
+        + fetchPersonaById(id:Long):ResponseEntity<PersonaDTO>
+        + findById(id: Long): Optional<PersonaDTO>
+        + borrarPersonaInDB(id:Long):PersonaDTO
+        + habilitarPersonaInDB(id:Long):PersonaDTO
+        + findByNombre(nombreCompleto:String):List<PersonaDTO>
+
+        
+    }
+    class RolService{
+        - rolRepository : RolRepository
+        + guardarRol(rol:Rol): Rol
+        + guardarRolSiNoExiste(nombreRol:String):Rol
+    }
+    class UsuarioService{
+        - usuarioRepository:UsuarioRepository
+        - usuarioMapper:UsuarioMapper
+        + findAllUsuarios(): List<UsuarioDTO>
+        + addUsuarioInDB(usuarioDTO:UsuarioDTO):UsuarioDTO
+        + validateUserByUserName(userName:String,password:String):String
+        + validateExistUserName(userName:String):boolean
+    }
+    class VentaService{
+        - ventaRepository:VentaRepository
+        - usuarioRepository : UsuarioRepository
+        - detalleVentaMapper : DetalleVentaMapper
+        - ventaMapper: VentaMapper
+        + registrarVenta(ventaDTO:VentaDTO): VentaDTO
+        + obtenerVentasEntreFechas(fechaInicio:LocalDate,fechaFin:LocalDate):List<VentaDTO>
+    }
+    class ProductService{
+        - productMapper: ProductMapperImplement
+        - productRepository: ProductRepository
+        + findAllProducts():List<ProductDTO>
+        + saveProduct(productDTO:ProductDTO):String
+        + fetchProductById(id:Long):ResponseEntity<ProductDTO>
+        + findById(id:Long):Optional<ProductDTO>
+        + findAllProductoByName(nombre:String):List<ProductDTO>
+        + findProductoByName(nombre:String): ProductDTO
+        + findProductByNameOrId(nombre:String): List<productDTO>
+        + updateProduct(productDTO:ProductDTO): ProductDTO
+
+    }
+}
+package repository{
+    interface PersonaRepository{}
+    interface RolRepository{}
+    interface UsuarioRepository{}
+    interface ProductRepository{}
+    interface VentaRepository{}
+
+}
+PersonaService <-- PersonaRepository
+PersonaService <-- PersonaMapperImplement
+RolService <-- RolRepository
+UsuarioService <-- UsuarioRepository
+UsuarioService <-- UsuarioMapperImplement
+PersonaMapperImplement ..|> PersonaMapper
+RolMapperImplement ..|> RolMapper
+UsuarioMapperImplement ..|> UsuarioMapper
+UsuarioDTO ..> PersonaDTO
+RolDTO <.. UsuarioDTO
+UsuarioMapperImplement <-- Usuario
+UsuarioMapperImplement <-- UsuarioDTO
+RolMapperImplement <-- Rol
+RolMapperImplement <-- RolDTO
+PersonaMapperImplement <-- Persona
+PersonaMapperImplement <-- PersonaDTO
+UsuarioService <-- UsuarioDTO
+PersonaService <-- PersonaDTO
+ProductMapper <|.. ProductMapperImplement
+ProductRepository --> ProductService
+ProductMapperImplement --> ProductService
+ProductMapperImplement <-- Product
+ProductMapperImplement <-- ProductDTO
+DetalleVentaMapperImplement <-- DetalleVenta
+DetalleVentaMapperImplement <-- DetalleVentaDTO
+DetalleVentaMapperImplement --> VentaService
+VentaMapperImplement <-- Venta
+VentaMapperImplement <-- VentaDTO
+VentaMapperImplement --> VentaService
+DetalleVenta --> Venta
+Usuario --> Venta
+Product --> DetalleVenta
+VentaRepository --> VentaService
+UsuarioRepository --> VentaService
+VentaMapper --> VentaService
+
+@enduml
