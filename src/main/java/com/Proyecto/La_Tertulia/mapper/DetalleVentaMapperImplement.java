@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
+import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.model.DetalleVenta;
 import com.Proyecto.La_Tertulia.model.Product;
+import com.Proyecto.La_Tertulia.model.Venta;
 import com.Proyecto.La_Tertulia.repository.ProductRepository;
 
 @Component
@@ -13,6 +15,10 @@ public class DetalleVentaMapperImplement implements DetalleVentaMapper {
 
     @Autowired
     private ProductRepository productoRepository;
+   @Autowired
+    private VentaMapper ventaMapper;
+    
+    
 
     @Override
     public DetalleVentaDTO toDTO(DetalleVenta detalleVenta) {
@@ -22,6 +28,7 @@ public class DetalleVentaMapperImplement implements DetalleVentaMapper {
 
         DetalleVentaDTO dto = new DetalleVentaDTO();
         dto.setId(detalleVenta.getId());
+        dto.setVenta(ventaMapper.toDTO(detalleVenta.getVenta()));
         dto.setIdProducto(detalleVenta.getProducto().getId());
         dto.setNombreProducto(detalleVenta.getNombreProducto());
         dto.setPrecioUnitario(detalleVenta.getPrecioUnitario());
@@ -40,6 +47,7 @@ public class DetalleVentaMapperImplement implements DetalleVentaMapper {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + dto.getIdProducto()));
 
         DetalleVenta detalle = new DetalleVenta();
+         detalle.setVenta(ventaMapper.toEntity(dto.getVenta()));
         detalle.setProducto(producto);
         detalle.setNombreProducto(producto.getName());
         detalle.setPrecioUnitario(dto.getPrecioUnitario());
