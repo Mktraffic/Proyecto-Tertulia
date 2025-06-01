@@ -135,7 +135,7 @@ public class SalesController {
     }
 
     @PostMapping("/removeDetailSale")
-    public String eliminarProducto(@RequestParam("index") int index, Model model) {
+    public String eliminarProducto(@RequestParam("index") Long index, Model model) {
         saleDetailsList.remove(index);
         return "redirect:/finishSale";
     }

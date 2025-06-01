@@ -1,7 +1,5 @@
 package com.Proyecto.La_Tertulia.dto;
 
-import com.Proyecto.La_Tertulia.model.Compra;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
