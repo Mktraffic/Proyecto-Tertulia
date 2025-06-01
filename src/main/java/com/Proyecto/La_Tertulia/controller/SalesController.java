@@ -93,38 +93,26 @@ public class SalesController {
         detalle.setNombreProducto(product.getName());
         detalle.setPrecioUnitario(product.getPrice());
         detalle.setSubtotal(detalle.getCantidad() * product.getPrice());
-        System.out.println("\n \n \n \n cantidad antes de la venta " + product.getStock());
+        detalle.setVenta(new VentaDTO());
         for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
-          
-            if(detalleVentaDTO.getProducto().getId()==detalle.getProducto().getId()){
-            if (product.getStock() >= detalle.getCantidad()) {
-                saleDetailsList.add(detalle);
-                redirectAttributes.addFlashAttribute("success", "Producto añadido correctamente");
-                model.addAttribute("detalleVentaDTO", new DetalleVentaDTO());
-            } else {
-                redirectAttributes.addFlashAttribute("error",
-                        "Solo tenemos " + product.getStock() + " unidades disponibles del producto "
-                                + detalle.getNombreProducto());
+            if (detalleVentaDTO.getProducto().getId() == detalle.getProducto().getId()) {
+                if (detalleVentaDTO.getCantidad() + detalle.getCantidad() > product.getStock()) {
+                    redirectAttributes.addFlashAttribute("error", "No hay suficiente stock para este producto");
+                    model.addAttribute("detalleVentaDTO", detalle);
+                } else {
+                    detalleVentaDTO.setCantidad(detalleVentaDTO.getCantidad() + detalle.getCantidad());
+                    detalleVentaDTO.setSubtotal(detalleVentaDTO.getPrecioUnitario() * detalleVentaDTO.getCantidad());
+                    redirectAttributes.addFlashAttribute("success", "Producto actualizado en la venta");
+                }
+                return "redirect:/addSale";
+            } else if (detalle.getCantidad() > product.getStock()) {
+                redirectAttributes.addFlashAttribute("error", "No hay suficiente stock para este producto");
                 model.addAttribute("detalleVentaDTO", detalle);
+                return "redirect:/addSale";
             }
-            
-        }else{
-             if (product.getStock() >= detalle.getCantidad()) {
-                saleDetailsList.add(detalle);
-                redirectAttributes.addFlashAttribute("success", "Producto añadido correctamente");
-                model.addAttribute("detalleVentaDTO", new DetalleVentaDTO());
-            } else {
-                redirectAttributes.addFlashAttribute("error",
-                        "Solo tenemos " + product.getStock() + " unidades disponibles del producto "
-                                + detalle.getNombreProducto());
-                model.addAttribute("detalleVentaDTO", detalle);
-            }
-
         }
-        }
-        System.out.println("Precio" + detalle.getPrecioUnitario());
-        System.out.println("Cantidad" + detalle.getCantidad());
-        System.out.println("Subtotal" + detalle.getSubtotal());
+        saleDetailsList.add(detalle);
+        redirectAttributes.addFlashAttribute("success", "Producto agregado a la venta");
         return "redirect:/addSale";
     }
 
@@ -135,45 +123,9 @@ public class SalesController {
     }
 
     @PostMapping("/removeDetailSale")
-    public String eliminarProducto(@RequestParam("index") Long index, Model model) {
-        saleDetailsList.remove(index);
+    public String eliminarProducto(@RequestParam("index") int index, Model model) {
+        saleDetailsList.remove(index - 1);
         return "redirect:/finishSale";
-    }
-
-    @PostMapping("/SaleRegistration")
-    public String saleRegistration(@ModelAttribute VentaDTO venta, @ModelAttribute("categoria") String tipoProd,
-            @ModelAttribute("producto") String nombreProd, Model model) {
-        venta();
-        compra();
-        // registrar la venta, crear una nueva ventaDTO y pasarle por parametros lo que
-        // se optiene de "venta"
-        // Revisar como van a agregar la venta de ese usuario a su arreglo
-        model.addAttribute("ventaDTO", new VentaDTO());
-        return "redirect:/SaleRegistration";
-    }
-
-    public void venta() {
-        System.out.println("registrando venta");
-        VentaDTO venta = new VentaDTO();
-        venta.setId(null);
-        venta.setFechaVenta(LocalDate.now());
-        venta.setVendedor(usuarioService.findUserByName("mktraffic"));
-        venta.setTipoDocumentoCliente("cedula de ciudadania");
-        venta.setNumeroDocumentoCliente(1000000000L);
-        System.out.println("vamos a la lista de detalles");
-        List<DetalleVentaDTO> detalle = new ArrayList<>();
-        ProductDTO productDTO = productoService.findById(1L).orElseThrow(null);
-        ProductDTO productDTO1 = productoService.findById(2L).orElseThrow(null);
-        detalle.add(new DetalleVentaDTO(null, venta, productDTO, productDTO.getName(), productDTO.getPrice(), 3,
-                productDTO.getPrice() * 3));
-        detalle.add(new DetalleVentaDTO(null, venta, productDTO1, productDTO1.getName(), productDTO1.getPrice(), 3,
-                productDTO1.getPrice() * 3));
-        venta.setDetalles(detalle);
-        double total = detalle.stream().mapToDouble(DetalleVentaDTO::getSubtotal).sum();
-        venta.setTotalVenta(total);
-        System.out.println("total de la venta: " + total);
-        ventaService.registrarVenta(venta);
-        System.out.println("venta registrada exitosamente");
     }
 
     public void compra() {
@@ -209,8 +161,12 @@ public class SalesController {
         if (!saleDetailsList.isEmpty()) {
 
             VentaDTO venta = new VentaDTO(null, LocalDate.now(),
-                    usuarioDTO, tipoDocCli, Long.parseLong(numDoc), this.obtainTotalSale(), saleDetailsList);
-            // sale registartion (venta)
+                    usuarioDTO, tipoDocCli, Long.parseLong(numDoc), this.obtainTotalSale(),
+                    new ArrayList<DetalleVentaDTO>());
+            for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
+                detalleVentaDTO.setVenta(venta);
+            }
+            venta.setDetalles(saleDetailsList);
             ventaService.registrarVenta(venta);
             saleDetailsList.clear();
             redirectAttributes.addFlashAttribute("success", "Venta realizada exitosamente");

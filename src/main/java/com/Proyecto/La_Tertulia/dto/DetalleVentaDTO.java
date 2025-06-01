@@ -9,7 +9,7 @@ public class DetalleVentaDTO {
 
     private Long id;
     private VentaDTO venta;
-    private ProductDTO Producto;
+    private ProductDTO producto;
     private String nombreProducto;
     private double precioUnitario;
     private int cantidad;
