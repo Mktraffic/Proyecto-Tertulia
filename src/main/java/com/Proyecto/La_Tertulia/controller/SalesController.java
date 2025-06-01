@@ -12,9 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
+import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
+import com.Proyecto.La_Tertulia.model.Venta;
 import com.Proyecto.La_Tertulia.service.ProductService;
+import com.Proyecto.La_Tertulia.service.UsuarioService;
 import com.Proyecto.La_Tertulia.service.VentaService;
 import jakarta.servlet.http.HttpSession;
 
@@ -24,6 +28,9 @@ public class SalesController {
     private VentaService ventaService;
     @Autowired
     private ProductService productoService;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @GetMapping("/manageSales")
     public String chargeSalesToManage(Model model, HttpSession session) {
@@ -72,12 +79,37 @@ public class SalesController {
     @PostMapping("/SaleRegistration")
     public String saleRegistration(@ModelAttribute VentaDTO venta, @ModelAttribute("categoria") String tipoProd,
             @ModelAttribute("producto") String nombreProd, Model model) {
+                venta();
         // registrar la venta, crear una nueva ventaDTO y pasarle por parametros lo que
         // se optiene de "venta"
         //Revisar como van a agregar la venta de ese usuario a su arreglo
         model.addAttribute("ventaDTO", new VentaDTO());
         return "redirect:/SaleRegistration";
     }
+
+    public void venta(){
+        System.out.println("registrando venta");
+        VentaDTO venta = new VentaDTO();
+        venta.setId(null);
+        venta.setFechaVenta(LocalDate.now());
+        venta.setVendedor(usuarioService.findUserByName("mktraffic"));
+        venta.setTipoDocumentoCliente("cedula de ciudadania");
+        venta.setNumeroDocumentoCliente(1000000000L);
+        System.out.println("vamos a la lista de detalles");
+        List<DetalleVentaDTO> detalle = new ArrayList<>();
+        ProductDTO productDTO = productoService.findById(1L).orElseThrow(null);
+        ProductDTO productDTO1 = productoService.findById(2L).orElseThrow(null);
+        detalle.add(new DetalleVentaDTO(null, venta, productDTO, productDTO.getName(), productDTO.getPrice(), 3 , productDTO.getPrice()*3));
+        detalle.add(new DetalleVentaDTO(null, venta, productDTO1, productDTO1.getName(), productDTO1.getPrice(), 3 , productDTO1.getPrice()*3));
+        venta.setDetalles(detalle);
+        double total = detalle.stream().mapToDouble(DetalleVentaDTO::getSubtotal).sum();
+        venta.setTotalVenta(total);
+        System.out.println("total de la venta: " + total);
+        ventaService.registrarVenta(venta);
+        System.out.println("venta registrada exitosamente");
+    }
+
+
 
     // Para cargar lo que se necesita para agregar venta @GetMapping("/productos")
 
