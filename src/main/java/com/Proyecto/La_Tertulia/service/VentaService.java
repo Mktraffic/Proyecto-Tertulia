@@ -40,19 +40,16 @@ public class VentaService {
         venta.setVendedor(vendedor);
         venta.setTipoDocumentoCliente(ventaDTO.getTipoDocumentoCliente());
         venta.setNumeroDocumentoCliente(ventaDTO.getNumeroDocumentoCliente());
-
-        // Mapeo manual de los detalles
         List<DetalleVenta> detalles = ventaDTO.getDetalles().stream().map(dto -> {
             DetalleVenta detalle = new DetalleVenta();
-            Product producto = productRepository.findById(dto.getIdProducto().getId())
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + dto.getIdProducto()));
+            Product producto = productRepository.findById(dto.getProducto().getId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + dto.getProducto()));
             detalle.setProducto(producto);
             detalle.setNombreProducto(dto.getNombreProducto());
             detalle.setPrecioUnitario(dto.getPrecioUnitario());
             detalle.setCantidad(dto.getCantidad());
             detalle.setSubtotal(dto.getPrecioUnitario() * dto.getCantidad());
-            detalle.setVenta(venta); // Relación bidireccional
-              
+            detalle.setVenta(venta);
               if (producto.getStock() < dto.getCantidad()) {
                 throw new RuntimeException("Stock insuficiente para vender el producto: " + producto.getName());
               }

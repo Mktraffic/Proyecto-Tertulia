@@ -15,16 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-<<<<<<< Updated upstream
 import com.Proyecto.La_Tertulia.dto.CompraDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleCompraDTO;
-=======
->>>>>>> Stashed changes
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
-import com.Proyecto.La_Tertulia.model.Venta;
 import com.Proyecto.La_Tertulia.service.CompraService;
 import com.Proyecto.La_Tertulia.service.ProductService;
 import com.Proyecto.La_Tertulia.service.UsuarioService;
@@ -39,17 +35,14 @@ public class SalesController {
     private CompraService compraService;
     @Autowired
     private ProductService productoService;
-
-<<<<<<< Updated upstream
     @Autowired
     private UsuarioService usuarioService;
-=======
+
     private ArrayList<DetalleVentaDTO> saleDetailsList;
 
     public SalesController() {
         saleDetailsList = new ArrayList<>();
     }
->>>>>>> Stashed changes
 
     @GetMapping("/manageSales")
     public String chargeSalesToManage(Model model, HttpSession session) {
@@ -91,17 +84,14 @@ public class SalesController {
     @PostMapping("/detailSale")
     public String saveDetailSale(@ModelAttribute DetalleVentaDTO detalle, RedirectAttributes redirectAttributes,
             Model model) {
-        ProductDTO product = productoService.findById(detalle.getIdProducto()).orElse(null);
+        ProductDTO product = productoService.findById(detalle.getProducto().getId()).orElse(null);
         if (product == null) {
             redirectAttributes.addFlashAttribute("error", "Producto no encontrado");
             model.addAttribute("detalleVentaDTO", detalle);
             return "redirect:/addSale";
         }
         detalle.setNombreProducto(product.getName());
-        detalle.setTipoProducto(product.getType());
-        detalle.setPresentacion(product.getPresentation());
         detalle.setPrecioUnitario(product.getPrice());
-        System.out.println("\n \n \n \n TipoProd: " + detalle.getTipoProducto());
         detalle.setSubtotal(detalle.getCantidad() * product.getPrice());
                 System.out.println("\n \n \n \n cantidad antes de la venta "+product.getStock());
         if (product.getStock() >= detalle.getCantidad()) {
@@ -113,9 +103,6 @@ public class SalesController {
                     "Solo tenemos " + product.getStock() + " unidades disponibles del producto "+detalle.getNombreProducto());
             model.addAttribute("detalleVentaDTO", detalle);
         }
-         System.out.println("\n \n \n \n Tipo" +detalle.getTipoProducto()+" Tamañ0"+saleDetailsList.size());
-          System.out.println("Nombre" +detalle.getNombreProducto());
-           System.out.println("Presentacion" +detalle.getPresentacion());
             System.out.println("Precio" +detalle.getPrecioUnitario());
         System.out.println("Cantidad" +detalle.getCantidad());
          System.out.println("Subtotal" +detalle.getSubtotal());
@@ -133,7 +120,6 @@ public class SalesController {
     return "redirect:/finishSale";
 }
 
-<<<<<<< Updated upstream
     @PostMapping("/SaleRegistration")
     public String saleRegistration(@ModelAttribute VentaDTO venta, @ModelAttribute("categoria") String tipoProd,
             @ModelAttribute("producto") String nombreProd, Model model) {
@@ -191,7 +177,6 @@ public class SalesController {
 
 
 
-=======
     @PostMapping("/saleRegistration")
     public String saleRegistration(@ModelAttribute("tipoDocCliente") String tipoDocCli,
             @ModelAttribute("numDocCliente") String numDoc, RedirectAttributes redirectAttributes, HttpSession session) {
@@ -212,7 +197,6 @@ public class SalesController {
         }
         return totalSale;
     }
->>>>>>> Stashed changes
     // Para cargar lo que se necesita para agregar venta @GetMapping("/productos")
 @GetMapping("/productos")
 @ResponseBody

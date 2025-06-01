@@ -42,13 +42,10 @@ public class VentaMapperImplement implements VentaMapper {
         dto.setNumeroDocumentoCliente(venta.getNumeroDocumentoCliente());
         dto.setTotalVenta(venta.getTotalVenta());
         dto.setVendedor(usuarioMapper.toDTO(venta.getVendedor()));
-
-        // Mapeo manual de detalles
         List<DetalleVentaDTO> detalles = venta.getDetalles().stream().map(detalle -> {
             DetalleVentaDTO detalleDTO = new DetalleVentaDTO();
             detalleDTO.setId(detalle.getId());
-            // No mapees la venta para evitar ciclos
-            detalleDTO.setIdProducto(productMapper.toDTO(detalle.getProducto()));
+            detalleDTO.setProducto(productMapper.toDTO(detalle.getProducto()));
             detalleDTO.setNombreProducto(detalle.getNombreProducto());
             detalleDTO.setPrecioUnitario(detalle.getPrecioUnitario());
             detalleDTO.setCantidad(detalle.getCantidad());
@@ -72,17 +69,13 @@ public class VentaMapperImplement implements VentaMapper {
         venta.setTipoDocumentoCliente(dto.getTipoDocumentoCliente());
         venta.setNumeroDocumentoCliente(dto.getNumeroDocumentoCliente());
         venta.setTotalVenta(dto.getTotalVenta());
-
-        // Se asume que el vendedor ya está creado
         venta.setVendedor(usuarioRepository.findById(dto.getVendedor().getId())
                 .orElseThrow(() -> new RuntimeException("Vendedor no encontrado")));
-
-        // Mapeo manual de detalles
         List<DetalleVenta> detalles = dto.getDetalles().stream().map(detalleDTO -> {
             DetalleVenta detalle = new DetalleVenta();
-            detalle.setVenta(venta); // Relación bidireccional
-            Product producto = productRepository.findById(productMapper.toEntity(detalleDTO.getIdProducto()).getId())
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + detalleDTO.getIdProducto()));
+            detalle.setVenta(venta);
+            Product producto = productRepository.findById(productMapper.toEntity(detalleDTO.getProducto()).getId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + detalleDTO.getProducto()));
             detalle.setProducto(producto);
             detalle.setNombreProducto(detalleDTO.getNombreProducto());
             detalle.setPrecioUnitario(detalleDTO.getPrecioUnitario());
