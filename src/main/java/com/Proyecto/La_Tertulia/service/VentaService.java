@@ -52,6 +52,12 @@ public class VentaService {
             detalle.setCantidad(dto.getCantidad());
             detalle.setSubtotal(dto.getPrecioUnitario() * dto.getCantidad());
             detalle.setVenta(venta); // Relación bidireccional
+              
+              if (producto.getStock() < dto.getCantidad()) {
+                throw new RuntimeException("Stock insuficiente para vender el producto: " + producto.getName());
+              }
+            producto.setStock(producto.getStock() - dto.getCantidad());
+            productRepository.save(producto);
             return detalle;
         }).collect(Collectors.toList());
 

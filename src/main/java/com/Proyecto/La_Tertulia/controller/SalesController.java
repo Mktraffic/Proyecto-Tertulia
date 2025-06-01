@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.Proyecto.La_Tertulia.dto.CompraDTO;
+import com.Proyecto.La_Tertulia.dto.DetalleCompraDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.model.Venta;
+import com.Proyecto.La_Tertulia.service.CompraService;
 import com.Proyecto.La_Tertulia.service.ProductService;
 import com.Proyecto.La_Tertulia.service.UsuarioService;
 import com.Proyecto.La_Tertulia.service.VentaService;
@@ -26,6 +29,8 @@ import jakarta.servlet.http.HttpSession;
 public class SalesController {
     @Autowired
     private VentaService ventaService;
+    @Autowired
+    private CompraService compraService;
     @Autowired
     private ProductService productoService;
 
@@ -80,6 +85,7 @@ public class SalesController {
     public String saleRegistration(@ModelAttribute VentaDTO venta, @ModelAttribute("categoria") String tipoProd,
             @ModelAttribute("producto") String nombreProd, Model model) {
                 venta();
+                compra();
         // registrar la venta, crear una nueva ventaDTO y pasarle por parametros lo que
         // se optiene de "venta"
         //Revisar como van a agregar la venta de ese usuario a su arreglo
@@ -106,6 +112,27 @@ public class SalesController {
         venta.setTotalVenta(total);
         System.out.println("total de la venta: " + total);
         ventaService.registrarVenta(venta);
+        System.out.println("venta registrada exitosamente");
+    }
+      public void compra(){
+        System.out.println("registrando compra");
+        CompraDTO compra = new CompraDTO();
+        compra.setId(null);
+        compra.setFechaCompra(LocalDate.now());
+        compra.setVendedor(usuarioService.findUserByName("mktraffic"));
+        compra.setNombreProveedor("Pxdd");
+
+        System.out.println("vamos a la lista de detalles");
+        List<DetalleCompraDTO> detalle = new ArrayList<>();
+        ProductDTO productDTO = productoService.findById(1L).orElseThrow(null);
+        ProductDTO productDTO1 = productoService.findById(2L).orElseThrow(null);
+        detalle.add(new DetalleCompraDTO(null, compra, productDTO, productDTO.getName(), productDTO.getPrice(), 2 , (double)productDTO.getPrice()*2));
+        detalle.add(new DetalleCompraDTO(null, compra, productDTO1, productDTO1.getName(), productDTO1.getPrice(), 2 , (double)productDTO1.getPrice()*2));
+        compra.setDetalles(detalle);
+        double total = detalle.stream().mapToDouble(DetalleCompraDTO::getSubtotal).sum();
+        compra.setTotalVenta(total);
+        System.out.println("total de la venta: " + total);
+        compraService.registrarCompra(compra);
         System.out.println("venta registrada exitosamente");
     }
 

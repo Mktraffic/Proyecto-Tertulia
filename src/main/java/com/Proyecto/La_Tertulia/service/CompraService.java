@@ -1,9 +1,15 @@
 package com.Proyecto.La_Tertulia.service;
 
 import com.Proyecto.La_Tertulia.dto.CompraDTO;
-import com.Proyecto.La_Tertulia.mapper.CompraMapperImplement;
+import com.Proyecto.La_Tertulia.mapper.CompraMapper;
+import com.Proyecto.La_Tertulia.model.DetalleCompra;
+import com.Proyecto.La_Tertulia.model.Product;
+import com.Proyecto.La_Tertulia.model.Usuario;
 import com.Proyecto.La_Tertulia.model.Compra;
+import com.Proyecto.La_Tertulia.repository.ProductRepository;
+import com.Proyecto.La_Tertulia.repository.UsuarioRepository;
 import com.Proyecto.La_Tertulia.repository.CompraRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,32 +24,66 @@ public class CompraService {
     private CompraRepository compraRepository;
 
     @Autowired
-    private CompraMapperImplement compraMapper;
+    private UsuarioRepository usuarioRepository;
 
-    public String addCompra(CompraDTO compraDTO) {
-        String result;
-        try {
-            Compra compra = compraMapper.toEntity(compraDTO);
-            compraRepository.save(compra);
-            result = "Compra registrada correctamente";
-        } catch (Exception e) {
-            result = "Error al registrar la compra";
-        }
-        return result;
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CompraMapper compraMapper;
+
+    public CompraDTO registrarCompra(CompraDTO compraDTO) {
+        Usuario vendedor = usuarioRepository.findById(compraDTO.getVendedor().getId())
+                .orElseThrow(() -> new RuntimeException("Comprador no encontrado"));
+
+        Compra compra = new Compra();
+        compra.setFechaCompra(LocalDate.now());
+        compra.setVendedor(vendedor);
+        compra.setNombreProveedor(compraDTO.getNombreProveedor());
+        compra.setTotalVenta(compraDTO.getTotalVenta());
+        
+
+        // Mapeo manual de los detalles
+        List<DetalleCompra> detalles = compraDTO.getDetalles().stream().map(dto -> {
+            DetalleCompra detalle = new DetalleCompra();
+            Product producto = productRepository.findById(dto.getProducto().getId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + dto.getProducto()));
+            detalle.setProducto(producto);
+            detalle.setNombreProducto(dto.getNombreProducto());
+            detalle.setPrecioUnitario(dto.getPrecioUnitario());
+            detalle.setCantidad(dto.getCantidad());
+            detalle.setSubtotal(dto.getPrecioUnitario() * dto.getCantidad());
+            detalle.setCompra(compra); // Relación bidireccional
+
+            // Actualizar stock del producto
+            producto.setStock(producto.getStock() + dto.getCantidad());
+            productRepository.save(producto);
+
+            return detalle;
+        }).collect(Collectors.toList());
+
+        double totalCompra = detalles.stream()
+                .mapToDouble(DetalleCompra::getSubtotal)
+                .sum();
+
+        compra.setTotalVenta(totalCompra);
+        compra.setDetalles(detalles);
+
+        Compra compraGuardada = compraRepository.save(compra);
+
+        return compraMapper.toDTO(compraGuardada);
     }
 
-    public List<CompraDTO> findAllCompras() {
-        return compraRepository.findAll()
-                .stream()
+    public List<CompraDTO> obtenerComprasEntreFechas(LocalDate fechaInicio, LocalDate fechaFin) {
+        List<Compra> compras = compraRepository.findByFechaCompraBetween(fechaInicio, fechaFin);
+        return compras.stream()
                 .map(compraMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<CompraDTO> findComprasBetweenDates(LocalDate fechaInicio, LocalDate fechaFin) {
-        return compraRepository.findAll().stream()
-                .filter(c -> c.getFechaCompra() != null &&
-                             !c.getFechaCompra().isBefore(fechaInicio) &&
-                             !c.getFechaCompra().isAfter(fechaFin))
+    public List<CompraDTO> findAllCompras() {
+        List<Compra> compras = compraRepository.findAll();
+        return compras.stream()
                 .map(compraMapper::toDTO)
                 .collect(Collectors.toList());
     }
