@@ -9,8 +9,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
-import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.service.ProductService;
