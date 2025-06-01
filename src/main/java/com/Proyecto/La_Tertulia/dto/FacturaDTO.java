@@ -13,10 +13,10 @@ public class FacturaDTO {
 
     private Long id;
     private UsuarioDTO usuario;
+    private CompraDTO compra;
     private String tipoDocumento;
     private Long numeroDocumento;
     private LocalDate fechaFactura;
-    private List<DetalleFacturaDTO> productos;
     private int subTotal;
     private double iva;
     private double totalFactura;

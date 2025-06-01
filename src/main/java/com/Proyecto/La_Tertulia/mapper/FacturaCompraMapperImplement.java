@@ -1,39 +1,33 @@
 package com.Proyecto.La_Tertulia.mapper;
 
 import com.Proyecto.La_Tertulia.dto.FacturaDTO;
-import com.Proyecto.La_Tertulia.dto.DetalleFacturaDTO;
-import com.Proyecto.La_Tertulia.model.Factura;
-import com.Proyecto.La_Tertulia.model.DetalleFactura;
+import com.Proyecto.La_Tertulia.model.FacturaCompra;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Component
-public class FacturaMapperImplement implements FacturaMapper {
+public class FacturaCompraMapperImplement implements FacturaCompraMapper {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
+     @Autowired
+    private CompraMapper compraMapper;
 
-    @Autowired
-    private DetalleFacturaMapperImplement detalleFacturaMapper;
+    
 
     @Override
-    public FacturaDTO toDTO(Factura factura) {
+    public FacturaDTO toDTO(FacturaCompra factura) {
         if (factura == null) return null;
         FacturaDTO dto = new FacturaDTO();
         dto.setId(factura.getId());
         dto.setUsuario(usuarioMapper.toDTO(factura.getUsuario()));
+        dto.setCompra(compraMapper.toDTO(factura.getCompra()));
         dto.setTipoDocumento(factura.getTipoDocumento());
         dto.setNumeroDocumento(factura.getNumeroDocumento());
         dto.setFechaFactura(factura.getFechaFactura());
-        if (factura.getProductos() != null) {
-            List<DetalleFacturaDTO> productosDTO = factura.getProductos().stream()
-                    .map(detalleFacturaMapper::toDTO)
-                    .collect(Collectors.toList());
-            dto.setProductos(productosDTO);
-        }
         dto.setSubTotal(factura.getSubTotal());
         dto.setIva(factura.getIva());
         dto.setTotalFactura(factura.getTotalFactura());
@@ -41,20 +35,15 @@ public class FacturaMapperImplement implements FacturaMapper {
     }
 
     @Override
-    public Factura toEntity(FacturaDTO dto) {
+    public FacturaCompra toEntity(FacturaDTO dto) {
         if (dto == null) return null;
-        Factura factura = new Factura();
+        FacturaCompra factura = new FacturaCompra();
         factura.setId(dto.getId());
         factura.setUsuario(usuarioMapper.toEntity(dto.getUsuario()));
+        factura.setCompra(compraMapper.toEntity(dto.getCompra()));
         factura.setTipoDocumento(dto.getTipoDocumento());
         factura.setNumeroDocumento(dto.getNumeroDocumento());
         factura.setFechaFactura(dto.getFechaFactura());
-        if (dto.getProductos() != null) {
-            List<DetalleFactura> productos = dto.getProductos().stream()
-                    .map(detalleFacturaMapper::toEntity)
-                    .collect(Collectors.toList());
-            factura.setProductos(productos);
-        }
         factura.setSubTotal(dto.getSubTotal());
         factura.setIva(dto.getIva());
         factura.setTotalFactura(dto.getTotalFactura());

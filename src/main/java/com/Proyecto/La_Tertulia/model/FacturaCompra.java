@@ -12,17 +12,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "factura")
+@Table(name = "factura_compra")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Factura {
+public class FacturaCompra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +34,10 @@ public class Factura {
     @JoinColumn(name = "id_vendedor", nullable = false, referencedColumnName = "id_usuario")
     private Usuario usuario;
 
+    @OneToOne
+    @JoinColumn(name = "id_compra", nullable = false, referencedColumnName = "id_compra")
+    private Compra compra;
+
     @Column(name = "tipo_documentoCliente", nullable = false)
     private String tipoDocumento;
 
@@ -41,9 +46,6 @@ public class Factura {
 
     @Column(name = "fecha_factura", nullable = false)
     private LocalDate fechaFactura;
-
-    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetalleFactura> productos;
 
     @Column(name = "sub_total", nullable = false)
     private int subTotal;

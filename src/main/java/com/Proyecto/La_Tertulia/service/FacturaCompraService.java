@@ -1,9 +1,9 @@
 package com.Proyecto.La_Tertulia.service;
 
 import com.Proyecto.La_Tertulia.dto.FacturaDTO;
-import com.Proyecto.La_Tertulia.mapper.FacturaMapperImplement;
-import com.Proyecto.La_Tertulia.model.Factura;
-import com.Proyecto.La_Tertulia.repository.FacturaRepository;
+import com.Proyecto.La_Tertulia.mapper.FacturaCompraMapperImplement;
+import com.Proyecto.La_Tertulia.model.FacturaCompra;
+import com.Proyecto.La_Tertulia.repository.FacturaCompraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +12,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class FacturaService {
+public class FacturaCompraService {
 
     @Autowired
-    private FacturaRepository facturaRepository;
+    private FacturaCompraRepository facturaRepository;
 
     @Autowired
-    private FacturaMapperImplement facturaMapper;
+    private FacturaCompraMapperImplement facturaMapper;
 
     public String addFactura(FacturaDTO facturaDTO) {
         String result;
         try {
-            Factura factura = facturaMapper.toEntity(facturaDTO);
+            facturaDTO.setTotalFactura(
+                    facturaDTO.getSubTotal() + (facturaDTO.getSubTotal() * facturaDTO.getIva() / 100)
+            );
+            FacturaCompra factura = facturaMapper.toEntity(facturaDTO);
             facturaRepository.save(factura);
             result = "Factura registrada correctamente";
         } catch (Exception e) {
@@ -31,6 +34,7 @@ public class FacturaService {
         }
         return result;
     }
+
 
     public List<FacturaDTO> findAllFacturas() {
         return facturaRepository.findAll()
@@ -40,7 +44,7 @@ public class FacturaService {
     }
 
     public FacturaDTO findFacturaById(Long id) {
-        Optional<Factura> factura = facturaRepository.findById(id);
+        Optional<FacturaCompra> factura = facturaRepository.findById(id);
         return factura.map(facturaMapper::toDTO).orElse(null);
     }
 }
