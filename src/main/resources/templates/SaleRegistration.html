@@ -4,19 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de venta</title>
-    <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
-    <style>
-        .disabled {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .form-control:disabled {
-            background-color: #f8f9fa;
-            opacity: 0.65;
-        }
-    </style>
+    <title>Finalizar venta</title>
+    <link rel="stylesheet" th:href="@{/css/StylesEndSale.css}" />
 </head>
 
 <body>
@@ -31,46 +20,45 @@
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
-            <h1>Registrar venta</h1>
+            <h1>Finalizar venta</h1>
         </div>
-
         <div class="form-container">
-            <form th:action="@{/SaleRegistration}" th:object="${ventaDTO}" method="POST">
-                <div class="form-group">
-                    <label for="categoria">Tipo producto:</label>
-                    <select id="categoria" name="categoria" class="form-control" required>
-                        <option disabled selected>Seleccione una categoría</option>
-                        <option th:each="type : ${categorias}" th:value="${type}" th:text="${type}"></option>
-                    </select>
+            <form th:action="@{/saleRegistration}" method="POST">
+                <div class="tabla-registro-compra">
+                    <h3>Detalles de la venta</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Presentación</th>
+                                <th>Precio Unitario</th>
+                                <th>Cantidad</th>
+                                <th>Total</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="detalle, iterStat : ${registroCompra}">
+                                <td th:text="${detalle.nombreProducto}"></td>
+                                <td th:text="${detalle.presentacion}"></td>
+                                <td th:text="${detalle.precioUnitario}"></td>
+                                <td th:text="${detalle.cantidad}"></td>
+                                <td
+                                    th:text="${#numbers.formatDecimal(detalle.precioUnitario * detalle.cantidad, 1, 'POINT', 2, 'COMMA')}">
+                                </td>
+                                <td>
+                                    <form th:action="@{/removeDetailSale}" method="post" style="display:inline;">
+                                        <input type="hidden" name="index" th:value="${iterStat.index}" />
+                                        <button type="submit" class="btn btn-danger">🗑</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <div class="form-group">
-                    <label for="nombre-producto">Nombre producto:</label>
-                    <select id="producto" name="producto" class="form-control" required disabled>
-                        <option disabled selected>Seleccione un producto</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="presentacion">Presentación:</label>
-                    <select id="presentacion" name="presentacion" class="form-control" required disabled>
-                        <option disabled selected>Seleccione presentación</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="precio">Precio:</label>
-                    <input type="number" class="form-control" name="price" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label for="cantidad">Cantidad:</label>
-                    <input type="number" class="form-control" name="cantidad" required min="1">
-                </div>
-
                 <div class="form-group">
                     <label for="nombreCliente">Tipo doc cliente:</label>
-                    <select class="form-control" th:field="*{tipoDocumentoCliente}" required>
+                    <select class="form-control" name="tipoDocCliente" required>
                         <option value="" selected disabled>Selecciona una opción</option>
                         <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
                         <option value="Cedula de extranjeria">Cédula de extranjería</option>
@@ -79,19 +67,20 @@
 
                 <div class="form-group">
                     <label for="numDocCliente">Número doc cliente:</label>
-                    <input type="text" class="form-control" th:field="*{numeroDocumentoCliente}" required minlength="7"
-                        maxlength="10" pattern="[0-9]{7,10}"
+                    <input type="text" class="form-control" name="numDocCliente" required minlength="7" maxlength="10"
+                        pattern="[0-9]{7,10}"
                         title="El documento de identidad debe tener entre 7 y 10 dígitos numéricos">
                 </div>
 
                 <div class="buttons">
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-primary">Realizar venta</button>
+                     <a href="/addSale" class="btn btn-primary" role="button">Añadir producto</a>
                     <a th:href="@{/manageSales}" class="btn btn-secondary"
-                        style="text-decoration: none; text-align: center;">Atrás</a>
+                        style="text-decoration: none; text-align: center;">Cancelar</a>
                 </div>
             </form>
         </div>
-        <script th:src="@{/js/chargeDetailsSale.js}"></script>
     </div>
 </body>
+
 </html>

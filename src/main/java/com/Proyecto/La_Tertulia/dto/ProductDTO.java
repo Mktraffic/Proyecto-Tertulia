@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
+    public ProductDTO(Long id2, String name2) {
+        //TODO Auto-generated constructor stub
+    }
     private Long id;
     private String name;
     private String type;

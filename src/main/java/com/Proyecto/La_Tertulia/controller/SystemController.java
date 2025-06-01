@@ -124,7 +124,7 @@ public class SystemController {
         if (!message.isEmpty()) {
             model.addAttribute("error", message);
             model.addAttribute("usuarioDTO", new UsuarioDTO());
-            return "UserRegistration";
+            return "AdminRegistration";
         }
         String nombreRol = "Administrador";
         Rol rolGuardado = rolService.guardarRolSiNoExiste(nombreRol);

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,9 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+<<<<<<< Updated upstream
 import com.Proyecto.La_Tertulia.dto.CompraDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleCompraDTO;
+=======
+>>>>>>> Stashed changes
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
@@ -34,8 +40,16 @@ public class SalesController {
     @Autowired
     private ProductService productoService;
 
+<<<<<<< Updated upstream
     @Autowired
     private UsuarioService usuarioService;
+=======
+    private ArrayList<DetalleVentaDTO> saleDetailsList;
+
+    public SalesController() {
+        saleDetailsList = new ArrayList<>();
+    }
+>>>>>>> Stashed changes
 
     @GetMapping("/manageSales")
     public String chargeSalesToManage(Model model, HttpSession session) {
@@ -49,6 +63,7 @@ public class SalesController {
         model.addAttribute("rol", usuarioDTO.getRol().getNombreRol().trim());
         return "SalesManagement";
     }
+
     @PostMapping("/searchSale")
     public String searchSale(@RequestParam("fechaInicial") LocalDate initialDate,
             @RequestParam("fechaFinal") LocalDate finaldate, Model model) {
@@ -63,24 +78,62 @@ public class SalesController {
         return "redirect:/manageSales";
     }
 
-    @PostMapping("/deleteSale")
-    public String deleteSale(@RequestParam("id") Long id) {
-        // Logica para eliminar venta, deben de añadir la cantidad substraida del
-        // producto
-
-        return "redirect:/manageSales";
-    }
-
     @GetMapping("/addSale")
     public String showFormAddSale(Model model) {
         List<String> categorias = productoService.productCategories();
         model.addAttribute("categorias", categorias);
-        model.addAttribute("ventaDTO", new VentaDTO());
+        model.addAttribute("detalleVentaDTO", new DetalleVentaDTO());
         model.addAttribute("productos", new ArrayList<>());
         model.addAttribute("presentaciones", new ArrayList<>());
-        return "SaleRegistration";
+        return "DetailsSaleRegistration";
     }
 
+    @PostMapping("/detailSale")
+    public String saveDetailSale(@ModelAttribute DetalleVentaDTO detalle, RedirectAttributes redirectAttributes,
+            Model model) {
+        ProductDTO product = productoService.findById(detalle.getIdProducto()).orElse(null);
+        if (product == null) {
+            redirectAttributes.addFlashAttribute("error", "Producto no encontrado");
+            model.addAttribute("detalleVentaDTO", detalle);
+            return "redirect:/addSale";
+        }
+        detalle.setNombreProducto(product.getName());
+        detalle.setTipoProducto(product.getType());
+        detalle.setPresentacion(product.getPresentation());
+        detalle.setPrecioUnitario(product.getPrice());
+        System.out.println("\n \n \n \n TipoProd: " + detalle.getTipoProducto());
+        detalle.setSubtotal(detalle.getCantidad() * product.getPrice());
+                System.out.println("\n \n \n \n cantidad antes de la venta "+product.getStock());
+        if (product.getStock() >= detalle.getCantidad()) {
+            saleDetailsList.add(detalle);
+            redirectAttributes.addFlashAttribute("success","Producto añadido correctamente");
+            model.addAttribute("detalleVentaDTO", new DetalleVentaDTO());
+        } else {
+            redirectAttributes.addFlashAttribute("error",
+                    "Solo tenemos " + product.getStock() + " unidades disponibles del producto "+detalle.getNombreProducto());
+            model.addAttribute("detalleVentaDTO", detalle);
+        }
+         System.out.println("\n \n \n \n Tipo" +detalle.getTipoProducto()+" Tamañ0"+saleDetailsList.size());
+          System.out.println("Nombre" +detalle.getNombreProducto());
+           System.out.println("Presentacion" +detalle.getPresentacion());
+            System.out.println("Precio" +detalle.getPrecioUnitario());
+        System.out.println("Cantidad" +detalle.getCantidad());
+         System.out.println("Subtotal" +detalle.getSubtotal());
+        return "redirect:/addSale";
+    }
+
+    @GetMapping("/finishSale")
+    private String showFinishSaleForm(Model model) {
+        model.addAttribute("registroCompra", saleDetailsList);
+        return "SaleRegistration";
+    }
+    @PostMapping("/removeDetailSale")
+    public String eliminarProducto(@RequestParam("index") int index, Model model) {
+        saleDetailsList.remove(index);
+    return "redirect:/finishSale";
+}
+
+<<<<<<< Updated upstream
     @PostMapping("/SaleRegistration")
     public String saleRegistration(@ModelAttribute VentaDTO venta, @ModelAttribute("categoria") String tipoProd,
             @ModelAttribute("producto") String nombreProd, Model model) {
@@ -138,24 +191,68 @@ public class SalesController {
 
 
 
+=======
+    @PostMapping("/saleRegistration")
+    public String saleRegistration(@ModelAttribute("tipoDocCliente") String tipoDocCli,
+            @ModelAttribute("numDocCliente") String numDoc, RedirectAttributes redirectAttributes, HttpSession session) {
+
+        UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
+
+        VentaDTO venta = new VentaDTO(null, LocalDate.now(),
+                usuarioDTO, tipoDocCli, Long.parseLong(numDoc), this.obtainTotalSale(), saleDetailsList);
+        ventaService.registrarVenta(venta);  
+         saleDetailsList.clear();   
+        redirectAttributes.addFlashAttribute("success","Venta realizada exitosamente" );
+        return "redirect:/SaleManagement";
+    }
+    private double obtainTotalSale() {
+        double totalSale = 0;
+        for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
+            totalSale += detalleVentaDTO.getSubtotal();
+        }
+        return totalSale;
+    }
+>>>>>>> Stashed changes
     // Para cargar lo que se necesita para agregar venta @GetMapping("/productos")
-
-    @GetMapping("/productos")
-     @ResponseBody
-    public List<String> obtainProducts(@RequestParam String categoria) {
-        return productoService.productsByCategory(categoria);
+@GetMapping("/productos")
+@ResponseBody
+public ResponseEntity<List<ProductDTO>> getProductosByCategoria(@RequestParam String categoria) {
+    try {
+        List<ProductDTO> productos = productoService.productsByCategoryParam(categoria);
+        return ResponseEntity.ok(productos);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
     }
+}
 
-    @GetMapping("/presentaciones")
-     @ResponseBody
-    public List<String> obtainPresentations(@RequestParam String producto) {
-        return productoService.presentationByProductName(producto);
+@GetMapping("/presentaciones")
+@ResponseBody
+public ResponseEntity<List<String>> getPresentacionesByProducto(@RequestParam Long productoId) {
+    try {
+        List<String> presentaciones = productoService.presentationByProductid(productoId);
+        return ResponseEntity.ok(presentaciones);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
     }
+}
 
-    @GetMapping("/precio")
-     @ResponseBody
-    public int obtainProductPrice(@RequestParam String presentacion, @RequestParam String producto) {
-        return productoService.productPrice(producto, presentacion);
+@GetMapping("/precio")
+@ResponseBody
+public ResponseEntity<Double> getPrecioByProductoAndPresentacion(
+    @RequestParam Long productoId,
+    @RequestParam String presentacion) {
+    try {
+        Double precio = productoService.productPrice(productoId, presentacion);
+        if (precio != null) {
+            return ResponseEntity.ok(precio);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
+}
+
+    
 
 }
