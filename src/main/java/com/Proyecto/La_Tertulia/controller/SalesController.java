@@ -93,19 +93,38 @@ public class SalesController {
         detalle.setNombreProducto(product.getName());
         detalle.setPrecioUnitario(product.getPrice());
         detalle.setSubtotal(detalle.getCantidad() * product.getPrice());
-                System.out.println("\n \n \n \n cantidad antes de la venta "+product.getStock());
-        if (product.getStock() >= detalle.getCantidad()) {
-            saleDetailsList.add(detalle);
-            redirectAttributes.addFlashAttribute("success","Producto añadido correctamente");
-            model.addAttribute("detalleVentaDTO", new DetalleVentaDTO());
-        } else {
-            redirectAttributes.addFlashAttribute("error",
-                    "Solo tenemos " + product.getStock() + " unidades disponibles del producto "+detalle.getNombreProducto());
-            model.addAttribute("detalleVentaDTO", detalle);
+        System.out.println("\n \n \n \n cantidad antes de la venta " + product.getStock());
+        for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
+          
+            if(detalleVentaDTO.getProducto().getId()==detalle.getProducto().getId()){
+            if (product.getStock() >= detalle.getCantidad()) {
+                saleDetailsList.add(detalle);
+                redirectAttributes.addFlashAttribute("success", "Producto añadido correctamente");
+                model.addAttribute("detalleVentaDTO", new DetalleVentaDTO());
+            } else {
+                redirectAttributes.addFlashAttribute("error",
+                        "Solo tenemos " + product.getStock() + " unidades disponibles del producto "
+                                + detalle.getNombreProducto());
+                model.addAttribute("detalleVentaDTO", detalle);
+            }
+            
+        }else{
+             if (product.getStock() >= detalle.getCantidad()) {
+                saleDetailsList.add(detalle);
+                redirectAttributes.addFlashAttribute("success", "Producto añadido correctamente");
+                model.addAttribute("detalleVentaDTO", new DetalleVentaDTO());
+            } else {
+                redirectAttributes.addFlashAttribute("error",
+                        "Solo tenemos " + product.getStock() + " unidades disponibles del producto "
+                                + detalle.getNombreProducto());
+                model.addAttribute("detalleVentaDTO", detalle);
+            }
+
         }
-            System.out.println("Precio" +detalle.getPrecioUnitario());
-        System.out.println("Cantidad" +detalle.getCantidad());
-         System.out.println("Subtotal" +detalle.getSubtotal());
+        }
+        System.out.println("Precio" + detalle.getPrecioUnitario());
+        System.out.println("Cantidad" + detalle.getCantidad());
+        System.out.println("Subtotal" + detalle.getSubtotal());
         return "redirect:/addSale";
     }
 
@@ -114,25 +133,26 @@ public class SalesController {
         model.addAttribute("registroCompra", saleDetailsList);
         return "SaleRegistration";
     }
+
     @PostMapping("/removeDetailSale")
     public String eliminarProducto(@RequestParam("index") int index, Model model) {
         saleDetailsList.remove(index);
-    return "redirect:/finishSale";
-}
+        return "redirect:/finishSale";
+    }
 
     @PostMapping("/SaleRegistration")
     public String saleRegistration(@ModelAttribute VentaDTO venta, @ModelAttribute("categoria") String tipoProd,
             @ModelAttribute("producto") String nombreProd, Model model) {
-                venta();
-                compra();
+        venta();
+        compra();
         // registrar la venta, crear una nueva ventaDTO y pasarle por parametros lo que
         // se optiene de "venta"
-        //Revisar como van a agregar la venta de ese usuario a su arreglo
+        // Revisar como van a agregar la venta de ese usuario a su arreglo
         model.addAttribute("ventaDTO", new VentaDTO());
         return "redirect:/SaleRegistration";
     }
 
-    public void venta(){
+    public void venta() {
         System.out.println("registrando venta");
         VentaDTO venta = new VentaDTO();
         venta.setId(null);
@@ -144,8 +164,10 @@ public class SalesController {
         List<DetalleVentaDTO> detalle = new ArrayList<>();
         ProductDTO productDTO = productoService.findById(1L).orElseThrow(null);
         ProductDTO productDTO1 = productoService.findById(2L).orElseThrow(null);
-        detalle.add(new DetalleVentaDTO(null, venta, productDTO, productDTO.getName(), productDTO.getPrice(), 3 , productDTO.getPrice()*3));
-        detalle.add(new DetalleVentaDTO(null, venta, productDTO1, productDTO1.getName(), productDTO1.getPrice(), 3 , productDTO1.getPrice()*3));
+        detalle.add(new DetalleVentaDTO(null, venta, productDTO, productDTO.getName(), productDTO.getPrice(), 3,
+                productDTO.getPrice() * 3));
+        detalle.add(new DetalleVentaDTO(null, venta, productDTO1, productDTO1.getName(), productDTO1.getPrice(), 3,
+                productDTO1.getPrice() * 3));
         venta.setDetalles(detalle);
         double total = detalle.stream().mapToDouble(DetalleVentaDTO::getSubtotal).sum();
         venta.setTotalVenta(total);
@@ -153,7 +175,8 @@ public class SalesController {
         ventaService.registrarVenta(venta);
         System.out.println("venta registrada exitosamente");
     }
-      public void compra(){
+
+    public void compra() {
         System.out.println("registrando compra");
         CompraDTO compra = new CompraDTO();
         compra.setId(null);
@@ -165,8 +188,10 @@ public class SalesController {
         List<DetalleCompraDTO> detalle = new ArrayList<>();
         ProductDTO productDTO = productoService.findById(1L).orElseThrow(null);
         ProductDTO productDTO1 = productoService.findById(2L).orElseThrow(null);
-        detalle.add(new DetalleCompraDTO(null, compra, productDTO, productDTO.getName(), productDTO.getPrice(), 2 , (double)productDTO.getPrice()*2));
-        detalle.add(new DetalleCompraDTO(null, compra, productDTO1, productDTO1.getName(), productDTO1.getPrice(), 2 , (double)productDTO1.getPrice()*2));
+        detalle.add(new DetalleCompraDTO(null, compra, productDTO, productDTO.getName(), productDTO.getPrice(), 2,
+                (double) productDTO.getPrice() * 2));
+        detalle.add(new DetalleCompraDTO(null, compra, productDTO1, productDTO1.getName(), productDTO1.getPrice(), 2,
+                (double) productDTO1.getPrice() * 2));
         compra.setDetalles(detalle);
         double total = detalle.stream().mapToDouble(DetalleCompraDTO::getSubtotal).sum();
         compra.setTotalVenta(total);
@@ -175,21 +200,26 @@ public class SalesController {
         System.out.println("venta registrada exitosamente");
     }
 
-
-
     @PostMapping("/saleRegistration")
     public String saleRegistration(@ModelAttribute("tipoDocCliente") String tipoDocCli,
-            @ModelAttribute("numDocCliente") String numDoc, RedirectAttributes redirectAttributes, HttpSession session) {
+            @ModelAttribute("numDocCliente") String numDoc, RedirectAttributes redirectAttributes,
+            HttpSession session) {
 
         UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
+        if (!saleDetailsList.isEmpty()) {
 
-        VentaDTO venta = new VentaDTO(null, LocalDate.now(),
-                usuarioDTO, tipoDocCli, Long.parseLong(numDoc), this.obtainTotalSale(), saleDetailsList);
-        ventaService.registrarVenta(venta);  
-         saleDetailsList.clear();   
-        redirectAttributes.addFlashAttribute("success","Venta realizada exitosamente" );
+            VentaDTO venta = new VentaDTO(null, LocalDate.now(),
+                    usuarioDTO, tipoDocCli, Long.parseLong(numDoc), this.obtainTotalSale(), saleDetailsList);
+            // sale registartion (venta)
+            ventaService.registrarVenta(venta);
+            saleDetailsList.clear();
+            redirectAttributes.addFlashAttribute("success", "Venta realizada exitosamente");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "No hay productos en la venta");
+        }
         return "redirect:/SaleManagement";
     }
+
     private double obtainTotalSale() {
         double totalSale = 0;
         for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
@@ -197,46 +227,45 @@ public class SalesController {
         }
         return totalSale;
     }
+
     // Para cargar lo que se necesita para agregar venta @GetMapping("/productos")
-@GetMapping("/productos")
-@ResponseBody
-public ResponseEntity<List<ProductDTO>> getProductosByCategoria(@RequestParam String categoria) {
-    try {
-        List<ProductDTO> productos = productoService.productsByCategoryParam(categoria);
-        return ResponseEntity.ok(productos);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
-    }
-}
-
-@GetMapping("/presentaciones")
-@ResponseBody
-public ResponseEntity<List<String>> getPresentacionesByProducto(@RequestParam Long productoId) {
-    try {
-        List<String> presentaciones = productoService.presentationByProductid(productoId);
-        return ResponseEntity.ok(presentaciones);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
-    }
-}
-
-@GetMapping("/precio")
-@ResponseBody
-public ResponseEntity<Double> getPrecioByProductoAndPresentacion(
-    @RequestParam Long productoId,
-    @RequestParam String presentacion) {
-    try {
-        Double precio = productoService.productPrice(productoId, presentacion);
-        if (precio != null) {
-            return ResponseEntity.ok(precio);
-        } else {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/productos")
+    @ResponseBody
+    public ResponseEntity<List<ProductDTO>> getProductosByCategoria(@RequestParam String categoria) {
+        try {
+            List<ProductDTO> productos = productoService.productsByCategoryParam(categoria);
+            return ResponseEntity.ok(productos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
         }
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
-}
 
-    
+    @GetMapping("/presentaciones")
+    @ResponseBody
+    public ResponseEntity<List<String>> getPresentacionesByProducto(@RequestParam Long productoId) {
+        try {
+            List<String> presentaciones = productoService.presentationByProductid(productoId);
+            return ResponseEntity.ok(presentaciones);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/precio")
+    @ResponseBody
+    public ResponseEntity<Double> getPrecioByProductoAndPresentacion(
+            @RequestParam Long productoId,
+            @RequestParam String presentacion) {
+        try {
+            Double precio = productoService.productPrice(productoId, presentacion);
+            if (precio != null) {
+                return ResponseEntity.ok(precio);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
 }
