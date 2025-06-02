@@ -62,7 +62,7 @@ public class SalesController {
             model.addAttribute("success", "Ventas encontradas");
         }
         model.addAttribute("Ventas", ventas);
-        return "redirect:/manageSales";
+        return "SalesManagement";
     }
 
     @GetMapping("/addSale")
@@ -93,7 +93,8 @@ public class SalesController {
             for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
                 if (detalleVentaDTO.getProducto().getId() == detalle.getProducto().getId()) {
                     if (detalleVentaDTO.getCantidad() + detalle.getCantidad() > product.getStock()) {
-                        redirectAttributes.addFlashAttribute("error", "No hay suficiente stock para este producto");
+                        int quantity = detalleVentaDTO.getCantidad() + detalle.getCantidad();
+                        redirectAttributes.addFlashAttribute("error", "No hay suficientes unidades disponibles para este producto, quedan: " + product.getStock() + " y usted esta necesitando: " + quantity);
                         model.addAttribute("detalleVentaDTO", detalle);
                     } else {
                         detalleVentaDTO.setCantidad(detalleVentaDTO.getCantidad() + detalle.getCantidad());
@@ -103,14 +104,14 @@ public class SalesController {
                     }
                     return "redirect:/addSale";
                 } else if (detalle.getCantidad() > product.getStock()) {
-                    redirectAttributes.addFlashAttribute("error", "No hay suficiente stock para este producto");
+                    redirectAttributes.addFlashAttribute("error", "No hay suficientes unidades disponibles para este producto, quedan: " + product.getStock() + " y usted esta necesitando: " + detalle.getCantidad());
                     model.addAttribute("detalleVentaDTO", detalle);
                     return "redirect:/addSale";
                 }
             }
         } else {
             if (detalle.getCantidad() > product.getStock()) {
-                redirectAttributes.addFlashAttribute("error", "No hay suficiente stock para este producto");
+                redirectAttributes.addFlashAttribute("error", "No hay suficientes unidades disponibles para este producto, quedan: " + product.getStock() + " y usted esta necesitando: " + detalle.getCantidad());
                 model.addAttribute("detalleVentaDTO", detalle);
                 return "redirect:/addSale";
             }
