@@ -23,7 +23,7 @@ public class Venta {
     @Column(name = "fecha_venta", nullable = false)
     private LocalDate fechaVenta;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_vendedor", nullable = false, referencedColumnName = "id_usuario")
     private Usuario vendedor;
 

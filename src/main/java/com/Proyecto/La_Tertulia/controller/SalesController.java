@@ -38,12 +38,6 @@ public class SalesController {
     @Autowired
     private UsuarioService usuarioService;
 
-    private ArrayList<DetalleVentaDTO> saleDetailsList;
-
-    public SalesController() {
-        saleDetailsList = new ArrayList<>();
-    }
-
     @GetMapping("/manageSales")
     public String chargeSalesToManage(Model model, HttpSession session) {
         UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
@@ -94,37 +88,57 @@ public class SalesController {
         detalle.setPrecioUnitario(product.getPrice());
         detalle.setSubtotal(detalle.getCantidad() * product.getPrice());
         detalle.setVenta(new VentaDTO());
-        for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
-            if (detalleVentaDTO.getProducto().getId() == detalle.getProducto().getId()) {
-                if (detalleVentaDTO.getCantidad() + detalle.getCantidad() > product.getStock()) {
+        ArrayList<DetalleVentaDTO> saleDetailsList = ventaService.getSaleDetailsList();
+        if (!saleDetailsList.isEmpty()) {
+            for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
+                if (detalleVentaDTO.getProducto().getId() == detalle.getProducto().getId()) {
+                    if (detalleVentaDTO.getCantidad() + detalle.getCantidad() > product.getStock()) {
+                        redirectAttributes.addFlashAttribute("error", "No hay suficiente stock para este producto");
+                        model.addAttribute("detalleVentaDTO", detalle);
+                    } else {
+                        detalleVentaDTO.setCantidad(detalleVentaDTO.getCantidad() + detalle.getCantidad());
+                        detalleVentaDTO
+                                .setSubtotal(detalleVentaDTO.getPrecioUnitario() * detalleVentaDTO.getCantidad());
+                        redirectAttributes.addFlashAttribute("success", "Producto actualizado en la venta");
+                    }
+                    return "redirect:/addSale";
+                } else if (detalle.getCantidad() > product.getStock()) {
                     redirectAttributes.addFlashAttribute("error", "No hay suficiente stock para este producto");
                     model.addAttribute("detalleVentaDTO", detalle);
-                } else {
-                    detalleVentaDTO.setCantidad(detalleVentaDTO.getCantidad() + detalle.getCantidad());
-                    detalleVentaDTO.setSubtotal(detalleVentaDTO.getPrecioUnitario() * detalleVentaDTO.getCantidad());
-                    redirectAttributes.addFlashAttribute("success", "Producto actualizado en la venta");
+                    return "redirect:/addSale";
                 }
-                return "redirect:/addSale";
-            } else if (detalle.getCantidad() > product.getStock()) {
+            }
+        } else {
+            if (detalle.getCantidad() > product.getStock()) {
                 redirectAttributes.addFlashAttribute("error", "No hay suficiente stock para este producto");
                 model.addAttribute("detalleVentaDTO", detalle);
                 return "redirect:/addSale";
             }
         }
-        saleDetailsList.add(detalle);
+        ventaService.guardarDetallesVenta(detalle);
         redirectAttributes.addFlashAttribute("success", "Producto agregado a la venta");
         return "redirect:/addSale";
     }
 
     @GetMapping("/finishSale")
     private String showFinishSaleForm(Model model) {
-        model.addAttribute("registroCompra", saleDetailsList);
+        model.addAttribute("registroCompra", ventaService.getSaleDetailsList());
         return "SaleRegistration";
     }
 
     @PostMapping("/removeDetailSale")
-    public String eliminarProducto(@RequestParam("index") int index, Model model) {
-        saleDetailsList.remove(index - 1);
+    public String eliminarProducto(@RequestParam("index") int index, RedirectAttributes redirectAttributes) {
+        ArrayList<DetalleVentaDTO> saleDetailsList = ventaService.getSaleDetailsList();
+        if (index >= 0 && index < saleDetailsList.size()) {
+            saleDetailsList.remove(index);
+            if (saleDetailsList.isEmpty()) {
+                redirectAttributes.addFlashAttribute("success", "Todos los productos han sido eliminados de la venta");
+            } else {
+                redirectAttributes.addFlashAttribute("success", "Producto eliminado de la venta");
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Índice inválido para eliminar producto");
+        }
         return "redirect:/finishSale";
     }
 
@@ -157,12 +171,15 @@ public class SalesController {
             @ModelAttribute("numDocCliente") String numDoc, RedirectAttributes redirectAttributes,
             HttpSession session) {
 
+        ArrayList<DetalleVentaDTO> saleDetailsList = ventaService.getSaleDetailsList();
         UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
         if (!saleDetailsList.isEmpty()) {
 
             VentaDTO venta = new VentaDTO(null, LocalDate.now(),
                     usuarioDTO, tipoDocCli, Long.parseLong(numDoc), this.obtainTotalSale(),
                     new ArrayList<DetalleVentaDTO>());
+            System.out.println(
+                    "el usuario id es: " + usuarioDTO.getId() + "---------------------------------------------");
             for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
                 detalleVentaDTO.setVenta(venta);
             }
@@ -178,6 +195,7 @@ public class SalesController {
 
     private double obtainTotalSale() {
         double totalSale = 0;
+        ArrayList<DetalleVentaDTO> saleDetailsList = ventaService.getSaleDetailsList();
         for (DetalleVentaDTO detalleVentaDTO : saleDetailsList) {
             totalSale += detalleVentaDTO.getSubtotal();
         }
