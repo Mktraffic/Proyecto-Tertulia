@@ -57,7 +57,7 @@
                 <tbody>
                     <tr th:each="venta : ${Ventas}">
                         <td th:text="${venta.id}"></td>
-                        <td th:text="${venta.nombreVendedor}"></td>
+                       <td th:text="${venta.vendedor != null and venta.vendedor.persona != null and venta.vendedor.persona.nombre != null and venta.vendedor.persona.apellido != null ? venta.vendedor.persona.nombre + ' ' + venta.vendedor.persona.apellido : 'No identificado'}"></td>
                         <td th:text="${venta.tipoDocumentoCliente}"></td>
                         <td th:text="${venta.numeroDocumentoCliente}"></td>
                         <td th:text="${venta.fechaVenta}"></td>

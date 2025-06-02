@@ -173,7 +173,7 @@ public class SalesController {
         } else {
             redirectAttributes.addFlashAttribute("error", "No hay productos en la venta");
         }
-        return "redirect:/SaleManagement";
+        return "redirect:/manageSales";
     }
 
     private double obtainTotalSale() {

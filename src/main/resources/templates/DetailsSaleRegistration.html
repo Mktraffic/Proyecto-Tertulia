@@ -41,15 +41,16 @@
                 </div>
                 <div class="form-group">
                     <label for="producto">Nombre producto:</label>
-                    <select id="producto" th:field="*{idProducto}" class="form-control" required>
+                    <select id="producto" th:field="*{producto}" class="form-control" required>
                         <option value="" disabled selected>Seleccione un producto</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="presentacion">Presentación:</label>
-                    <select id="presentacion" th:field="*{presentacion}" class="form-control" required disabled>
+                    <select id="presentacion" class="form-control" required disabled>
                         <option value="" disabled selected>Seleccione presentación</option>
                     </select>
+                    <input type="hidden" th:field="*{producto.presentation}" id="presentacionHidden" />
                 </div>
                 <div class="form-group">
                     <label for="precio">Precio:</label>

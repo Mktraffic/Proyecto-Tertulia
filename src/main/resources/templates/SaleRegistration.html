@@ -40,7 +40,7 @@
                         <tbody>
                             <tr th:each="detalle, iterStat : ${registroCompra}">
                                 <td th:text="${detalle.nombreProducto}"></td>
-                                <td th:text="${detalle.presentacion}"></td>
+                                <td th:text="${detalle.producto.presentation}"></td>
                                 <td th:text="${detalle.precioUnitario}"></td>
                                 <td th:text="${detalle.cantidad}"></td>
                                 <td

@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
             precioInput.value = '';
             return;
         }
-
+        document.getElementById('presentacionHidden').value = this.value;
         precioInput.value = 'Cargando...';
 
         fetch(`/precio?productoId=${encodeURIComponent(productoId)}&presentacion=${encodeURIComponent(presentacion)}`)
