@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Finalizar venta</title>
     <link rel="stylesheet" th:href="@{/css/StylesEndSale.css}" />
 </head>
@@ -22,65 +22,71 @@
             </svg>
             <h1>Finalizar venta</h1>
         </div>
-        <div class="form-container">
-            <form th:action="@{/saleRegistration}" method="POST">
-                <div class="tabla-registro-compra">
-                    <h3>Detalles de la venta</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th>Presentación</th>
-                                <th>Precio Unitario</th>
-                                <th>Cantidad</th>
-                                <th>Total</th>
-                                <th>Eliminar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="detalle, iterStat : ${registroCompra}">
-                                <td th:text="${detalle.nombreProducto}"></td>
-                                <td th:text="${detalle.producto.presentation}"></td>
-                                <td th:text="${detalle.precioUnitario}"></td>
-                                <td th:text="${detalle.cantidad}"></td>
-                                <td
-                                    th:text="${#numbers.formatDecimal(detalle.precioUnitario * detalle.cantidad, 1, 'POINT', 2, 'COMMA')}">
-                                </td>
-                                <td>
-                                    <form th:action="@{/removeDetailSale}" method="post" style="display:inline;">
-                                        <input type="hidden" name="index" th:value="${iterStat.index}" />
-                                        <button type="submit" class="btn btn-danger">🗑</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="form-group">
-                    <label for="nombreCliente">Tipo doc cliente:</label>
-                    <select class="form-control" name="tipoDocCliente" required>
-                        <option value="" selected disabled>Selecciona una opción</option>
-                        <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
-                        <option value="Cedula de extranjeria">Cédula de extranjería</option>
-                    </select>
-                </div>
+        <form th:action="@{/saleRegistration}" method="POST">
+            <div class="tabla-registro-compra">
+                <h3>Detalles de la venta</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Presentación</th>
+                            <th>Precio Unitario</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="detalle, iterStat : ${registroCompra}">
+                            <td th:text="${detalle.nombreProducto}"></td>
+                            <td th:text="${detalle.producto.presentation}"></td>
+                            <td th:text="${detalle.precioUnitario}"></td>
+                            <td th:text="${detalle.cantidad}"></td>
+                            <td th:text="${#numbers.formatDecimal(detalle.precioUnitario * detalle.cantidad, 1, 'POINT', 2, 'COMMA')}">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger"
+                                    th:onclick="|eliminarDetalle(${iterStat.index})|">🗑</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-                <div class="form-group">
-                    <label for="numDocCliente">Número doc cliente:</label>
-                    <input type="text" class="form-control" name="numDocCliente" required minlength="7" maxlength="10"
-                        pattern="[0-9]{7,10}"
-                        title="El documento de identidad debe tener entre 7 y 10 dígitos numéricos">
-                </div>
+            <div class="form-group">
+                <label for="tipoDocCliente">Tipo doc cliente:</label>
+                <select class="form-control" name="tipoDocCliente" required>
+                    <option value="" selected disabled>Selecciona una opción</option>
+                    <option value="Cedula de ciudadania">Cédula de ciudadanía</option>
+                    <option value="Cedula de extranjeria">Cédula de extranjería</option>
+                </select>
+            </div>
 
-                <div class="buttons">
-                    <button type="submit" class="btn btn-primary">Realizar venta</button>
-                     <a href="/addSale" class="btn btn-primary" role="button">Añadir producto</a>
-                    <a th:href="@{/manageSales}" class="btn btn-secondary"
-                        style="text-decoration: none; text-align: center;">Cancelar</a>
-                </div>
-            </form>
-        </div>
+            <div class="form-group">
+                <label for="numDocCliente">Número doc cliente:</label>
+                <input type="text" class="form-control" name="numDocCliente" required minlength="7" maxlength="10"
+                    pattern="[0-9]{7,10}" title="El documento de identidad debe tener entre 7 y 10 dígitos numéricos" />
+            </div>
+
+            <div class="buttons">
+                <button type="submit" class="btn btn-primary">Realizar venta</button>
+                <a href="/addSale" class="btn btn-primary" role="button">Añadir producto</a>
+                <a th:href="@{/manageSales}" class="btn btn-secondary"
+                    style="text-decoration: none; text-align: center;">Cancelar</a>
+            </div>
+        </form>
+        <form id="deleteForm" th:action="@{/removeDetailSale}" method="post" style="display:none;">
+            <input type="hidden" name="index" id="indexInput" />
+        </form>
     </div>
+
+    <script>
+        function eliminarDetalle(index) {
+            document.getElementById('indexInput').value = index;
+            document.getElementById('deleteForm').submit();
+        }
+    </script>
+
 </body>
 
 </html>

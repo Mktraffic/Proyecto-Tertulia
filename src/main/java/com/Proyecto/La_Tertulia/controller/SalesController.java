@@ -128,6 +128,7 @@ public class SalesController {
 
     @PostMapping("/removeDetailSale")
     public String eliminarProducto(@RequestParam("index") int index, RedirectAttributes redirectAttributes) {
+        System.out.println("\n \n \n \n indice "+index);
         ArrayList<DetalleVentaDTO> saleDetailsList = ventaService.getSaleDetailsList();
         if (index >= 0 && index < saleDetailsList.size()) {
             saleDetailsList.remove(index);
