@@ -14,16 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.Proyecto.La_Tertulia.dto.CompraDTO;
-import com.Proyecto.La_Tertulia.dto.DetalleCompraDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
-import com.Proyecto.La_Tertulia.service.CompraService;
 import com.Proyecto.La_Tertulia.service.ProductService;
-import com.Proyecto.La_Tertulia.service.UsuarioService;
 import com.Proyecto.La_Tertulia.service.VentaService;
 import jakarta.servlet.http.HttpSession;
 
@@ -32,14 +27,13 @@ public class SalesController {
     @Autowired
     private VentaService ventaService;
     @Autowired
-    private CompraService compraService;
-    @Autowired
     private ProductService productoService;
-    @Autowired
-    private UsuarioService usuarioService;
 
     @GetMapping("/manageSales")
-    public String chargeSalesToManage(Model model, HttpSession session) {
+    public String chargeSalesToManage(@RequestParam(required = false) String error, Model model, HttpSession session) {
+        if (error != null) {
+            model.addAttribute("error", error);
+        }
         UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
         if (usuarioDTO == null) {
             return "redirect:/login";
@@ -94,7 +88,9 @@ public class SalesController {
                 if (detalleVentaDTO.getProducto().getId() == detalle.getProducto().getId()) {
                     if (detalleVentaDTO.getCantidad() + detalle.getCantidad() > product.getStock()) {
                         int quantity = detalleVentaDTO.getCantidad() + detalle.getCantidad();
-                        redirectAttributes.addFlashAttribute("error", "No hay suficientes unidades disponibles para este producto, quedan: " + product.getStock() + " y usted esta necesitando: " + quantity);
+                        redirectAttributes.addFlashAttribute("error",
+                                "No hay suficientes unidades disponibles para este producto, quedan: "
+                                        + product.getStock() + " y usted esta necesitando: " + quantity);
                         model.addAttribute("detalleVentaDTO", detalle);
                     } else {
                         detalleVentaDTO.setCantidad(detalleVentaDTO.getCantidad() + detalle.getCantidad());
@@ -104,14 +100,18 @@ public class SalesController {
                     }
                     return "redirect:/addSale";
                 } else if (detalle.getCantidad() > product.getStock()) {
-                    redirectAttributes.addFlashAttribute("error", "No hay suficientes unidades disponibles para este producto, quedan: " + product.getStock() + " y usted esta necesitando: " + detalle.getCantidad());
+                    redirectAttributes.addFlashAttribute("error",
+                            "No hay suficientes unidades disponibles para este producto, quedan: " + product.getStock()
+                                    + " y usted esta necesitando: " + detalle.getCantidad());
                     model.addAttribute("detalleVentaDTO", detalle);
                     return "redirect:/addSale";
                 }
             }
         } else {
             if (detalle.getCantidad() > product.getStock()) {
-                redirectAttributes.addFlashAttribute("error", "No hay suficientes unidades disponibles para este producto, quedan: " + product.getStock() + " y usted esta necesitando: " + detalle.getCantidad());
+                redirectAttributes.addFlashAttribute("error",
+                        "No hay suficientes unidades disponibles para este producto, quedan: " + product.getStock()
+                                + " y usted esta necesitando: " + detalle.getCantidad());
                 model.addAttribute("detalleVentaDTO", detalle);
                 return "redirect:/addSale";
             }
@@ -129,7 +129,7 @@ public class SalesController {
 
     @PostMapping("/removeDetailSale")
     public String eliminarProducto(@RequestParam("index") int index, RedirectAttributes redirectAttributes) {
-        System.out.println("\n \n \n \n indice "+index);
+        System.out.println("\n \n \n \n indice " + index);
         ArrayList<DetalleVentaDTO> saleDetailsList = ventaService.getSaleDetailsList();
         if (index >= 0 && index < saleDetailsList.size()) {
             saleDetailsList.remove(index);
@@ -142,30 +142,6 @@ public class SalesController {
             redirectAttributes.addFlashAttribute("error", "Índice inválido para eliminar producto");
         }
         return "redirect:/finishSale";
-    }
-
-    public void compra() {
-        System.out.println("registrando compra");
-        CompraDTO compra = new CompraDTO();
-        compra.setId(null);
-        compra.setFechaCompra(LocalDate.now());
-        compra.setVendedor(usuarioService.findUserByName("mktraffic"));
-        compra.setNombreProveedor("Pxdd");
-
-        System.out.println("vamos a la lista de detalles");
-        List<DetalleCompraDTO> detalle = new ArrayList<>();
-        ProductDTO productDTO = productoService.findById(1L).orElseThrow(null);
-        ProductDTO productDTO1 = productoService.findById(2L).orElseThrow(null);
-        detalle.add(new DetalleCompraDTO(null, compra, productDTO, productDTO.getName(), productDTO.getPrice(), 2,
-                (double) productDTO.getPrice() * 2));
-        detalle.add(new DetalleCompraDTO(null, compra, productDTO1, productDTO1.getName(), productDTO1.getPrice(), 2,
-                (double) productDTO1.getPrice() * 2));
-        compra.setDetalles(detalle);
-        double total = detalle.stream().mapToDouble(DetalleCompraDTO::getSubtotal).sum();
-        compra.setTotalVenta(total);
-        System.out.println("total de la venta: " + total);
-        compraService.registrarCompra(compra);
-        System.out.println("venta registrada exitosamente");
     }
 
     @PostMapping("/saleRegistration")

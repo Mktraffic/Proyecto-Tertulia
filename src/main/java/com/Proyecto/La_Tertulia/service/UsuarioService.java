@@ -138,4 +138,13 @@ public class UsuarioService {
 
         return usuarioMapper.toDTO(usuarioRepository.save(usuarioMapper.toEntity(usuarioExistente)));
     }
+    public ArrayList<String> obtainSuppliers(){
+        ArrayList<String> suppliers = new ArrayList<>();
+        for (UsuarioDTO usuario : findAllUsuarios()) {
+            if(usuario.getRol().getNombreRol().equals("Proveedor")){
+                suppliers.add(usuario.getPersona().getNombre()+" "+usuario.getPersona().getApellido());
+            }
+        }
+        return suppliers;
+    }
 }

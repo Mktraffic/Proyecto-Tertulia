@@ -1,65 +1,90 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de compra</title>
-    <link rel="stylesheet" th:href="@{/css/StylesRegistration.css}" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finalizar compras</title>
+    <link rel="stylesheet" th:href="@{/css/StylesEndSale.css}" />
 </head>
+
 <body>
     <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
         <div class="header">
-            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
                 <line x1="16" y1="17" x2="8" y2="17"></line>
                 <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
-            <h1>Registrar compra</h1>
+            <h1>Finalizar compra</h1>
         </div>
-        
-        <div class="form-container">
-            <form th:action="@{/buyRegistration}" th:object="${neededForBuyDTO}" method="POST">
-                <div class="form-group">
-                    <label for="nombre-producto">Nombre producto:</label>
-                     <input type="text" class="form-control" th:field="*{ProductDTO.name}" required>
-                </div>
-                 <div class="form-group">
-                    <label for="cantidad">Precio:</label>
-                     <input type="number" class="form-control" th:field="*{ProductDTO.price}" required>
-                </div>  
-               <div class="form-group">
-                    <label for="descripción-producto">Descripción producto:</label>
-                     <input type="text" class="form-control" th:field="*{ProductDTO.descripcion_producto}" required>
-                </div> 
-                <div class="form-group">
-                    <label for="fechaCompra">Fecha compra:</label>
-                     <input type="date" class="form-control" th:field="*{BuyDTO.saleDate}" required>
-                </div> 
-                <div class="form-group">
-                    <label for="cantidad">Cantidad:</label>
-                     <input type="number" class="form-control" th:field="*{ProductDTO.stock}" required>
-                </div> 
-               <div class="form-group">
-                    <label for="docProveedor">Número doc proveedor:</label>
-                     <input type="number" class="form-control" th:field="*{UsuarioDTO.documentoIdentidad}" required>
-                </div> 
-                <div class="form-group">
-                    <label for="nombreProveedor">Nombre proveedor:</label>
-                     <input type="text" class="form-control" th:field="*{ProductDTO.nombre}" required>
-                </div> 
-                <div class="form-group">
-                    <label for="numeroDocComp">Número doc comprador:</label>
-                     <input type="number" class="form-control" name="documentoComprador" required>
-                </div> 
-                <div class="buttons">
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a th:href="@{/manageBuy}" class="btn btn-secondary" style="text-decoration: none; text-align: center;">Atras</a>
-                </div>
-            </form>
-        </div>
+        <form th:action="@{/buyRegistration}" method="POST">
+            <div class="tabla-registro-compra">
+                <h3>Detalles de la compra</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Tipo</th>
+                            <th>Presentación</th>
+                            <th>Grados de alcohol</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="detalle, iterStat : ${registroCompra}">
+                            <td th:text="${detalle.nombreProducto}"></td>
+                            <td th:text="${detalle.producto.type}"></td>
+                            <td th:text="${detalle.producto.presentation}"></td>
+                            <td th:text="${detalle.producto.gradosAlcohol}"></td>
+                            <td th:text="${detalle.cantidad}"></td>
+                            <td th:text="${detalle.precioUnitario}"></td>
+                            <td th:text="${#numbers.formatDecimal(detalle.precioUnitario * detalle.cantidad, 1, 'POINT', 2, 'COMMA')}">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger"
+                                    th:onclick="|eliminarDetalle(${iterStat.index})|">🗑</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group">
+                <label for="proveedor">Proveedor:</label>
+                <select id="proveedor" class="form-control" name="nombreProveedor" required>
+                    <option value="" selected disabled>Selecciona un proveedor</option>
+                   <option th:each="proveedor: ${proveedores}" th:value="${proveedor}" th:text="${proveedor}"></option>
+                </select>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="btn btn-primary">Realizar compra</button>
+                <a href="/addDetailBuy" class="btn btn-primary" role="button">Añadir producto</a>
+                <a th:href="@{/addPerson}" class="btn btn-secondary"
+                    style="text-decoration: none; text-align: center;">Registrar proveedor</a>
+                <a th:href="@{/manageBuy(error='Compra cancelada')}" class="btn btn-secondary"
+                    style="text-decoration: none; text-align: center;">Cancelar</a>
+            </div>
+        </form>
+        <form id="deleteForm" th:action="@{/removeDetailBuy}" method="post" style="display:none;">
+            <input type="hidden" name="index" id="indexInput" />
+        </form>
     </div>
+
+    <script>
+        function eliminarDetalle(index) {
+            document.getElementById('indexInput').value = index;
+            document.getElementById('deleteForm').submit();
+        }
+    </script>
+
 </body>
+
 </html>
