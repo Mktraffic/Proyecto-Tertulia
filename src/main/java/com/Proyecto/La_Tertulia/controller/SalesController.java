@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.Proyecto.La_Tertulia.dto.CompraDTO;
+import com.Proyecto.La_Tertulia.dto.DetalleCompraDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
@@ -219,5 +222,27 @@ public class SalesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+     @GetMapping("/showBillOfSale")
+  public String showBillBuy(@RequestParam("idVenta") Long saleId, Model model) {
+    System.out.println("\n \n \n \n id venta " + saleId);
+    VentaDTO venta = ventaService.obtainSaleId(saleId);
+    double iva = 0.19;
+    if (venta != null) {
+      model.addAttribute("facturaVenta", venta);
+      model.addAttribute("subtotal", obtainSubTotal(venta));
+      model.addAttribute("iva", obtainSubTotal(venta)*iva);
+      model.addAttribute("total", (obtainSubTotal(venta)*iva)+obtainSubTotal(venta));
+    }
+    return "BillOfSale";
+  }
+
+  public double obtainSubTotal(VentaDTO venta) {
+    double subTotal = 0;
+    for (DetalleVentaDTO detalle : venta.getDetalles()) {
+      subTotal += detalle.getSubtotal();
+    }
+    return subTotal;
+  }
 
 }

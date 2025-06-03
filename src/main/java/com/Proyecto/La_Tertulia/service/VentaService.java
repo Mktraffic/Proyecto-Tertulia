@@ -1,5 +1,6 @@
 package com.Proyecto.La_Tertulia.service;
 
+import com.Proyecto.La_Tertulia.dto.CompraDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.mapper.VentaMapper;
@@ -103,5 +104,13 @@ public class VentaService {
     return ventas.stream()
         .map(ventaMapper::toDTO)
         .collect(Collectors.toList());
+  }
+  public VentaDTO obtainSaleId(Long saleId) {
+    for (VentaDTO venta : findAllSales()) {
+        if(venta.getId() == saleId){
+            return venta;
+        }
+    }
+    return null;
   }
 }

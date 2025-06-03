@@ -2,12 +2,10 @@ package com.Proyecto.La_Tertulia.service;
 
 import com.Proyecto.La_Tertulia.dto.CompraDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleCompraDTO;
-import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.mapper.CompraMapper;
 import com.Proyecto.La_Tertulia.model.DetalleCompra;
 import com.Proyecto.La_Tertulia.model.Product;
 import com.Proyecto.La_Tertulia.model.Usuario;
-import com.Proyecto.La_Tertulia.model.Venta;
 import com.Proyecto.La_Tertulia.model.Compra;
 import com.Proyecto.La_Tertulia.repository.ProductRepository;
 import com.Proyecto.La_Tertulia.repository.UsuarioRepository;
@@ -112,5 +110,14 @@ public class CompraService {
     return compras.stream()
         .map(compraMapper::toDTO)
         .collect(Collectors.toList());
+  }
+
+  public CompraDTO obtainBuyId(Long buyId) {
+    for (CompraDTO compraDTO : findAllBuys()) {
+        if(compraDTO.getId() == buyId){
+            return compraDTO;
+        }
+    }
+    return null;
   }
 }

@@ -3,7 +3,6 @@ package com.Proyecto.La_Tertulia.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,19 +11,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.Proyecto.La_Tertulia.dto.CompraDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleCompraDTO;
-import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
-import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.service.CompraService;
 import com.Proyecto.La_Tertulia.service.ProductService;
 import com.Proyecto.La_Tertulia.service.UsuarioService;
-
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class BuyController {
@@ -62,7 +56,7 @@ public class BuyController {
       model.addAttribute("success", "Compras realizadas");
     }
     model.addAttribute("compras", compras);
-    return "SalesManagement";
+    return "BuyManagement";
   }
 
   @GetMapping("/addDetailBuy")
@@ -157,4 +151,24 @@ public class BuyController {
     }
     return totalBuy;
   }
+
+  @GetMapping("/showBillOfBuy")
+  public String showBillBuy(@RequestParam("idCompra") Long buyId, Model model) {
+    System.out.println("\n \n \n \n id venta " + buyId);
+    CompraDTO compra = buyService.obtainBuyId(buyId);
+    if (compra != null) {
+      model.addAttribute("facturaCompra", compra);
+      model.addAttribute("total", obtainSubTotal(compra));
+    }
+    return "BillOfBuy";
+  }
+
+  public double obtainSubTotal(CompraDTO compra) {
+    double subTotal = 0;
+    for (DetalleCompraDTO detalle : compra.getDetalles()) {
+      subTotal += detalle.getSubtotal();
+    }
+    return subTotal;
+  }
+
 }

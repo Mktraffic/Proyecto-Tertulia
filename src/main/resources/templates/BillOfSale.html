@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Factura de venta</title>
+    <link rel="stylesheet" th:href="@{/css/StylesBills.css}">
+</head>
+
+<body th:object="${facturaVenta}">
+
+    <div class="factura-container">
+        <div class="encabezado">
+            <img th:src="@{/images/logo-tertulia.png}" alt="Logo" class="logo">
+            <div class="titulo-empresa">
+                <h2>LICORERA LA TERTULIA</h2>
+                <p><strong>Tipo de sociedad:</strong> Sociedad comercial</p>
+                <p><strong>Representante legal:</strong> Rafael Leonardo Torres Pinzón</p>
+                <p><strong>NIT:</strong> 102995675_1</p>
+            </div>
+            <div class="fecha">
+                <p><strong>Fecha venta:</strong> <span th:text="*{fechaVenta}"></span></p>
+            </div>
+
+        </div>
+        <h2>Factura de venta</h2>
+        <div class="datos-compra">
+            <div class="bloque">
+                <p><strong>Id_venta:</strong> <span th:text="*{id}"></span></p>
+            </div>
+            <div class="bloque">
+                <p><strong>Datos Vendedor:</strong></p>
+                <p><strong>Nombre: </strong><span
+                        th:text="*{vendedor.persona.nombre + ' ' + vendedor.persona.apellido}"></span></p>
+                <p><strong>Cédula: </strong><span th:text="*{vendedor.persona.documentoIdentidad}"></span></p>
+            </div>
+            <div class="bloque">
+                <p><strong>Datos cliente:</strong></p>
+                <p><strong>Tipo documento: </strong><span th:text="*{tipoDocumentoCliente}"></span></p>
+                <p><strong>Número documento: </strong><span th:text="*{numeroDocumentoCliente}"></span></p>
+            </div>
+        </div>
+
+        <table class="tabla-detalle">
+            <thead>
+                <tr>
+                    <th>Código Producto</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Presentación</th>
+                    <th>Precio Unitario</th>
+                    <th>Cantidad Producto</th>
+                    <th>Valor Total</th>
+                </tr>
+            </thead>
+            <h2>Detalles venta</h2>
+            <tbody>
+                <tr th:each="detalle : *{detalles}">
+                    <td th:text="${detalle.producto.id}"></td>
+                    <td th:text="${detalle.nombreProducto}"></td>
+                    <td th:text="${detalle.producto.description}"></td>
+                    <td th:text="${detalle.producto.presentation}"></td>
+                    <td th:text="${#numbers.formatDecimal(detalle.precioUnitario, 1, 'COMMA', 2, 'POINT')}"></td>
+                    <td th:text="${detalle.cantidad}"></td>
+                    <td th:text="${#numbers.formatDecimal(detalle.subtotal, 1, 'COMMA', 2, 'POINT')}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="resumen">
+            <p><strong>Subtotal:</strong>
+                <span th:text="'$' + ${#numbers.formatDecimal(subtotal, 1, 'COMMA', 2, 'POINT')}"></span>
+            </p>
+            <p><strong>IVA 19%:</strong>
+                <span th:text="'$' + ${#numbers.formatDecimal(iva, 1, 'COMMA', 2, 'POINT')}"></span>
+            </p>
+            <p><strong>Total Factura:</strong>
+                <span th:text="'$' + ${#numbers.formatDecimal(total, 1, 'COMMA', 2, 'POINT')}"></span>
+            </p>
+        </div>
+
+        <div class="acciones">
+            <button onclick="window.print()">Imprimir</button>
+            <a th:href="@{/manageSales}" class="btn-volver">Volver</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<div th:replace="ToastContainer :: toastContainer"></div>
+    <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
         <div th:replace="AdministratorOptions :: amdOptions"></div>
         <section class="personas-card">
@@ -17,15 +17,13 @@
             </header>
             <div class="personas-header">
                 <div class="icon-title">
-                     <i class="fas fa-shopping-bag"></i>
+                    <i class="fas fa-shopping-bag"></i>
                     <h2>Compras</h2>
                 </div>
                 <div class="search-add">
                     <form th:action="@{/searchBuy}" method="post">
-                        <input type="date" name="fechaInicial"  required
-                            title="Seleccione la fecha inicial">
-                             <input type="date" name="fechaFinal"  required
-                            title="Seleccione la final">
+                        <input type="date" name="fechaInicial" required title="Seleccione la fecha inicial">
+                        <input type="date" name="fechaFinal" required title="Seleccione la final">
                         <button type="submit" class="search-button" title="Buscar">🔍</button>
                     </form>
                     <form th:action="@{/manageBuy}" method="get">
@@ -53,14 +51,16 @@
                 <tbody>
                     <tr th:each="compra : ${compras}">
                         <td th:text="${compra.id}"></td>
-                        <td th:text="${compra.vendedor != null and compra.vendedor.persona != null and compra.vendedor.persona.nombre != null and compra.vendedor.persona.apellido != null ? compra.vendedor.persona.nombre + ' ' + compra.vendedor.persona.apellido : 'No identificado'}"></td>
+                        <td
+                            th:text="${compra.vendedor != null and compra.vendedor.persona != null and compra.vendedor.persona.nombre != null and compra.vendedor.persona.apellido != null ? compra.vendedor.persona.nombre + ' ' + compra.vendedor.persona.apellido : 'No identificado'}">
+                        </td>
                         <td th:text="${compra.nombreProveedor}"></td>
                         <td th:text="${compra.fechaCompra}"></td>
                         <td th:text="${#numbers.formatDecimal({compra.totalVenta}, 1, 'COMMA', 2, 'POINT')}"></td>
                         <td>
-                            <button class="delete-btn" th:attr="data-id=${compra.id}" onclick="confirmDelete(this)"
-                                title="Eliminar">
-                                <i class="fas fa-trash-alt"></i>
+                            <button class="delete-btn" th:attr="data-id=${compra.id}" onclick="viewBill(this)"
+                                title="Ver factura">
+                                <i class="fas fa-eye" style="color: #007bff;"></i>
                             </button>
                         </td>
                     </tr>
@@ -68,8 +68,13 @@
             </table>
         </section>
     </div>
-    <div th:replace="ModalDeleteSale :: deleteSale"></div>
     </div>
+    <script>
+        function viewBill(button) {
+            const id = button.getAttribute("data-id");
+            window.location.href = `/showBillOfBuy?idCompra=${id}`;
+        }
+    </script>
 </body>
 
 </html>
