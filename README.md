@@ -27,8 +27,8 @@ Este proyecto es una aplicación web desarrollada en Java con Spring Boot, que p
 
 - **Backend:** Java 17, Spring Boot, Spring Data JPA
 - **Frontend:** Thymeleaf, HTML5, CSS3
-- **Base de datos:** MySQL
-- **Dependencias:** Lombok, Spring Web, Spring Security (opcional)
+- **Base de datos:** PostgreSQL
+- **Dependencias:** Lombok, Spring Web
 - **Build:** Maven
 
 ## 🚀 Instalación
