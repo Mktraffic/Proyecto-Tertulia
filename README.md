@@ -37,7 +37,7 @@ Este proyecto es una aplicación web desarrollada en Java con Spring Boot, que p
    ```bash
    git clone https://github.com/tu-usuario/La_Tertulia.git
 2. Configura la base de datos:
-   - Crea una base de datos MySQL llamada la_tertulia.
+   - Crea una base de datos PostgreSQL llamada la_tertulia.
    - Actualiza las credenciales en src/main/resources/application.properties.
 3. Compila y ejecuta el proyecto:
    ```bash
