@@ -8,7 +8,8 @@ import lombok.*;
 public class DetalleVentaDTO {
 
     private Long id;
-    private Long idProducto;
+    private VentaDTO venta;
+    private ProductDTO producto;
     private String nombreProducto;
     private double precioUnitario;
     private int cantidad;

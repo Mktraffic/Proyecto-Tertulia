@@ -65,7 +65,6 @@
                         <td th:text="${usuario.persona.estado} ? 'Activo' : 'Inactivo'"
                             th:class="${usuario.persona.estado} ? 'estado-activo' : 'estado-inactivo'">
                         </td>
-
                         <td>
                             <button class="edit-btn" th:attr="data-id=${usuario.persona.id},
                                     data-nombre=${usuario.persona.nombre},
@@ -85,7 +84,6 @@
         </section>
     </div>
     <div th:replace="ModalModifyPerson :: modalEdit"></div>
-    </div>
 </body>
 
 </html>

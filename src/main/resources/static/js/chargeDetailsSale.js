@@ -2,12 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const categoriaSelect = document.getElementById('categoria');
     const productoSelect = document.getElementById('producto');
     const presentacionSelect = document.getElementById('presentacion');
-    const precioInput = document.querySelector('input[name="price"]');
-
-    function showError(message) {
-        console.error(message);
-
-    }
+    const precioInput = document.getElementById('precio');
 
     function toggleElement(element, disabled) {
         element.disabled = disabled;
@@ -19,126 +14,94 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     categoriaSelect.addEventListener('change', function () {
-        const categoria = this.value;
+        const categoriaSeleccionada = this.value;
 
-        if (!categoria) {
-            productoSelect.innerHTML = '<option disabled selected>Seleccione un producto</option>';
-            presentacionSelect.innerHTML = '<option disabled selected>Seleccione presentación</option>';
-            precioInput.value = '';
-            toggleElement(productoSelect, true);
-            toggleElement(presentacionSelect, true);
-            return;
-        }
-
-        productoSelect.innerHTML = '<option disabled selected>Cargando productos...</option>';
+        productoSelect.innerHTML = '<option value="" disabled selected>Cargando productos...</option>';
+        presentacionSelect.innerHTML = '<option value="" disabled selected>Seleccione presentación</option>';
+        precioInput.value = '';
         toggleElement(productoSelect, true);
+        toggleElement(presentacionSelect, true);
 
-        fetch(`/productos?categoria=${encodeURIComponent(categoria)}`)
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`Error HTTP: ${res.status}`);
-                }
-                return res.json();
-            })
+        if (!categoriaSeleccionada) return;
+
+        fetch('/productos?categoria=' + encodeURIComponent(categoriaSeleccionada))
+            .then(response => response.json())
             .then(data => {
-                productoSelect.innerHTML = '<option disabled selected>Seleccione un producto</option>';
+                productoSelect.innerHTML = '<option value="" disabled selected>Seleccione un producto</option>';
 
                 if (data && data.length > 0) {
                     data.forEach(producto => {
-                        const opt = document.createElement('option');
-                        opt.value = producto;
-                        opt.textContent = producto;
-                        productoSelect.appendChild(opt);
+                        const option = document.createElement('option');
+                        option.value = producto.id; 
+                        option.text = producto.name; 
+                        productoSelect.appendChild(option);
                     });
                     toggleElement(productoSelect, false);
                 } else {
-                    productoSelect.innerHTML = '<option disabled selected>No hay productos disponibles</option>';
+                    productoSelect.innerHTML = '<option value="" disabled selected>No hay productos disponibles</option>';
                 }
-
-                presentacionSelect.innerHTML = '<option disabled selected>Seleccione presentación</option>';
-                toggleElement(presentacionSelect, true);
-                precioInput.value = '';
             })
             .catch(error => {
-                showError('Error al cargar productos: ' + error.message);
-                productoSelect.innerHTML = '<option disabled selected>Error al cargar productos</option>';
-                presentacionSelect.innerHTML = '<option disabled selected>Seleccione presentación</option>';
-                toggleElement(presentacionSelect, true);
-                precioInput.value = '';
+                console.error('Error al obtener productos:', error);
+                productoSelect.innerHTML = '<option value="" disabled selected>Error al cargar productos</option>';
             });
     });
 
     productoSelect.addEventListener('change', function () {
-        const producto = this.value;
+        const productoId = this.value;
 
-        if (!producto) {
-            presentacionSelect.innerHTML = '<option disabled selected>Seleccione presentación</option>';
-            toggleElement(presentacionSelect, true);
-            precioInput.value = '';
-            return;
-        }
-
-        presentacionSelect.innerHTML = '<option disabled selected>Cargando presentaciones...</option>';
+        presentacionSelect.innerHTML = '<option value="" disabled selected>Cargando presentaciones...</option>';
+        precioInput.value = '';
         toggleElement(presentacionSelect, true);
 
-        fetch(`/presentaciones?producto=${encodeURIComponent(producto)}`)
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`Error HTTP: ${res.status}`);
-                }
-                return res.json();
-            })
+        if (!productoId) return;
+
+        fetch('/presentaciones?productoId=' + encodeURIComponent(productoId))
+            .then(response => response.json())
             .then(data => {
-                presentacionSelect.innerHTML = '<option disabled selected>Seleccione presentación</option>';
+                presentacionSelect.innerHTML = '<option value="" disabled selected>Seleccione presentación</option>';
 
                 if (data && data.length > 0) {
                     data.forEach(presentacion => {
-                        const opt = document.createElement('option');
-                        opt.value = presentacion;
-                        opt.textContent = presentacion;
-                        presentacionSelect.appendChild(opt);
+                        const option = document.createElement('option');
+                        option.value = presentacion; 
+                        option.text = presentacion;
+                        presentacionSelect.appendChild(option);
                     });
                     toggleElement(presentacionSelect, false);
                 } else {
-                    presentacionSelect.innerHTML = '<option disabled selected>No hay presentaciones disponibles</option>';
+                    presentacionSelect.innerHTML = '<option value="" disabled selected>No hay presentaciones disponibles</option>';
                 }
-
-                precioInput.value = '';
             })
             .catch(error => {
-                showError('Error al cargar presentaciones: ' + error.message);
-                presentacionSelect.innerHTML = '<option disabled selected>Error al cargar presentaciones</option>';
-                precioInput.value = '';
+                console.error('Error al obtener presentaciones:', error);
+                presentacionSelect.innerHTML = '<option value="" disabled selected>Error al cargar presentaciones</option>';
             });
     });
 
     presentacionSelect.addEventListener('change', function () {
-        const producto = productoSelect.value;
+        const productoId = productoSelect.value;
         const presentacion = this.value;
 
-        if (!producto || !presentacion) {
+        if (!productoId || !presentacion) {
             precioInput.value = '';
             return;
         }
+        document.getElementById('presentacionHidden').value = this.value;
         precioInput.value = 'Cargando...';
 
-        fetch(`/precio?producto=${encodeURIComponent(producto)}&presentacion=${encodeURIComponent(presentacion)}`)
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error(`Error HTTP: ${res.status}`);
-                }
-                return res.json();
-            })
+        fetch(`/precio?productoId=${encodeURIComponent(productoId)}&presentacion=${encodeURIComponent(presentacion)}`)
+            .then(response => response.json())
             .then(precio => {
                 if (precio !== null && precio !== undefined) {
                     precioInput.value = precio;
                 } else {
                     precioInput.value = '';
-                    showError('Precio no disponible');
+                    console.error('Precio no disponible');
                 }
             })
             .catch(error => {
-                showError('Error al cargar precio: ' + error.message);
+                console.error('Error al obtener precio:', error);
                 precioInput.value = '';
             });
     });

@@ -10,7 +10,9 @@ import com.Proyecto.La_Tertulia.dto.VentaDTO;
 import com.Proyecto.La_Tertulia.dto.DetalleVentaDTO;
 import com.Proyecto.La_Tertulia.model.Venta;
 import com.Proyecto.La_Tertulia.model.DetalleVenta;
+import com.Proyecto.La_Tertulia.model.Product;
 import com.Proyecto.La_Tertulia.repository.UsuarioRepository;
+import com.Proyecto.La_Tertulia.repository.ProductRepository;
 
 @Component
 public class VentaMapperImplement implements VentaMapper {
@@ -19,10 +21,13 @@ public class VentaMapperImplement implements VentaMapper {
     private UsuarioMapper usuarioMapper;
 
     @Autowired
-    private DetalleVentaMapper detalleVentaMapper;
+    private ProductMapper productMapper;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public VentaDTO toDTO(Venta venta) {
@@ -33,14 +38,20 @@ public class VentaMapperImplement implements VentaMapper {
         VentaDTO dto = new VentaDTO();
         dto.setId(venta.getId());
         dto.setFechaVenta(venta.getFechaVenta());
-        dto.setNumeroDocumentoCliente(venta.getNumeroDocumentoCliente());
+        dto.setTipoDocumentoCliente(venta.getTipoDocumentoCliente());
         dto.setNumeroDocumentoCliente(venta.getNumeroDocumentoCliente());
         dto.setTotalVenta(venta.getTotalVenta());
         dto.setVendedor(usuarioMapper.toDTO(venta.getVendedor()));
-
-        List<DetalleVentaDTO> detalles = venta.getDetalles().stream()
-                .map(detalleVentaMapper::toDTO)
-                .collect(Collectors.toList());
+        List<DetalleVentaDTO> detalles = venta.getDetalles().stream().map(detalle -> {
+            DetalleVentaDTO detalleDTO = new DetalleVentaDTO();
+            detalleDTO.setId(detalle.getId());
+            detalleDTO.setProducto(productMapper.toDTO(detalle.getProducto()));
+            detalleDTO.setNombreProducto(detalle.getNombreProducto());
+            detalleDTO.setPrecioUnitario(detalle.getPrecioUnitario());
+            detalleDTO.setCantidad(detalle.getCantidad());
+            detalleDTO.setSubtotal(detalle.getSubtotal());
+            return detalleDTO;
+        }).collect(Collectors.toList());
         dto.setDetalles(detalles);
 
         return dto;
@@ -58,18 +69,20 @@ public class VentaMapperImplement implements VentaMapper {
         venta.setTipoDocumentoCliente(dto.getTipoDocumentoCliente());
         venta.setNumeroDocumentoCliente(dto.getNumeroDocumentoCliente());
         venta.setTotalVenta(dto.getTotalVenta());
-
-        // Se asume que el vendedor ya está creado
         venta.setVendedor(usuarioRepository.findById(dto.getVendedor().getId())
                 .orElseThrow(() -> new RuntimeException("Vendedor no encontrado")));
-
-        List<DetalleVenta> detalles = dto.getDetalles().stream()
-                .map(detalleVentaDTO -> {
-                    DetalleVenta detalle = detalleVentaMapper.toEntity(detalleVentaDTO);
-                    detalle.setVenta(venta); // importante para la relación bidireccional
-                    return detalle;
-                })
-                .collect(Collectors.toList());
+        List<DetalleVenta> detalles = dto.getDetalles().stream().map(detalleDTO -> {
+            DetalleVenta detalle = new DetalleVenta();
+            detalle.setVenta(venta);
+            Product producto = productRepository.findById(productMapper.toEntity(detalleDTO.getProducto()).getId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + detalleDTO.getProducto()));
+            detalle.setProducto(producto);
+            detalle.setNombreProducto(detalleDTO.getNombreProducto());
+            detalle.setPrecioUnitario(detalleDTO.getPrecioUnitario());
+            detalle.setCantidad(detalleDTO.getCantidad());
+            detalle.setSubtotal(detalleDTO.getPrecioUnitario() * detalleDTO.getCantidad());
+            return detalle;
+        }).collect(Collectors.toList());
 
         venta.setDetalles(detalles);
         return venta;

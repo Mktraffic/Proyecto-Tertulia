@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<div th:replace="ToastContainer :: toastContainer"></div>
+    <div th:replace="ToastContainer :: toastContainer"></div>
     <div class="container">
         <div th:replace="AdministratorOptions :: amdOptions"></div>
         <section class="personas-card">
@@ -17,21 +17,19 @@
             </header>
             <div class="personas-header">
                 <div class="icon-title">
-                     <i class="fas fa-shopping-bag"></i>
+                    <i class="fas fa-shopping-bag"></i>
                     <h2>Compras</h2>
                 </div>
                 <div class="search-add">
                     <form th:action="@{/searchBuy}" method="post">
-                        <input type="date" name="fechaInicial"  required
-                            title="Seleccione la fecha inicial">
-                             <input type="date" name="fechaFinal"  required
-                            title="Seleccione la final">
+                        <input type="date" name="fechaInicial" required title="Seleccione la fecha inicial">
+                        <input type="date" name="fechaFinal" required title="Seleccione la final">
                         <button type="submit" class="search-button" title="Buscar">🔍</button>
                     </form>
                     <form th:action="@{/manageBuy}" method="get">
                         <button type="submit" class="search-button" title="Refrescar">🔄</button>
                     </form>
-                    <form th:action="@{/addBuy}" method="get" style="display: inline;">
+                    <form th:action="@{/addDetailBuy}" method="get" style="display: inline;">
                         <button type="submit" class="search-button" title="Agregar">
                             <span class="plus-icon">+</span>
                         </button>
@@ -43,39 +41,40 @@
                 <thead>
                     <tr>
                         <th>Id compra</th>
+                        <th>Nombre comprador</th>
                         <th>Nombre proveedor</th>
-                        <th>Documento proveedor</th>
                         <th>Fecha compra</th>
                         <th>Valor total</th>
+                        <th>Ver factura compra</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="compra : ${Compras}">
+                    <tr th:each="compra : ${compras}">
                         <td th:text="${compra.id}"></td>
-                        <td th:text="${compra.proveedor}"></td>
-                        <td th:text="${compra.documentoProveedor}"></td>
-                        <td th:text="${compra.fecha}"></td>
-                        <td th:text="${compra.totalcompra}"></td>
-                       <!-- <td>
-                            <button class="edit-btn" th:attr="data-id=${compra.id},
-                                    data-vendedor=${compra.vendedor},
-                                    data-fecha=${compra.fecha},
-                                    data-telefono=${usuario.persona.numeroTelefono},
-                                    data-correo=${usuario.persona.correo},
-                                    data-rol=${usuario.rol.nombreRol},
-                                    data-userName=${usuario.userName},
-                                    data-password=${usuario.userPassword},
-                                    data-state=${usuario.persona.estado}" onclick="openModal(this)" title="Modificar">
-                                <i class="fas fa-pen edit-icon"></i>
+                        <td
+                            th:text="${compra.vendedor != null and compra.vendedor.persona != null and compra.vendedor.persona.nombre != null and compra.vendedor.persona.apellido != null ? compra.vendedor.persona.nombre + ' ' + compra.vendedor.persona.apellido : 'No identificado'}">
+                        </td>
+                        <td th:text="${compra.nombreProveedor}"></td>
+                        <td th:text="${compra.fechaCompra}"></td>
+                        <td th:text="${#numbers.formatDecimal({compra.totalVenta}, 1, 'COMMA', 2, 'POINT')}"></td>
+                        <td>
+                            <button class="delete-btn" th:attr="data-id=${compra.id}" onclick="viewBill(this)"
+                                title="Ver factura">
+                                <i class="fas fa-eye" style="color: #007bff;"></i>
                             </button>
-                        </td>-->
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </section>
     </div>
-    <div th:replace="ModalModifyPerson :: modalEdit"></div>
     </div>
+    <script>
+        function viewBill(button) {
+            const id = button.getAttribute("data-id");
+            window.location.href = `/showBillOfBuy?idCompra=${id}`;
+        }
+    </script>
 </body>
 
 </html>

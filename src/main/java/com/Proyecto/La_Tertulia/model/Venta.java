@@ -6,6 +6,8 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "venta")
 @Data
@@ -16,12 +18,12 @@ public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_venta")
-    private long id;
+    private Long id;
 
     @Column(name = "fecha_venta", nullable = false)
     private LocalDate fechaVenta;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_vendedor", nullable = false, referencedColumnName = "id_usuario")
     private Usuario vendedor;
 
@@ -35,5 +37,6 @@ public class Venta {
     private double totalVenta;
 
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<DetalleVenta> detalles;
 }

@@ -12,7 +12,6 @@ function closeModal() {
     document.getElementById('editModal').style.display = 'none';
 }
 
-// Opcional: cerrar modal al hacer clic fuera
 window.onclick = function(event) {
     const modal = document.getElementById('editModal');
     if (event.target === modal) {

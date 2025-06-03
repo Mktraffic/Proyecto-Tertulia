@@ -10,5 +10,5 @@ import com.Proyecto.La_Tertulia.model.Compra;
 
 @Repository
 public interface CompraRepository extends JpaRepository<Compra, Long> {
-    List<Compra> findByFechaVentaBetween(LocalDate fechaInicio, LocalDate fechaFin);
+    List<Compra> findByFechaCompraBetween(LocalDate inicio, LocalDate fin);
 }

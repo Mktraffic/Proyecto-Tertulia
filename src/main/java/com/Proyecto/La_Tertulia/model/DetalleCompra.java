@@ -1,5 +1,7 @@
 package com.Proyecto.La_Tertulia.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,8 +15,9 @@ public class DetalleCompra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_compra", nullable = false)
     private Compra compra;
 

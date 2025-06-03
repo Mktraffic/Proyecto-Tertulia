@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VentaDTO {
+public class VentaDTO { 
 
-    private long id;
+    private Long id;
     private LocalDate fechaVenta;
     private UsuarioDTO vendedor;
     private String tipoDocumentoCliente;

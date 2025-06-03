@@ -1,5 +1,7 @@
 package com.Proyecto.La_Tertulia.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +17,7 @@ public class DetalleVenta {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_venta", nullable = false)
     private Venta venta;
 

@@ -2,8 +2,6 @@ package com.Proyecto.La_Tertulia.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.Proyecto.La_Tertulia.dto.ProductDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.mapper.RolMapper;
 import com.Proyecto.La_Tertulia.mapper.UsuarioMapper;
@@ -51,14 +49,14 @@ public class UsuarioService {
         List<UsuarioDTO> userList = findAllUsuarios();
         for (UsuarioDTO usuario : userList) {
             if (usuario.getUserName().equals(userName)) {
-                if(usuario.getUserPassword().equals(password)){
-                    if (usuario.getPersona().isEstado()!=false) {
-                         return true + "," + usuario.getRol().getNombreRol();
+                if (usuario.getUserPassword().equals(password)) {
+                    if (usuario.getPersona().isEstado() != false) {
+                        return true + "," + usuario.getRol().getNombreRol();
                     } else {
                         return "false,DISABLED_USER";
-                     }  
-                 }else{
-                     return "false,INVALID_CREDENTIALS";
+                    }
+                } else {
+                    return "false,INVALID_CREDENTIALS";
                 }
             }
         }
@@ -137,5 +135,17 @@ public class UsuarioService {
         System.out.println(usuarioExistente);
 
         return usuarioMapper.toDTO(usuarioRepository.save(usuarioMapper.toEntity(usuarioExistente)));
+    }
+
+    public ArrayList<String> obtainSuppliers() {
+        ArrayList<String> suppliers = new ArrayList<>();
+        for (UsuarioDTO usuario : findAllUsuarios()) {
+            if (usuario.getRol().getNombreRol().equals("Proveedor")) {
+                if (usuario.getPersona().isEstado()) {
+                    suppliers.add(usuario.getPersona().getNombre() + " " + usuario.getPersona().getApellido());
+                }
+            }
+        }
+        return suppliers;
     }
 }

@@ -154,29 +154,27 @@ public class ProductService {
                 .distinct()
                 .collect(Collectors.toList());
     }
-
-    public List<String> productsByCategory(String category) {
-        return findAllProducts().stream()
-                .filter(p -> p.getType().equalsIgnoreCase(category))
-                .map(ProductDTO::getName)
-                .distinct()
-                .collect(Collectors.toList());
+    public ArrayList<ProductDTO> productsByCategoryParam(String type){
+        ArrayList<ProductDTO> productList = new ArrayList<>();
+        for (ProductDTO productDTO : findAllProducts()) {
+            if(productDTO.getType().equalsIgnoreCase(type)){
+                productList.add(productDTO);
+            }
+        }
+        return productList;
     }
 
-    public List<String> presentationByProductName(String productName) {
-        return findAllProducts().stream()
-                .filter(p -> p.getName().equalsIgnoreCase(productName))
-                .map(ProductDTO::getPresentation)
-                .distinct()
+     public List<ProductDTO> productsByCategory(String categoria) {
+        List<Product> productos = productRepository.findByType(categoria);
+        return productos.stream()
+                .map(p -> new ProductDTO(p.getId(), p.getName()))
                 .collect(Collectors.toList());
     }
+    public List<String> presentationByProductid(Long productoId) {
+        return productRepository.findPresentationByProductId(productoId);
+    }
 
-    public int productPrice(String productName, String presentation) {
-        return findAllProducts().stream()
-                .filter(p -> p.getName().equalsIgnoreCase(productName)
-                        && p.getPresentation().equalsIgnoreCase(presentation))
-                .map(ProductDTO::getPrice)
-                .findFirst()
-                .orElse(0);
+    public double productPrice(Long productoId, String presentacion) {
+        return productRepository.findPriceByProductIdAndPresentation(productoId, presentacion);
     }
 }

@@ -69,4 +69,8 @@ public class ProductController {
     }
     return "redirect:/manageProduct";
   }
+  @GetMapping("/showAddProduc")
+  public String showAddProduct() {
+      return "AddCustomerData";
+     }
 }
