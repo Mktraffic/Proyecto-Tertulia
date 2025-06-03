@@ -23,7 +23,6 @@ import com.Proyecto.La_Tertulia.model.Persona;
 import com.Proyecto.La_Tertulia.repository.PersonaRepository;
 import com.Proyecto.La_Tertulia.service.PersonaService;
 
-
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class PersonaServiceTest {
@@ -39,10 +38,11 @@ class PersonaServiceTest {
 
     @BeforeEach
     void setUp() {
-        PersonaDTO personaDTO = new PersonaDTO(1L, 122333,"Cedula de extranjeria", "juan", "perez",
-        310802532,"luis2020@gmail.com", LocalDate.of(1998, 1, 1));
-        PersonaDTO personaDTO2 = new PersonaDTO(2L, 223334,"Cedula de ciudadania", "luis", "rincon",320802341,
-        "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+        PersonaDTO personaDTO = new PersonaDTO(1L, (long) 1002525090, "Cedula de extranjeria", "juan", "perez", true,
+                (long) 313570908, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        PersonaDTO personaDTO2 = new PersonaDTO(2L, (long) 1002525091, "Cedula de ciudadania", "luis", "rincon", true,
+                (long) 320802341,
+                "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
         personaService.addPersonaInDB(personaDTO);
         personaService.addPersonaInDB(personaDTO2);
 
@@ -51,16 +51,18 @@ class PersonaServiceTest {
     @Test
     void testFindAllPersonas() {
 
-        Persona persona1 = new Persona(1L, 3334444,"Cedula de extranjeria", "juan", "perez",
-        310802532,"luis2020@gmail.com",LocalDate.of(1998, 1, 1));
-        Persona persona2 = new Persona(2L, 444455,"Cedula de extranjeria", "luis", "rincon"
-        ,320802341,"luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+        Persona persona1 = new Persona(1L, (long) 1002525090, "Cedula de extranjeria", "juan", "perez", true,
+                (long) 313570908, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        Persona persona2 = new Persona(2L, (long) 1002525091, "Cedula de ciudadania", "luis", "rincon", true,
+                (long) 320802341,
+                "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
         List<Persona> personas = Arrays.asList(persona1, persona2);
 
-        PersonaDTO personaDTO1 = new PersonaDTO(1L, 555556, "Cedula de ciudadania", "juan", "perez",
-        310802532,"luis2020@gmail.com", LocalDate.of(1998, 1, 1));
-        PersonaDTO personaDTO2 =new PersonaDTO(2L, 666666, "Cedula de ciudadania", "luis", "rincon",320802341,
-        "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+        PersonaDTO personaDTO1 = new PersonaDTO(1L, (long) 1002525090, "Cedula de extranjeria", "juan", "perez", true,
+                (long) 313570908, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        PersonaDTO personaDTO2 = new PersonaDTO(2L, (long) 1002525091, "Cedula de ciudadania", "luis", "rincon", true,
+                (long) 320802341,
+                "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
         List<PersonaDTO> expected = Arrays.asList(personaDTO1, personaDTO2);
 
         Mockito.when(personaRepository.findAll()).thenReturn(personas);
@@ -77,10 +79,11 @@ class PersonaServiceTest {
     @Test
     void testAddPersonaInDB() {
 
-        PersonaDTO personaDTO = new PersonaDTO(3L, 887776,"Cedula de extranjeria", "max", "ruiz",320854987,
-        "max202@gmail.com", LocalDate.of(1995, 1, 1));
-        Persona persona = new Persona(3L, 7776666, "Cedula de ciudadania", "max", "ruiz",320854987,
-        "max202@gmail.com",  LocalDate.of(1995, 1, 1));
+        PersonaDTO personaDTO = new PersonaDTO(3L, (long) 887776, "Cedula de extranjeria", "max", "ruiz", true,
+                (long) 320854987,
+                "max202@gmail.com", LocalDate.of(1995, 1, 1));
+        Persona persona = new Persona(3L, (long) 7776666, "Cedula de ciudadania", "max", "ruiz", true, (long) 320854987,
+                "max202@gmail.com", LocalDate.of(1995, 1, 1));
 
         Mockito.when(personaMapper.toEntity(personaDTO)).thenReturn(persona);
         Mockito.when(personaRepository.save(persona)).thenReturn(persona);
@@ -89,29 +92,130 @@ class PersonaServiceTest {
         PersonaDTO resultado = personaService.addPersonaInDB(personaDTO);
         Assertions.assertEquals(personaDTO.getId(), resultado.getId());
         Mockito.verify(personaRepository).save(persona);
-       
 
     }
 
     @Test
     void testFetchPersonaByIdFound() {
-    Long id = 1L;
-    Persona persona = new Persona(id, 456954,"Cedula de extranjeria", "juan", "perez",
-    310802532,"luis2020@gmail.com", LocalDate.of(1998, 1, 1));
-    PersonaDTO personaDTO = new PersonaDTO(id, 3986252,"Cedula de ciudadania", "juan", "perez",
-    310802532,"luis2020@gmail.com", LocalDate.of(1990, 1, 1));
+        Long id = 1L;
+        Persona persona = new Persona(id, (long) 456954, "Cedula de extranjeria", "juan", "perez", true,
+                (long) 310802532, "luis2020@gmail.com", LocalDate.of(1998, 1, 1));
+        PersonaDTO personaDTO = new PersonaDTO(id, (long) 93986252, "Cedula de ciudadania", "juan", "perez", true,
+                (long) 310802532, "luis2020@gmail.com", LocalDate.of(1990, 1, 1));
 
-    Mockito.when(personaRepository.findById(id)).thenReturn(Optional.of(persona));
-    Mockito.when(personaMapper.toDTO(persona)).thenReturn(personaDTO);
+        Mockito.when(personaRepository.findById(id)).thenReturn(Optional.of(persona));
+        Mockito.when(personaMapper.toDTO(persona)).thenReturn(personaDTO);
 
-    ResponseEntity<PersonaDTO> response = personaService.fetchPersonaById(id);
+        ResponseEntity<PersonaDTO> response = personaService.fetchPersonaById(id);
 
-    Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assertions.assertNotNull(response.getBody());
-    Assertions.assertEquals(personaDTO.getId(), response.getBody().getId());
-    Mockito.verify(personaRepository).findById(id);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response.getBody());
+        Assertions.assertEquals(personaDTO.getId(), response.getBody().getId());
+        Mockito.verify(personaRepository).findById(id);
 
     }
 
-   
+    @Test
+    void testUpdatePerson() {
+
+        PersonaDTO existente = new PersonaDTO(
+                2L, 1002525091L, "Cedula de ciudadania", "luis", "rincon", true,
+                320802341L, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+
+        PersonaDTO nuevosDatos = new PersonaDTO(
+                2L, 1002525091L, "Cedula de ciudadania", "luis", "rincon", true,
+                321999999L, "nuevoemail@gmail.com", LocalDate.of(1990, 1, 1));
+
+        Persona entidadActualizada = new Persona(
+                2L, 1002525091L, "Cedula de ciudadania", "luis", "rincon", true,
+                321999999L, "nuevoemail@gmail.com", LocalDate.of(1990, 1, 1));
+
+        PersonaDTO dtoEsperado = new PersonaDTO(
+                2L, 1002525091L, "Cedula de ciudadania", "luis", "rincon", true,
+                321999999L, "nuevoemail@gmail.com", LocalDate.of(1990, 1, 1));
+
+        Mockito.when(personaMapper.toEntity(existente)).thenReturn(entidadActualizada);
+        Mockito.when(personaRepository.save(entidadActualizada)).thenReturn(entidadActualizada);
+        Mockito.when(personaMapper.toDTO(entidadActualizada)).thenReturn(dtoEsperado);
+
+        PersonaDTO resultado = personaService.updatePersona(existente, nuevosDatos);
+
+        Assertions.assertEquals(dtoEsperado.getNumeroTelefono(), resultado.getNumeroTelefono());
+        Assertions.assertEquals(dtoEsperado.getCorreo(), resultado.getCorreo());
+        Assertions.assertTrue(resultado.isEstado());
+
+        Mockito.verify(personaRepository).save(Mockito.any(Persona.class));
+        Mockito.verify(personaMapper).toDTO(Mockito.any(Persona.class));
+    }
+
+    @Test
+    void testBorrarPersona() {
+
+        Long id = 2L;
+
+        PersonaDTO personaDTO = new PersonaDTO(
+                id, 1002525091L, "Cedula de ciudadania", "luis", "rincon", true,
+                320802341L, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+
+        PersonaDTO personaDTOBorrada = new PersonaDTO(
+                id, 1002525091L, "Cedula de ciudadania", "luis", "rincon", false,
+                320802341L, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+
+        Persona personaEntity = new Persona(
+                id, 1002525091L, "Cedula de ciudadania", "luis", "rincon", false,
+                320802341L, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+
+        Mockito.when(personaMapper.toEntity(Mockito.any(PersonaDTO.class))).thenReturn(personaEntity);
+        Mockito.when(personaRepository.save(personaEntity)).thenReturn(personaEntity);
+        Mockito.when(personaMapper.toDTO(personaEntity)).thenReturn(personaDTOBorrada);
+        Mockito.when(personaService.findById(id)).thenReturn(Optional.of(personaDTO));
+
+        PersonaDTO resultado = personaService.borrarPersonaInDB(id);
+
+        Assertions.assertNotNull(resultado);
+        Assertions.assertFalse(resultado.isEstado());
+        Assertions.assertEquals(id, resultado.getId());
+
+        Mockito.verify(personaRepository).save(Mockito.any(Persona.class));
+        Mockito.verify(personaMapper).toDTO(Mockito.any(Persona.class));
+    }
+
+    @Test
+    void testHabilitarPersonaInDB() {
+        Long id = 2L;
+
+        Persona personaYaHabilitada = new Persona(
+                id, 1002525091L, "Cedula de ciudadania", "luis", "rincon", true,
+                320802341L, "luis3050@gmail.com", LocalDate.of(1990, 1, 1));
+
+        Mockito.when(personaRepository.findById(id)).thenReturn(Optional.of(personaYaHabilitada));
+
+        PersonaDTO resultado = personaService.habiliarPersonaInDB(id);
+
+        Assertions.assertNull(resultado);
+        Mockito.verify(personaRepository, Mockito.never()).save(Mockito.any());
+        Mockito.verify(personaMapper, Mockito.never()).toDTO(Mockito.any());
+    }
+
+    @Test
+    void testFindByNombre() {
+
+        Persona persona = new Persona(
+                1L, 123456789L, "Cedula de ciudadania", "Luis", "Rincon", true,
+                310123456L, "luis@gmail.com", LocalDate.of(1990, 1, 1));
+
+        PersonaDTO personaDTO = new PersonaDTO(
+                1L, 123456789L, "Cedula de ciudadania", "Luis", "Rincon", true,
+                310123456L, "luis@gmail.com", LocalDate.of(1990, 1, 1));
+
+        Mockito.when(personaRepository.findAll()).thenReturn(List.of(persona));
+        Mockito.when(personaMapper.toDTO(persona)).thenReturn(personaDTO);
+
+        List<PersonaDTO> resultado = personaService.findByNombre("luis rincon");
+
+        Assertions.assertEquals(1, resultado.size());
+        Assertions.assertEquals("Luis", resultado.get(0).getNombre());
+        Assertions.assertEquals("Rincon", resultado.get(0).getApellido());
+    }
+
 }
