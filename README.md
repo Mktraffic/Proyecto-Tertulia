@@ -49,28 +49,8 @@ Este proyecto es una aplicación web desarrollada en Java con Spring Boot, que p
 5. Accede a la aplicación:
    - Abre tu navegador en http://localhost:8080
 ## 🗂️ Estructura del Proyecto
-La_Tertulia/
-│
-├── src/
-│   ├── main/
-│   │   ├── java/com/Proyecto/La_Tertulia/
-│   │   │   ├── controller/
-│   │   │   ├── dto/
-│   │   │   ├── mapper/
-│   │   │   ├── model/
-│   │   │   ├── repository/
-│   │   │   └── service/
-│   │   ├── resources/
-│   │   │   ├── static/
-│   │   │   │   └── css/
-│   │   │   └── templates/
-│   │   │       ├── SaleRegistration.html
-│   │   │       ├── BillOfSale.html
-│   │   │       └── ...
-│   └── test/
-│
-├── pom.xml
-└── README.md
+![image](https://github.com/user-attachments/assets/89524696-c749-4d4f-b3a8-9f5fe6e088ba)
+
 ##📖 Guía de Uso
 1. Inicia sesión como administrador o vendedor.
 2. Gestiona productos: Agrega, edita o elimina productos.
