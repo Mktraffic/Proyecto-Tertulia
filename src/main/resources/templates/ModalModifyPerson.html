@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <body>
     <div th:fragment="modalEdit">
         <link rel="stylesheet" th:href="@{/css/ModalModifyPerson.css}">
+        
         <div id="editModal" class="modal" style="display:none;">
             <div class="modal-content">
                 <span class="close" onclick="closeModal()">&times;</span>
                 <h3>Editar Persona</h3>
                 <form th:action="@{/updatePerson}" method="post">
                     <input type="hidden" name="persona.id" id="edit-id">
+                    
                     <div>
                         <label for="edit-nombre">Nombre:</label>
                         <input type="text" name="persona.nombre" id="edit-nombre" readonly>
                     </div>
+                    
                     <div>
                         <label for="edit-apellido">Apellido:</label>
                         <input type="text" name="persona.apellido" id="edit-apellido" readonly>
                     </div>
+                    
                     <div>
                         <label for="edit-telefono">Número de Teléfono:</label>
                         <input type="text" name="persona.numeroTelefono" id="edit-telefono" required minlength="7"
                             maxlength="10" title="El numero de telefono debe tener entre 7 y 10 dígitos numéricos">
                     </div>
+                    
                     <div>
                         <label for="edit-correo">Correo Electrónico:</label>
                         <input type="email" name="persona.correo" id="edit-correo" required
                             pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                             title="Introduce un correo válido (usuario@gmail.com)" minlength="14" maxlength="150">
                     </div>
+                    
                     <div class="form-group">
                         <label for="edit-state">Estado:</label>
                         <select name="persona.estado" id="edit-state" required>
@@ -36,28 +41,29 @@
                             <option value="false">Inactivo</option>
                         </select>
                     </div>
-                    <div id="datosUsuario"
-                        th:unless="${session.usuario != null and session.usuario.rol.nombreRol == 'Proveedor'}">
-                        <p th:text="'Rol actual: ' + ${session.usuario?.rol?.nombreRol}"></p>
-
+                    
+                    <div id="datosUsuario" style="display: none;">
                         <div class="form-group">
                             <label for="edit-rol">Rol:</label>
-                            <select name="rol.nombreRol" id="edit-rol" required>
+                            <select name="rol.nombreRol" id="edit-rol">
                                 <option value="Administrador">Administrador</option>
                                 <option value="Vendedor">Vendedor</option>
+                                <option value="Proveedor">Proveedor</option>
                             </select>
                         </div>
+                        
                         <div>
                             <label for="edit-userName">Nombre usuario:</label>
                             <input type="text" name="userName" id="edit-userName" readonly>
                         </div>
-
+                        
                         <div>
                             <label for="edit-password">Contraseña:</label>
-                            <input type="password" name="userPassword" id="edit-password" required minlength="5"
-                                maxlength="20" title="La contraseña debe tener mas de cinco caracteres">
+                            <input type="password" name="userPassword" id="edit-password" minlength="5"
+                                maxlength="20" title="La contraseña debe tener más de cinco caracteres">
                         </div>
                     </div>
+                    
                     <div style="margin-top: 15px;">
                         <button type="submit">Guardar</button>
                         <button type="button" onclick="closeModal()">Cancelar</button>
@@ -68,5 +74,4 @@
         <script th:src="@{/js/ModalModifyPerson.js}"></script>
     </div>
 </body>
-
 </html>

@@ -50,7 +50,12 @@ public class SalesController {
 
     @PostMapping("/searchSale")
     public String searchSale(@RequestParam("fechaInicial") LocalDate initialDate,
-            @RequestParam("fechaFinal") LocalDate finaldate, Model model) {
+            @RequestParam("fechaFinal") LocalDate finaldate, Model model, HttpSession session) {
+                UsuarioDTO usuarioDTO = (UsuarioDTO) session.getAttribute("usuario");
+        if (usuarioDTO == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("rol", usuarioDTO.getRol().getNombreRol().trim());
         List<VentaDTO> ventas = ventaService.obtenerVentasEntreFechas(initialDate, finaldate);
         if (ventas.isEmpty()) {
             ventas = ventaService.findAllSales();
@@ -58,6 +63,7 @@ public class SalesController {
         } else {
             model.addAttribute("success", "Ventas encontradas");
         }
+        
         model.addAttribute("Ventas", ventas);
         return "SalesManagement";
     }
