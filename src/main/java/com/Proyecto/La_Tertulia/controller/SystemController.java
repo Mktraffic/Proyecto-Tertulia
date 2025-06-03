@@ -14,6 +14,7 @@ import com.Proyecto.La_Tertulia.dto.RolDTO;
 import com.Proyecto.La_Tertulia.dto.UsuarioDTO;
 import com.Proyecto.La_Tertulia.model.Rol;
 import com.Proyecto.La_Tertulia.service.PersonaService;
+import com.Proyecto.La_Tertulia.service.RedirectionService;
 import com.Proyecto.La_Tertulia.service.RolService;
 import com.Proyecto.La_Tertulia.service.UsuarioService;
 
@@ -27,6 +28,8 @@ public class SystemController {
     private UsuarioService usuarioService;
     @Autowired
     private RolService rolService;
+    @Autowired
+    private RedirectionService redirectionService;
 
     @GetMapping("/login")
     public String mostrarLogin(Model model) {
@@ -36,49 +39,38 @@ public class SystemController {
 
     @PostMapping("/loggeo")
     public String processLogin(@ModelAttribute UsuarioDTO usuarioDTO, Model model, HttpSession session) {
-        try {
-            String[] data = usuarioService
-                    .validateUserByUserName(usuarioDTO.getUserName(), usuarioDTO.getUserPassword())
-                    .split(",");
-            boolean isAuthenticated = Boolean.parseBoolean(data[0].trim());
+        String[] data = usuarioService
+                .validateUserByUserName(usuarioDTO.getUserName(), usuarioDTO.getUserPassword())
+                .split(",");
+        boolean isAuthenticated = Boolean.parseBoolean(data[0].trim());
 
-            if (!isAuthenticated) {
-                String errorCode = data.length > 1 ? data[1].trim() : "UNKNOWN_ERROR";
-                String mensajeError = "";
-                switch (errorCode) {
-                    case "USER_NOT_FOUND":
-                        mensajeError = "El usuario no existe.";
-                        break;
-                    case "INVALID_CREDENTIALS":
-                        mensajeError = "Credenciales incorrectas.";
-                        break;
-                    case "DISABLED_USER":
-                        mensajeError = "Usuario sin acceso al sistema";
-                        break;
-                    default:
-                        mensajeError = "Credenciales incorrectas.";
-                        break;
-                }
+        if (!isAuthenticated) {
+            String errorCode = data.length > 1 ? data[1].trim() : "UNKNOWN_ERROR";
+            String mensajeError = "";
+            switch (errorCode) {
+                case "USER_NOT_FOUND":
+                    mensajeError = "El usuario no existe.";
+                    break;
+                case "INVALID_CREDENTIALS":
+                    mensajeError = "Credenciales incorrectas.";
+                    break;
+                case "DISABLED_USER":
+                    mensajeError = "Usuario sin acceso al sistema";
+                    break;
+                default:
+                    mensajeError = "Credenciales incorrectas.";
+                    break;
+            }
 
-                model.addAttribute("error", mensajeError);
-                return "Login";
-            }
-            String rol = data[1];
-            UsuarioDTO usuarioSession = searchPersonByUserName(usuarioDTO.getUserName());
-            usuarioSession.getRol().setNombreRol(rol);
-            session.setAttribute("usuario", usuarioSession);
-            session.setAttribute("rol", rol);
-            switch (rol) {
-                case "Administrador":
-                    return "AdministratorOptions";
-                case "Vendedor":
-                    return "SellerOptions";
-            }
-        } catch (Exception e) {
-            model.addAttribute("error", "Ocurrió un error inesperado. Inténtalo de nuevo.");
+            model.addAttribute("error", mensajeError);
             return "Login";
         }
-        return null;
+        String rol = data[1];
+        UsuarioDTO usuarioSession = searchPersonByUserName(usuarioDTO.getUserName());
+        usuarioSession.getRol().setNombreRol(rol);
+        session.setAttribute("usuario", usuarioSession);
+        session.setAttribute("rol", rol);
+        return redirectionService.redirectionUser(rol);
     }
 
     public UsuarioDTO searchPersonByUserName(String user_name) {
